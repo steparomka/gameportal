@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!-- Файл: templates/base.html -->
+<!-- Базовый шаблон: подключает CSS/JS, рисует навбар и обёртку -->
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}GamePortal{% endblock %}</title>
+
+  <!-- Фавиконка эмодзи (не нужен отдельный файл) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>" />
+
+  <!-- Наш главный CSS -->
+  <link rel="stylesheet" href="/static/css/style.css" />
+
+  <!-- Дополнительные стили из дочерних шаблонов -->
+  {% block extra_css %}{% endblock %}
+</head>
+<!-- Аватар в углу -->
+<div style="position:fixed;bottom:1.5rem;left:1.5rem;z-index:999">
+  <img src="/static/img/avatar.jpg"
+       style="width:52px;height:52px;border-radius:50%;
+              border:2px solid #00d4ff;
+              box-shadow:0 0 15px rgba(0,212,255,0.4)"
+       title="Автор сайта" />
+</div>
+<body>
+
+<!-- ══ НАВБАР ══════════════════════════════════════════ -->
+<nav class="navbar">
+  <!-- Логотип / бренд -->
+  <a href="/" class="navbar-brand">GAME<span>PORTAL</span></a>
+
+  <!-- Бургер для мобильных -->
+  <div class="burger" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </div>
+
+  <!-- Навигационные ссылки -->
+  <ul class="navbar-nav">
+    <li><a href="/">🏠 Главная</a></li>
+    <li><a href="/replays">📹 Реплеи</a></li>
+    <li><a href="/tournaments">🏆 Турниры</a></li>
+    <li><a href="/find-teammates">🔍 Тиммейты</a></li>
+  </ul>
+
+  <!-- Онлайн-счётчик -->
+  <div class="online-badge">
+    <span class="online-dot"></span>
+    <span id="online-count">{{ online }}</span> онлайн
+  </div>
+</nav>
+
+<!-- ══ ОСНОВНОЙ КОНТЕНТ ════════════════════════════════ -->
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ══ КОНТЕЙНЕР ДЛЯ ТОСТОВ ═══════════════════════════ -->
+<div id="toast-container"></div>
+
+<!-- Общий JS -->
+<script src="/static/js/main.js"></script>
+
+<!-- Дополнительные скрипты из дочерних шаблонов -->
+{% block extra_js %}{% endblock %}
+</body>
+</html>
