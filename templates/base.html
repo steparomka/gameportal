@@ -7,17 +7,243 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
   <link rel="stylesheet" href="/static/css/style.css" />
   <link rel="stylesheet" href="/static/css/themes.css" />
+  <style>
+    /* ── Telegram-кнопка ── */
+    .tg-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 99px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #2AABEE;
+      background: rgba(42,171,238,0.10);
+      border: 1px solid rgba(42,171,238,0.25);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .tg-link:hover {
+      background: rgba(42,171,238,0.22);
+      border-color: rgba(42,171,238,0.55);
+      color: #2AABEE;
+      box-shadow: 0 0 12px rgba(42,171,238,0.2);
+    }
+    .tg-link svg { flex-shrink: 0; }
+
+    /* ── Бургер → скрывает navbar-nav, показывает dropdown ── */
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-surface);
+      transition: all var(--transition);
+      position: relative;
+    }
+    .burger span {
+      display: block; width: 20px; height: 2px;
+      background: var(--text-primary);
+      transition: all 0.25s ease;
+    }
+    .burger:hover span { background: var(--accent); }
+    .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .burger.open span:nth-child(2) { opacity: 0; }
+    .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* dropdown из бургера */
+    .burger-dropdown {
+      display: none;
+      position: absolute;
+      top: 64px;
+      right: 1rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      min-width: 180px;
+      z-index: 2000;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      animation: dropdown-in 0.15s ease;
+    }
+    .burger-dropdown.open { display: block; }
+    @keyframes dropdown-in {
+      from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .burger-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      font-family: var(--font-head);
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: all 0.15s;
+    }
+    .burger-dropdown a:last-child { border-bottom: none; }
+    .burger-dropdown a:hover { background: var(--bg-card); color: var(--accent); }
+
+    /* на мобайле убираем стандартный nav, показываем бургер */
+    @media (max-width: 768px) {
+      .navbar-nav { display: none !important; }
+      .burger { display: flex; }
+      .tg-link span { display: none; }
+    }
+    /* на десктопе бургер не нужен */
+    @media (min-width: 769px) {
+      .burger { display: none; }
+      .burger-dropdown { display: none !important; }
+    }
+
+    /* ── Steam-карточка (используется в index.html) ── */
+    .steam-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      width: 100%;
+      max-width: 300px;
+    }
+    .steam-login-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: rgba(27,156,252,0.12);
+      border: 1px solid rgba(27,156,252,0.35);
+      border-radius: var(--radius);
+      color: #1B9CFC;
+      font-family: var(--font-head);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .steam-login-btn:hover {
+      background: rgba(27,156,252,0.25);
+      border-color: #1B9CFC;
+      color: #1B9CFC;
+      box-shadow: 0 0 14px rgba(27,156,252,0.25);
+    }
+    .steam-profile { display: none; }
+    .steam-avatar-wrap {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+    }
+    .steam-avatar {
+      width: 48px; height: 48px; border-radius: 10px;
+      border: 2px solid #1B9CFC;
+      background: var(--bg-surface);
+      object-fit: cover;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+    }
+    .steam-name {
+      font-family: var(--font-head); font-size: 1rem;
+      font-weight: 700; color: var(--text-bright);
+    }
+    .steam-rank { font-size: 0.75rem; color: var(--warning); margin-top: 2px; }
+    .steam-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;
+    }
+    .steam-stat {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+    }
+    .steam-stat .slabel {
+      font-family: var(--font-mono); font-size: 0.65rem;
+      text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);
+    }
+    .steam-stat .sval {
+      font-family: var(--font-mono); font-size: 1.1rem;
+      font-weight: 700; margin-top: 2px;
+    }
+    .sval-green { color: var(--success); }
+    .sval-gold  { color: var(--warning); }
+    .sval-blue  { color: #1B9CFC; }
+    .steam-logout {
+      width: 100%;
+      margin-top: 8px;
+      background: transparent;
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: var(--radius);
+      color: var(--danger);
+      font-family: var(--font-head);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 7px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .steam-logout:hover { background: rgba(239,68,68,0.1); border-color: var(--danger); }
+
+    /* ── Секция hero с колонками ── */
+    .hero-columns {
+      display: flex;
+      align-items: flex-start;
+      gap: 2rem;
+      padding: 2.5rem 0 2rem;
+    }
+    .hero-main { flex: 1; }
+    .hero-sidebar { flex-shrink: 0; }
+    @media (max-width: 900px) {
+      .hero-columns { flex-direction: column; }
+      .steam-card { max-width: 100%; }
+    }
+
+    .match-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .match-row:last-child { border-bottom: none; }
+    .match-result {
+      font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
+      padding: 3px 7px; border-radius: 4px; min-width: 38px; text-align: center;
+    }
+    .match-win  { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
+    .match-loss { background: rgba(239,68,68,0.12);  color: var(--danger);  border: 1px solid rgba(239,68,68,0.25); }
+    .match-hero { flex: 1; font-family: var(--font-head); font-weight: 600; color: var(--text-bright); }
+    .match-kda  { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.75rem; }
+    .match-time { color: var(--text-muted); font-size: 0.75rem; }
+  </style>
   {% block extra_css %}{% endblock %}
 </head>
 <body>
 
 <nav class="navbar">
-  <a href="/" class="navbar-brand">DOTA<span>CLUTCH</span></a>
-
-  <div class="burger" aria-label="Меню">
-    <span></span><span></span><span></span>
+  <!-- Логотип + Telegram -->
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <a href="/" class="navbar-brand">DOTA<span>CLUTCH</span></a>
+    <a href="https://t.me/DotaClutch0" class="tg-link" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+      </svg>
+      <span>@DotaClutch0</span>
+    </a>
   </div>
 
+  <!-- Основная навигация (десктоп) -->
   <ul class="navbar-nav">
     <li><a href="/">🏠 Главная</a></li>
     <li><a href="/replays">📹 Реплеи</a></li>
@@ -25,7 +251,8 @@
     <li><a href="/find-teammates">🔍 Тиммейты</a></li>
   </ul>
 
-  <div style="display:flex;align-items:center;gap:1rem">
+  <!-- Правая часть -->
+  <div style="display:flex;align-items:center;gap:0.75rem;position:relative;">
     <button class="theme-toggle" id="theme-toggle" title="Переключить тему">
       <span class="theme-icon-light">
         <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
@@ -56,6 +283,19 @@
       <span class="online-dot"></span>
       <span id="online-count">{{ online }}</span> онлайн
     </div>
+
+    <!-- Бургер (мобайл) -->
+    <div class="burger" id="burger" onclick="toggleBurger()">
+      <span></span><span></span><span></span>
+    </div>
+
+    <!-- Выпадающее меню -->
+    <div class="burger-dropdown" id="burgerMenu">
+      <a href="/">🏠 Главная</a>
+      <a href="/replays">📹 Реплеи</a>
+      <a href="/tournaments">🏆 Турниры</a>
+      <a href="/find-teammates">🔍 Тиммейты</a>
+    </div>
   </div>
 </nav>
 
@@ -76,6 +316,7 @@
 
 <script src="/static/js/main.js"></script>
 <script>
+/* ── Тема ── */
 (function() {
   var saved = localStorage.getItem('gp-theme') || 'dark';
   document.documentElement.setAttribute('data-theme', saved);
@@ -91,6 +332,35 @@
     }
   });
 })();
+
+/* ── Бургер ── */
+function toggleBurger() {
+  document.getElementById('burger').classList.toggle('open');
+  document.getElementById('burgerMenu').classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  var burger = document.getElementById('burger');
+  var menu   = document.getElementById('burgerMenu');
+  if (burger && menu && !burger.contains(e.target) && !menu.contains(e.target)) {
+    burger.classList.remove('open');
+    menu.classList.remove('open');
+  }
+});
+
+/* ── Steam (используется в index.html) ── */
+function steamLogin() {
+  /* В реальном проекте здесь будет редирект на Steam OpenID:
+     window.location.href = '/auth/steam';
+     Пока показываем демо-профиль */
+  document.getElementById('steamLoginBtn').style.display  = 'none';
+  document.getElementById('steamProfile').style.display   = 'block';
+}
+function steamLogout() {
+  document.getElementById('steamLoginBtn').style.display  = 'block';
+  document.getElementById('steamProfile').style.display   = 'none';
+  document.getElementById('matchList').innerHTML =
+    '<p style="color:var(--text-muted);font-size:0.85rem;padding:0.5rem 0">Войдите через Steam, чтобы увидеть матчи</p>';
+}
 </script>
 {% block extra_js %}{% endblock %}
 </body>
