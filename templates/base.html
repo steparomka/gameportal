@@ -75,6 +75,23 @@
 </div>
 
 <script src="/static/js/main.js"></script>
+<script>
+(function() {
+  var saved = localStorage.getItem('gp-theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.querySelector('.theme-toggle');
+    if (btn) {
+      btn.onclick = function() {
+        var c = document.documentElement.getAttribute('data-theme');
+        var n = c === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', n);
+        localStorage.setItem('gp-theme', n);
+      };
+    }
+  });
+})();
+</script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>
