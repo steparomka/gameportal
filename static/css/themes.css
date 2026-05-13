@@ -1,0 +1,156 @@
+/* Файл: static/css/themes.css */
+
+[data-theme="dark"] {
+  --bg-dark:      #0a0505;
+  --bg-card:      #110808;
+  --bg-surface:   #1a0d0d;
+  --border:       #3d0a0a;
+  --accent:       #cc0000;
+  --accent2:      #ff3300;
+  --accent3:      #8b0000;
+  --text-primary: #e8d0d0;
+  --text-muted:   #7a4a4a;
+  --text-bright:  #fff0f0;
+  --shadow-glow:  0 0 20px rgba(204,0,0,0.2);
+  --shadow-card:  0 4px 24px rgba(0,0,0,0.7);
+}
+
+[data-theme="dark"] body {
+  background-color: #0a0505;
+  background-image:
+    linear-gradient(rgba(204,0,0,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(204,0,0,0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+[data-theme="dark"] .card::before { background: linear-gradient(90deg, #cc0000, #8b0000); }
+[data-theme="dark"] .navbar { background: rgba(10,5,5,0.95); border-bottom-color: #3d0a0a; }
+[data-theme="dark"] .navbar-brand { color: #cc0000; text-shadow: 0 0 20px rgba(204,0,0,0.6); }
+[data-theme="dark"] .navbar-brand span { color: #ff3300; }
+[data-theme="dark"] .online-dot { background: #cc0000; }
+[data-theme="dark"] .online-badge { color: #cc4400; background: rgba(204,0,0,0.08); border-color: rgba(204,0,0,0.2); }
+[data-theme="dark"] .btn-primary { background: linear-gradient(135deg, #cc0000, #8b0000); box-shadow: 0 0 15px rgba(204,0,0,0.3); }
+[data-theme="dark"] .btn-primary:hover { box-shadow: 0 0 30px rgba(204,0,0,0.5); color: #fff0f0; }
+[data-theme="dark"] a { color: #cc0000; }
+[data-theme="dark"] a:hover { color: #ff3300; }
+[data-theme="dark"] .text-accent { color: #cc0000; }
+[data-theme="dark"] .form-control:focus { border-color: #cc0000; box-shadow: 0 0 0 3px rgba(204,0,0,0.15); }
+[data-theme="dark"] .hero h1 .glow { color: #cc0000; text-shadow: 0 0 30px rgba(204,0,0,0.7); }
+[data-theme="dark"] .hero h1 .glow2 { color: #ff3300; }
+[data-theme="dark"] .neon-line { background: linear-gradient(90deg, #cc0000, #8b0000, transparent); }
+[data-theme="dark"] .stat-box .value { color: #cc0000; }
+[data-theme="dark"] .navbar-nav a:hover, [data-theme="dark"] .navbar-nav a.active { color: #cc0000; border-color: #3d0a0a; background: rgba(204,0,0,0.06); }
+[data-theme="dark"] .hero-card:hover { border-color: #cc0000; color: #cc0000; box-shadow: 0 0 25px rgba(204,0,0,0.15); }
+[data-theme="dark"] .chat-header .dot { background: #cc0000; }
+[data-theme="dark"] .chat-send-btn { background: #cc0000; }
+[data-theme="dark"] .chat-send-btn:hover { background: #ff0000; }
+[data-theme="dark"] .chat-nick-input { color: #cc0000; }
+[data-theme="dark"] .progress-bar { background: linear-gradient(90deg, #cc0000, #8b0000); }
+[data-theme="dark"] .participant-chip { background: rgba(204,0,0,0.08); border-color: rgba(204,0,0,0.2); color: #cc0000; }
+
+[data-theme="light"] {
+  --bg-dark:      #f5f0e8;
+  --bg-card:      #faf7f2;
+  --bg-surface:   #ede8df;
+  --border:       #d4c4a0;
+  --accent:       #8b6914;
+  --accent2:      #c8922a;
+  --accent3:      #6b4f10;
+  --text-primary: #2d1f0a;
+  --text-muted:   #8b7355;
+  --text-bright:  #1a0f00;
+  --shadow-glow:  0 0 20px rgba(139,105,20,0.2);
+  --shadow-card:  0 4px 24px rgba(0,0,0,0.1);
+}
+
+[data-theme="light"] body {
+  background-color: #f5f0e8;
+  background-image:
+    linear-gradient(rgba(139,105,20,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139,105,20,0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+[data-theme="light"] .card { background: #faf7f2; border-color: #d4c4a0; }
+[data-theme="light"] .card:hover { border-color: rgba(139,105,20,0.4); }
+[data-theme="light"] .card::before { background: linear-gradient(90deg, #8b6914, #c8922a); }
+[data-theme="light"] .navbar { background: rgba(245,240,232,0.95); border-bottom-color: #d4c4a0; }
+[data-theme="light"] .navbar-brand { color: #8b6914; text-shadow: 0 0 15px rgba(139,105,20,0.3); }
+[data-theme="light"] .navbar-brand span { color: #c8922a; }
+[data-theme="light"] .online-dot { background: #5a7a2a; }
+[data-theme="light"] .online-badge { color: #5a7a2a; background: rgba(90,122,42,0.08); border-color: rgba(90,122,42,0.2); }
+[data-theme="light"] .navbar-nav a { color: #8b7355; }
+[data-theme="light"] .navbar-nav a:hover, [data-theme="light"] .navbar-nav a.active { color: #8b6914; border-color: #d4c4a0; background: rgba(139,105,20,0.06); }
+[data-theme="light"] .btn-primary { background: linear-gradient(135deg, #8b6914, #c8922a); color: #fff8ee; }
+[data-theme="light"] .btn-primary:hover { color: #fff8ee; }
+[data-theme="light"] .btn-ghost { color: #8b7355; border-color: #d4c4a0; }
+[data-theme="light"] .btn-ghost:hover { border-color: #8b6914; color: #8b6914; }
+[data-theme="light"] a { color: #8b6914; }
+[data-theme="light"] a:hover { color: #6b4f10; }
+[data-theme="light"] .text-accent { color: #8b6914; }
+[data-theme="light"] .text-muted { color: #8b7355; }
+[data-theme="light"] .form-control { background: #ede8df; border-color: #d4c4a0; color: #2d1f0a; }
+[data-theme="light"] .form-control:focus { border-color: #8b6914; box-shadow: 0 0 0 3px rgba(139,105,20,0.12); }
+[data-theme="light"] .hero h1 { color: #1a0f00; }
+[data-theme="light"] .hero h1 .glow { color: #8b6914; text-shadow: 0 0 25px rgba(139,105,20,0.5); }
+[data-theme="light"] .hero h1 .glow2 { color: #c8922a; }
+[data-theme="light"] .hero p { color: #8b7355; }
+[data-theme="light"] .hero-card { background: #faf7f2; border-color: #d4c4a0; color: #2d1f0a; }
+[data-theme="light"] .hero-card:hover { border-color: #8b6914; color: #8b6914; }
+[data-theme="light"] .stat-box { background: #ede8df; border-color: #d4c4a0; }
+[data-theme="light"] .stat-box .value { color: #8b6914; }
+[data-theme="light"] .stat-box .label { color: #8b7355; }
+[data-theme="light"] .neon-line { background: linear-gradient(90deg, #8b6914, #c8922a, transparent); }
+[data-theme="light"] .chat-widget { background: #faf7f2; border-color: #d4c4a0; }
+[data-theme="light"] .chat-header { background: #ede8df; color: #2d1f0a; }
+[data-theme="light"] .chat-header .dot { background: #c8922a; }
+[data-theme="light"] .chat-msg .nick { color: #8b6914; }
+[data-theme="light"] .chat-msg .text { background: #ede8df; border-color: #d4c4a0; color: #2d1f0a; }
+[data-theme="light"] .chat-input-area { background: #ede8df; border-top-color: #d4c4a0; }
+[data-theme="light"] .chat-nick-input { background: #f5f0e8; border-color: #d4c4a0; color: #8b6914; }
+[data-theme="light"] .chat-text-input { background: #f5f0e8; border-color: #d4c4a0; color: #2d1f0a; }
+[data-theme="light"] .chat-send-btn { background: #8b6914; color: #fff8ee; }
+[data-theme="light"] .chat-send-btn:hover { background: #c8922a; }
+[data-theme="light"] .participant-chip { background: rgba(139,105,20,0.08); border-color: rgba(139,105,20,0.2); color: #8b6914; }
+[data-theme="light"] .progress-bar { background: linear-gradient(90deg, #8b6914, #c8922a); }
+[data-theme="light"] .page-header h1 { color: #1a0f00; }
+[data-theme="light"] .empty-state { color: #8b7355; }
+[data-theme="light"] .alert-info { background: rgba(139,105,20,0.08); border-color: rgba(139,105,20,0.2); color: #8b6914; }
+
+/* Кнопка переключения тем */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-icon-light,
+.theme-icon-dark {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-family: var(--font-head);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .theme-icon-dark { background: rgba(204,0,0,0.15); color: #cc0000; }
+[data-theme="dark"] .theme-icon-light { color: var(--text-muted); }
+[data-theme="light"] .theme-icon-light { background: rgba(139,105,20,0.15); color: #8b6914; }
+[data-theme="light"] .theme-icon-dark { color: var(--text-muted); }
+[data-theme="light"] .theme-toggle { background: #ede8df; border-color: #d4c4a0; }
+
+@media (max-width: 768px) {
+  .theme-icon-light span, .theme-icon-dark span { display: none; }
+}
