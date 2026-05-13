@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/static/css/style.css" />
   <link rel="stylesheet" href="/static/css/themes.css" />
   <style>
-    /* ── Telegram-кнопка ── */
+    /* ── Telegram-кнопка рядом с логотипом ── */
     .tg-link {
       display: inline-flex;
       align-items: center;
@@ -16,7 +16,7 @@
       padding: 5px 12px;
       border-radius: 99px;
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 0.5px;
       color: #2AABEE;
@@ -29,59 +29,62 @@
     .tg-link:hover {
       background: rgba(42,171,238,0.22);
       border-color: rgba(42,171,238,0.55);
-      color: #2AABEE;
+      color: #2AABEE !important;
       box-shadow: 0 0 12px rgba(42,171,238,0.2);
     }
     .tg-link svg { flex-shrink: 0; }
-
-    /* ── Бургер → скрывает navbar-nav, показывает dropdown ── */
+    @media (max-width: 600px) { .tg-label { display: none; } }
+ 
+    /* ── Бургер-кнопка (мобайл) ── */
     .burger {
       display: none;
       flex-direction: column;
       gap: 5px;
       cursor: pointer;
-      padding: 6px;
+      padding: 7px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       background: var(--bg-surface);
       transition: all var(--transition);
-      position: relative;
     }
     .burger span {
       display: block; width: 20px; height: 2px;
-      background: var(--text-primary);
+      background: var(--text-muted);
       transition: all 0.25s ease;
+      border-radius: 2px;
     }
     .burger:hover span { background: var(--accent); }
-    .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--accent); }
     .burger.open span:nth-child(2) { opacity: 0; }
-    .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-    /* dropdown из бургера */
+    .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--accent); }
+ 
+    /* ── Выпадающее меню бургера ── */
     .burger-dropdown {
-      display: none;
       position: absolute;
-      top: 64px;
-      right: 1rem;
+      top: calc(100% + 8px);
+      right: 0;
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      min-width: 180px;
-      z-index: 2000;
+      min-width: 190px;
+      z-index: 3000;
       overflow: hidden;
-      box-shadow: var(--shadow-card);
-      animation: dropdown-in 0.15s ease;
+      box-shadow: var(--shadow-card), 0 0 20px rgba(0,0,0,0.5);
+      opacity: 0;
+      transform: translateY(-8px) scale(0.97);
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
     }
-    .burger-dropdown.open { display: block; }
-    @keyframes dropdown-in {
-      from { opacity: 0; transform: translateY(-6px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
+    .burger-dropdown.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: all;
     }
     .burger-dropdown a {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 11px 16px;
+      padding: 12px 16px;
       font-family: var(--font-head);
       font-size: 0.9rem;
       font-weight: 600;
@@ -93,28 +96,28 @@
       transition: all 0.15s;
     }
     .burger-dropdown a:last-child { border-bottom: none; }
-    .burger-dropdown a:hover { background: var(--bg-card); color: var(--accent); }
-
-    /* на мобайле убираем стандартный nav, показываем бургер */
+    .burger-dropdown a:hover { background: var(--bg-card); color: var(--accent); padding-left: 22px; }
+    .burger-dropdown a.active { color: var(--accent); background: rgba(0,0,0,0.15); }
+ 
     @media (max-width: 768px) {
       .navbar-nav { display: none !important; }
       .burger { display: flex; }
-      .tg-link span { display: none; }
     }
-    /* на десктопе бургер не нужен */
-    @media (min-width: 769px) {
-      .burger { display: none; }
-      .burger-dropdown { display: none !important; }
+ 
+    /* ── Правая часть navbar (позиционирование dropdown) ── */
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      position: relative;
     }
-
+ 
     /* ── Steam-карточка (используется в index.html) ── */
     .steam-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 1.25rem;
-      width: 100%;
-      max-width: 300px;
     }
     .steam-login-btn {
       width: 100%;
@@ -122,8 +125,8 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 10px 16px;
-      background: rgba(27,156,252,0.12);
+      padding: 11px 16px;
+      background: rgba(27,156,252,0.10);
       border: 1px solid rgba(27,156,252,0.35);
       border-radius: var(--radius);
       color: #1B9CFC;
@@ -135,124 +138,125 @@
       cursor: pointer;
       transition: all 0.2s;
       text-decoration: none;
+      margin-bottom: 10px;
     }
     .steam-login-btn:hover {
-      background: rgba(27,156,252,0.25);
+      background: rgba(27,156,252,0.22);
       border-color: #1B9CFC;
-      color: #1B9CFC;
-      box-shadow: 0 0 14px rgba(27,156,252,0.25);
+      color: #1B9CFC !important;
+      box-shadow: 0 0 16px rgba(27,156,252,0.25);
     }
-    .steam-profile { display: none; }
-    .steam-avatar-wrap {
-      display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
-    }
+    #steamProfile { display: none; }
+    .steam-avatar-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
     .steam-avatar {
       width: 48px; height: 48px; border-radius: 10px;
       border: 2px solid #1B9CFC;
       background: var(--bg-surface);
-      object-fit: cover;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem;
+      font-size: 1.5rem; flex-shrink: 0; overflow: hidden;
     }
-    .steam-name {
-      font-family: var(--font-head); font-size: 1rem;
-      font-weight: 700; color: var(--text-bright);
-    }
-    .steam-rank { font-size: 0.75rem; color: var(--warning); margin-top: 2px; }
-    .steam-stats {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;
-    }
-    .steam-stat {
+    .steam-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .steam-name { font-family: var(--font-head); font-size: 1rem; font-weight: 700; color: var(--text-bright); letter-spacing: 0.5px; }
+    .steam-rank { font-size: 0.72rem; color: var(--warning); margin-top: 3px; font-family: var(--font-mono); }
+    .steam-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .steam-stat-box {
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 8px 10px;
     }
-    .steam-stat .slabel {
-      font-family: var(--font-mono); font-size: 0.65rem;
-      text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);
-    }
-    .steam-stat .sval {
-      font-family: var(--font-mono); font-size: 1.1rem;
-      font-weight: 700; margin-top: 2px;
-    }
+    .steam-stat-box .slabel { font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+    .steam-stat-box .sval  { font-family: var(--font-mono); font-size: 1.05rem; font-weight: 700; margin-top: 2px; }
     .sval-green { color: var(--success); }
     .sval-gold  { color: var(--warning); }
     .sval-blue  { color: #1B9CFC; }
-    .steam-logout {
-      width: 100%;
-      margin-top: 8px;
+    .steam-locked { opacity: 0.3; filter: blur(1.5px); pointer-events: none; user-select: none; }
+    .steam-logout-btn {
+      width: 100%; margin-top: 8px;
       background: transparent;
       border: 1px solid rgba(239,68,68,0.3);
       border-radius: var(--radius);
       color: var(--danger);
       font-family: var(--font-head);
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 7px;
-      cursor: pointer;
-      transition: all 0.2s;
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      padding: 7px; cursor: pointer; transition: all 0.2s;
     }
-    .steam-logout:hover { background: rgba(239,68,68,0.1); border-color: var(--danger); }
-
-    /* ── Секция hero с колонками ── */
-    .hero-columns {
-      display: flex;
-      align-items: flex-start;
-      gap: 2rem;
-      padding: 2.5rem 0 2rem;
+    .steam-logout-btn:hover { background: rgba(239,68,68,0.1); border-color: var(--danger); }
+ 
+    /* ── Матчи в Steam-карточке ── */
+    .steam-matches-label {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px; padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
     }
-    .hero-main { flex: 1; }
-    .hero-sidebar { flex-shrink: 0; }
-    @media (max-width: 900px) {
-      .hero-columns { flex-direction: column; }
-      .steam-card { max-width: 100%; }
+    .smatch-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 0.82rem;
     }
-
-    .match-row {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 0; border-bottom: 1px solid var(--border);
-      font-size: 0.85rem;
+    .smatch-row:last-child { border-bottom: none; }
+    .smatch-result {
+      font-family: var(--font-mono); font-size: 0.64rem; font-weight: 700;
+      padding: 2px 6px; border-radius: 4px; min-width: 36px; text-align: center; flex-shrink: 0;
     }
-    .match-row:last-child { border-bottom: none; }
-    .match-result {
-      font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
-      padding: 3px 7px; border-radius: 4px; min-width: 38px; text-align: center;
+    .smatch-win  { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
+    .smatch-loss { background: rgba(239,68,68,0.12);  color: var(--danger);  border: 1px solid rgba(239,68,68,0.25); }
+    .smatch-hero { flex: 1; font-family: var(--font-head); font-weight: 600; color: var(--text-bright); }
+    .smatch-kda  { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.72rem; }
+    .smatch-dur  { color: var(--text-muted); font-size: 0.72rem; flex-shrink: 0; }
+ 
+    /* ── Hero с Steam-сайдбаром ── */
+    .hero-steam-layout {
+      display: flex; align-items: flex-start; gap: 2.5rem;
+      padding: 3.5rem 0 1rem;
     }
-    .match-win  { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
-    .match-loss { background: rgba(239,68,68,0.12);  color: var(--danger);  border: 1px solid rgba(239,68,68,0.25); }
-    .match-hero { flex: 1; font-family: var(--font-head); font-weight: 600; color: var(--text-bright); }
-    .match-kda  { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.75rem; }
-    .match-time { color: var(--text-muted); font-size: 0.75rem; }
+    .hero-steam-main { flex: 1; min-width: 0; text-align: left; }
+    .hero-steam-main h1 { text-align: left; }
+    .hero-steam-main p  { margin: 0 0 2rem; }
+    .hero-steam-main .hero-nav { justify-content: flex-start; }
+    .hero-steam-sidebar { flex-shrink: 0; width: 260px; }
+    @media (max-width: 920px) {
+      .hero-steam-layout { flex-direction: column; padding-top: 2rem; }
+      .hero-steam-main h1 { text-align: center; }
+      .hero-steam-main p  { text-align: center; }
+      .hero-steam-main .hero-nav { justify-content: center; }
+      .hero-steam-sidebar { width: 100%; }
+    }
+ 
+    /* ── Hint ── */
+    .steam-hint {
+      color: var(--text-muted); font-size: 0.82rem;
+      padding: 0.4rem 0; font-family: var(--font-mono);
+    }
   </style>
   {% block extra_css %}{% endblock %}
 </head>
 <body>
-
+ 
 <nav class="navbar">
   <!-- Логотип + Telegram -->
-  <div style="display:flex;align-items:center;gap:0.75rem;">
+  <div style="display:flex;align-items:center;gap:0.75rem;flex-shrink:0;">
     <a href="/" class="navbar-brand">DOTA<span>CLUTCH</span></a>
     <a href="https://t.me/DotaClutch0" class="tg-link" target="_blank" rel="noopener">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
         <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
       </svg>
-      <span>@DotaClutch0</span>
+      <span class="tg-label">@DotaClutch0</span>
     </a>
   </div>
-
-  <!-- Основная навигация (десктоп) -->
+ 
+  <!-- Навигация (десктоп) -->
   <ul class="navbar-nav">
     <li><a href="/">🏠 Главная</a></li>
     <li><a href="/replays">📹 Реплеи</a></li>
     <li><a href="/tournaments">🏆 Турниры</a></li>
     <li><a href="/find-teammates">🔍 Тиммейты</a></li>
   </ul>
-
+ 
   <!-- Правая часть -->
-  <div style="display:flex;align-items:center;gap:0.75rem;position:relative;">
+  <div class="navbar-right">
     <button class="theme-toggle" id="theme-toggle" title="Переключить тему">
       <span class="theme-icon-light">
         <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
@@ -278,17 +282,17 @@
         <span>Тьма</span>
       </span>
     </button>
-
+ 
     <div class="online-badge">
       <span class="online-dot"></span>
       <span id="online-count">{{ online }}</span> онлайн
     </div>
-
-    <!-- Бургер (мобайл) -->
-    <div class="burger" id="burger" onclick="toggleBurger()">
+ 
+    <!-- Бургер -->
+    <div class="burger" id="burger">
       <span></span><span></span><span></span>
     </div>
-
+ 
     <!-- Выпадающее меню -->
     <div class="burger-dropdown" id="burgerMenu">
       <a href="/">🏠 Главная</a>
@@ -298,70 +302,22 @@
     </div>
   </div>
 </nav>
-
+ 
 <main>
   {% block content %}{% endblock %}
 </main>
-
+ 
 <div id="toast-container"></div>
-
+ 
 <div style="position:fixed;bottom:1.5rem;left:1.5rem;z-index:999">
   <img src="/static/img/avatar.jpg"
-       style="width:52px;height:52px;border-radius:50%;
-              border:2px solid var(--accent);
-              box-shadow:0 0 15px rgba(0,212,255,0.4)"
+       style="width:52px;height:52px;border-radius:50%;border:2px solid var(--accent);box-shadow:0 0 15px rgba(0,212,255,0.4)"
        title="Автор сайта"
        onerror="this.style.display='none'" />
 </div>
-
+ 
 <script src="/static/js/main.js"></script>
-<script>
-/* ── Тема ── */
-(function() {
-  var saved = localStorage.getItem('gp-theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', saved);
-  document.addEventListener('DOMContentLoaded', function() {
-    var btn = document.querySelector('.theme-toggle');
-    if (btn) {
-      btn.onclick = function() {
-        var c = document.documentElement.getAttribute('data-theme');
-        var n = c === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', n);
-        localStorage.setItem('gp-theme', n);
-      };
-    }
-  });
-})();
-
-/* ── Бургер ── */
-function toggleBurger() {
-  document.getElementById('burger').classList.toggle('open');
-  document.getElementById('burgerMenu').classList.toggle('open');
-}
-document.addEventListener('click', function(e) {
-  var burger = document.getElementById('burger');
-  var menu   = document.getElementById('burgerMenu');
-  if (burger && menu && !burger.contains(e.target) && !menu.contains(e.target)) {
-    burger.classList.remove('open');
-    menu.classList.remove('open');
-  }
-});
-
-/* ── Steam (используется в index.html) ── */
-function steamLogin() {
-  /* В реальном проекте здесь будет редирект на Steam OpenID:
-     window.location.href = '/auth/steam';
-     Пока показываем демо-профиль */
-  document.getElementById('steamLoginBtn').style.display  = 'none';
-  document.getElementById('steamProfile').style.display   = 'block';
-}
-function steamLogout() {
-  document.getElementById('steamLoginBtn').style.display  = 'block';
-  document.getElementById('steamProfile').style.display   = 'none';
-  document.getElementById('matchList').innerHTML =
-    '<p style="color:var(--text-muted);font-size:0.85rem;padding:0.5rem 0">Войдите через Steam, чтобы увидеть матчи</p>';
-}
-</script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>
+ 
