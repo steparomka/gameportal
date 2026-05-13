@@ -1,34 +1,23 @@
 <!DOCTYPE html>
-<!-- Файл: templates/base.html -->
-<!-- Базовый шаблон: подключает CSS/JS, рисует навбар и обёртку -->
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}GamePortal{% endblock %}</title>
-
-  <!-- Фавиконка эмодзи (не нужен отдельный файл) -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>" />
-
-  <!-- Наш главный CSS -->
+  <title>{% block title %}DotaClutch{% endblock %}</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
   <link rel="stylesheet" href="/static/css/style.css" />
-
-  <!-- Дополнительные стили из дочерних шаблонов -->
+  <link rel="stylesheet" href="/static/css/themes.css" />
   {% block extra_css %}{% endblock %}
 </head>
 <body>
 
-  <!-- ══ НАВБАР ══════════════════════════════════════════ -->
 <nav class="navbar">
-  <!-- Логотип / бренд -->
-  <a href="/" class="navbar-brand">GAME<span>PORTAL</span></a>
+  <a href="/" class="navbar-brand">DOTA<span>CLUTCH</span></a>
 
-  <!-- Бургер для мобильных -->
   <div class="burger" aria-label="Меню">
     <span></span><span></span><span></span>
   </div>
 
-  <!-- Навигационные ссылки -->
   <ul class="navbar-nav">
     <li><a href="/">🏠 Главная</a></li>
     <li><a href="/replays">📹 Реплеи</a></li>
@@ -36,33 +25,56 @@
     <li><a href="/find-teammates">🔍 Тиммейты</a></li>
   </ul>
 
-  <!-- Онлайн-счётчик -->
-  <div class="online-badge">
-    <span class="online-dot"></span>
-    <span id="online-count">{{ online }}</span> онлайн
+  <div style="display:flex;align-items:center;gap:1rem">
+    <button class="theme-toggle" id="theme-toggle" title="Переключить тему">
+      <span class="theme-icon-light">
+        <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="6" fill="#f5e6c8" opacity="0.9"/>
+          <path d="M14 2 Q16 8 14 14 Q12 8 14 2Z" fill="#c8a96e"/>
+          <path d="M26 14 Q20 16 14 14 Q20 12 26 14Z" fill="#c8a96e"/>
+          <path d="M14 26 Q12 20 14 14 Q16 20 14 26Z" fill="#c8a96e"/>
+          <path d="M2 14 Q8 12 14 14 Q8 16 2 14Z" fill="#c8a96e"/>
+          <circle cx="14" cy="14" r="4" fill="#fff8ee"/>
+        </svg>
+        <span>Свет</span>
+      </span>
+      <span class="theme-icon-dark">
+        <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="7" fill="#1a0a0a" stroke="#8b0000" stroke-width="1"/>
+          <path d="M14 4 L16 11 L14 9 L12 11Z" fill="#cc0000"/>
+          <path d="M24 14 L17 16 L19 14 L17 12Z" fill="#cc0000"/>
+          <path d="M14 24 L12 17 L14 19 L16 17Z" fill="#cc0000"/>
+          <path d="M4 14 L11 12 L9 14 L11 16Z" fill="#cc0000"/>
+          <circle cx="14" cy="14" r="3.5" fill="#2d0000"/>
+          <circle cx="14" cy="14" r="1.5" fill="#ff2200" opacity="0.8"/>
+        </svg>
+        <span>Тьма</span>
+      </span>
+    </button>
+
+    <div class="online-badge">
+      <span class="online-dot"></span>
+      <span id="online-count">{{ online }}</span> онлайн
+    </div>
   </div>
 </nav>
 
-<!-- ══ ОСНОВНОЙ КОНТЕНТ ════════════════════════════════ -->
 <main>
   {% block content %}{% endblock %}
 </main>
 
-<!-- ══ КОНТЕЙНЕР ДЛЯ ТОСТОВ ═══════════════════════════ -->
 <div id="toast-container"></div>
 
-<!-- Общий JS -->
-<script src="/static/js/main.js"></script>
-
-<!-- Дополнительные скрипты из дочерних шаблонов -->
-{% block extra_js %}{% endblock %}
-<!-- Аватар в углу -->
 <div style="position:fixed;bottom:1.5rem;left:1.5rem;z-index:999">
   <img src="/static/img/avatar.jpg"
        style="width:52px;height:52px;border-radius:50%;
-              border:2px solid #00d4ff;
+              border:2px solid var(--accent);
               box-shadow:0 0 15px rgba(0,212,255,0.4)"
-       title="Автор сайта" />
+       title="Автор сайта"
+       onerror="this.style.display='none'" />
 </div>
+
+<script src="/static/js/main.js"></script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>
