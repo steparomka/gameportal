@@ -1,7 +1,5 @@
 // Файл: static/js/main.js
-// Общий JS: тосты, навбар, онлайн-счётчик, переключатель тем
 
-// ── Тосты ───────────────────────────────────────────────
 window.showToast = function(message, type = 'info') {
   const container = document.getElementById('toast-container');
   if (!container) return;
@@ -9,11 +7,6 @@ window.showToast = function(message, type = 'info') {
   toast.className = 'toast';
   const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
   toast.innerHTML = `${icons[type] || ''} ${message}`;
-  toast.style.borderColor = {
-    success: 'rgba(16,185,129,0.3)',
-    error:   'rgba(239,68,68,0.3)',
-    info:    'rgba(0,212,255,0.2)',
-  }[type] || '';
   container.appendChild(toast);
   setTimeout(() => {
     toast.style.opacity = '0';
@@ -22,64 +15,63 @@ window.showToast = function(message, type = 'info') {
   }, 3000);
 };
 
-// ── Переключатель тем Свет/Тьма ─────────────────────────
+// Тема — запускается сразу, до DOMContentLoaded
 (function() {
-  // Загружаем сохранённую тему из localStorage
-  const saved = localStorage.getItem('gp-theme') || 'dark';
+  var saved = localStorage.getItem('gp-theme') || 'dark';
   document.documentElement.setAttribute('data-theme', saved);
+})();
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('theme-toggle');
-    if (!btn) return;
+document.addEventListener('DOMContentLoaded', function() {
 
-    btn.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme');
-      const next = current === 'dark' ? 'light' : 'dark';
-
-      // Плавный переход
-      document.documentElement.style.transition = 'background-color 0.4s ease, color 0.4s ease';
+  // Переключатель темы
+  var btn = document.getElementById('theme-toggle');
+  if (btn) {
+    btn.onclick = function() {
+      var current = document.documentElement.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('gp-theme', next);
-
-      // Тост с названием темы
       if (next === 'light') {
         showToast('☀️ Сила Света активирована!', 'info');
       } else {
         showToast('🔴 Сила Тьмы активирована!', 'info');
       }
-    });
-  });
-})();
-
-// ── Мобильное меню ──────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  const burger = document.querySelector('.burger');
-  const nav    = document.querySelector('.navbar-nav');
-  if (burger && nav) {
-    burger.addEventListener('click', () => nav.classList.toggle('open'));
-    nav.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => nav.classList.remove('open'));
-    });
+    };
   }
 
-  // Активный пункт меню
-  const path = window.location.pathname;
-  document.querySelectorAll('.navbar-nav a').forEach(a => {
-    if (a.getAttribute('href') === path ||
-        (path.startsWith(a.getAttribute('href')) && a.getAttribute('href') !== '/')) {
-      a.classList.add('active');
-    }
-  });
-
-  // Обновляем онлайн каждые 30 сек
-  async function updateOnline() {
-    try {
-      const r = await fetch('/api/online');
-      const d = await r.json();
-      const el = document.getElementById('online-count');
-      if (el) el.textContent = d.online;
-    } catch (_) {}
+  // Онлайн
+  function updateOnline() {
+    fetch('/api/online')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        var el = document.getElementById('online-count');
+        if (el) el.textContent = d.online;
+      }).catch(function() {});
   }
   updateOnline();
   setInterval(updateOnline, 30000);
+
+  // Пользователь
+  fetch('/api/me')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.logged_in) {
+        var navUser = document.getElementById('navbar-user');
+        var navAvatar = document.getElementById('navbar-avatar');
+        if (navUser && navAvatar) {
+          navAvatar.src = d.avatar;
+          navUser.style.display = 'block';
+        }
+        var profile = document.getElementById('burger-profile');
+        if (profile) {
+          document.getElementById('burger-avatar').src = d.avatar;
+          document.getElementById('burger-username').textContent = d.nickname;
+          document.getElementById('burger-steamid').textContent = 'Steam ID: ' + d.steam_id;
+          profile.style.display = 'flex';
+        }
+        document.getElementById('steam-login-btn').style.display = 'none';
+        document.getElementById('steam-logout-btn').style.display = 'flex';
+      }
+    }).catch(function() {});
+
 });
