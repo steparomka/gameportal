@@ -19,15 +19,23 @@
   --danger:       #ff0000;
   --shadow-glow:  0 0 20px rgba(204,0,0,0.2);
   --shadow-card:  0 4px 24px rgba(0,0,0,0.7);
-
-  /* Фоновая сетка тёмной темы */
   --grid-color:   rgba(204,0,0,0.04);
 }
 
+[data-theme="dark"] body {
+  background-color: #0a0505;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
 
-/* Неоновые полоски карточек — красные */
 [data-theme="dark"] .card::before {
   background: linear-gradient(90deg, #cc0000, #8b0000);
+}
+
+[data-theme="dark"] .navbar {
+  background: rgba(10,5,5,0.92);
 }
 
 [data-theme="dark"] .navbar-brand { color: #cc0000; text-shadow: 0 0 20px rgba(204,0,0,0.6); }
@@ -35,7 +43,6 @@
 [data-theme="dark"] .online-dot { background: #cc0000; }
 [data-theme="dark"] .online-badge { color: #cc4400; background: rgba(204,0,0,0.08); border-color: rgba(204,0,0,0.2); }
 
-/* Кнопки тёмной темы */
 [data-theme="dark"] .btn-primary {
   background: linear-gradient(135deg, #cc0000, #8b0000);
   box-shadow: 0 0 15px rgba(204,0,0,0.3);
@@ -44,7 +51,6 @@
   box-shadow: 0 0 30px rgba(204,0,0,0.5);
 }
 
-/* Акцентные цвета */
 [data-theme="dark"] .text-accent { color: #cc0000; }
 [data-theme="dark"] a { color: #cc0000; }
 [data-theme="dark"] a:hover { color: #ff3300; }
@@ -85,6 +91,14 @@
   --shadow-glow:  0 0 20px rgba(139,105,20,0.2);
   --shadow-card:  0 4px 24px rgba(0,0,0,0.1);
   --grid-color:   rgba(139,105,20,0.05);
+}
+
+[data-theme="light"] body {
+  background-color: #f5f0e8;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 50px 50px;
 }
 
 [data-theme="light"] .card { background: #faf7f2; border-color: #d4c4a0; }
@@ -196,7 +210,6 @@
   white-space: nowrap;
 }
 
-/* Тёмная тема активна — подсвечиваем иконку тьмы */
 [data-theme="dark"] .theme-icon-dark {
   background: rgba(204,0,0,0.15);
   color: #cc0000;
@@ -204,7 +217,6 @@
 }
 [data-theme="dark"] .theme-icon-light { color: var(--text-muted); }
 
-/* Светлая тема активна — подсвечиваем иконку света */
 [data-theme="light"] .theme-icon-light {
   background: rgba(139,105,20,0.15);
   color: #8b6914;
