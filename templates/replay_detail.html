@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+<!-- Файл: templates/replay_detail.html — Страница просмотра реплея -->
+
+{% block title %}{{ replay.title }} — DotaClutch{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Кнопка назад -->
+  <a href="/replays" class="btn btn-ghost btn-sm mb-2">← Все реплеи</a>
+
+  <div class="page-header">
+    <h1>{{ replay.title }}</h1>
+    <p class="text-muted">🕒 Загружен: {{ replay.uploaded_at.strftime('%d.%m.%Y в %H:%M') }}</p>
+  </div>
+
+  <!-- ══ ВИДЕОПЛЕЕР ════════════════════════════════════ -->
+  <div class="video-player-wrap mb-3">
+    <video
+      id="main-video"
+      src="{{ replay.file_url }}"
+      controls
+      preload="auto"
+      style="width:100%;max-height:70vh;display:block;background:#000"
+    >
+      Ваш браузер не поддерживает HTML5 Video.
+    </video>
+  </div>
+
+  <!-- ══ ПАНЕЛЬ ДЕЙСТВИЙ ══════════════════════════════ -->
+  <div class="flex gap-2" style="flex-wrap:wrap;align-items:center;margin-bottom:2rem">
+    <!-- Кнопка лайка -->
+    <button class="like-btn" id="like-btn" onclick="likeReplay()">
+      <span class="heart">❤️</span>
+      <span id="likes-count">{{ likes }}</span> лайков
+    </button>
+
+    <!-- Скачать -->
+    <a href="{{ replay.file_url }}" download class="btn btn-ghost btn-sm">
+      💾 Скачать
+    </a>
+
+    <!-- Поделиться -->
+    <button class="btn btn-ghost btn-sm" onclick="copyLink()">
+      🔗 Скопировать ссылку
+    </button>
+  </div>
+
+  <hr class="neon-line" />
+
+  <!-- ══ ИНФОРМАЦИЯ ════════════════════════════════════ -->
+  <div class="grid grid-2">
+    <div class="card">
+      <h3 class="text-head" style="margin-bottom:0.75rem;color:var(--text-bright)">📋 Информация</h3>
+      <table style="width:100%;border-collapse:collapse">
+        <tr>
+          <td style="padding:0.4rem 0;color:var(--text-muted);font-size:0.85rem;width:40%">Название</td>
+          <td style="padding:0.4rem 0;font-family:var(--font-mono);font-size:0.85rem">{{ replay.title }}</td>
+        </tr>
+        <tr>
+          <td style="padding:0.4rem 0;color:var(--text-muted);font-size:0.85rem">Загружен</td>
+          <td style="padding:0.4rem 0;font-family:var(--font-mono);font-size:0.85rem">{{ replay.uploaded_at.strftime('%d.%m.%Y') }}</td>
+        </tr>
+        <tr>
+          <td style="padding:0.4rem 0;color:var(--text-muted);font-size:0.85rem">Лайков</td>
+          <td style="padding:0.4rem 0;font-family:var(--font-mono);font-size:0.85rem;color:var(--accent2)">❤️ <span id="likes-count-2">{{ likes }}</span></td>
+        </tr>
+        <tr>
+          <td style="padding:0.4rem 0;color:var(--text-muted);font-size:0.85rem">ID</td>
+          <td style="padding:0.4rem 0;font-family:var(--font-mono);font-size:0.85rem;color:var(--text-muted)">#{{ replay.id }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Управление плеером -->
+    <div class="card">
+      <h3 class="text-head" style="margin-bottom:0.75rem;color:var(--text-bright)">⌨️ Управление</h3>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;font-size:0.85rem;color:var(--text-muted)">
+        <div><kbd style="background:var(--bg-surface);border:1px solid var(--border);border-radius:4px;padding:0.1rem 0.5rem;font-family:var(--font-mono)">Space</kbd> — пауза / воспроизведение</div>
+        <div><kbd style="background:var(--bg-surface);border:1px solid var(--border);border-radius:4px;padding:0.1rem 0.5rem;font-family:var(--font-mono)">← →</kbd> — перемотка на 5 сек</div>
+        <div><kbd style="background:var(--bg-surface);border:1px solid var(--border);border-radius:4px;padding:0.1rem 0.5rem;font-family:var(--font-mono)">F</kbd> — полноэкранный режим</div>
+        <div><kbd style="background:var(--bg-surface);border:1px solid var(--border);border-radius:4px;padding:0.1rem 0.5rem;font-family:var(--font-mono)">M</kbd> — выкл/вкл звук</div>
+        <div><kbd style="background:var(--bg-surface);border:1px solid var(--border);border-radius:4px;padding:0.1rem 0.5rem;font-family:var(--font-mono)">↑ ↓</kbd> — громкость</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+const REPLAY_ID = {{ replay.id }};
+let liked = false;  // флаг: уже лайкнул?
+
+// ── Поставить лайк ───────────────────────────────────────
+async function likeReplay() {
+  if (liked) { showToast('Ты уже лайкнул этот реплей! ❤️', 'info'); return; }
+  try {
+    const r = await fetch(`/replays/${REPLAY_ID}/like`, { method: 'POST' });
+    const d = await r.json();
+    // Обновляем счётчики
+    document.getElementById('likes-count').textContent  = d.likes;
+    document.getElementById('likes-count-2').textContent = d.likes;
+    // Помечаем кнопку как нажатую
+    document.getElementById('like-btn').classList.add('liked');
+    liked = true;
+    showToast('Лайк поставлен! ❤️', 'success');
+  } catch(e) {
+    showToast('Ошибка при лайке', 'error');
+  }
+}
+
+// ── Копировать ссылку ────────────────────────────────────
+function copyLink() {
+  navigator.clipboard.writeText(window.location.href)
+    .then(() => showToast('Ссылка скопирована! 🔗', 'success'))
+    .catch(() => showToast('Не удалось скопировать', 'error'));
+}
+
+// ── Горячие клавиши для плеера ───────────────────────────
+const video = document.getElementById('main-video');
+document.addEventListener('keydown', (e) => {
+  // Не перехватываем если пользователь пишет в input
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+  switch(e.key) {
+    case ' ':
+      e.preventDefault();
+      video.paused ? video.play() : video.pause();
+      break;
+    case 'ArrowLeft':
+      video.currentTime = Math.max(0, video.currentTime - 5);
+      break;
+    case 'ArrowRight':
+      video.currentTime = Math.min(video.duration, video.currentTime + 5);
+      break;
+    case 'ArrowUp':
+      e.preventDefault();
+      video.volume = Math.min(1, video.volume + 0.1);
+      break;
+    case 'ArrowDown':
+      e.preventDefault();
+      video.volume = Math.max(0, video.volume - 0.1);
+      break;
+    case 'f': case 'F':
+      video.requestFullscreen?.();
+      break;
+    case 'm': case 'M':
+      video.muted = !video.muted;
+      break;
+  }
+});
+</script>
+{% endblock %}
