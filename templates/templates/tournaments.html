@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+<!-- Файл: templates/tournaments.html — Список турниров -->
+
+{% block title %}Турниры — GamePortal{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1>🏆 <span class="accent">Турниры</span></h1>
+    <p>Участвуй в соревнованиях, побеждай, становись лучшим</p>
+  </div>
+
+  <!-- ══ СОЗДАТЬ ТУРНИР (для админа) ══════════════════ -->
+  <div class="card mb-3">
+    <details>
+      <summary style="cursor:pointer;font-family:var(--font-head);font-weight:700;font-size:1rem;
+                      letter-spacing:1px;text-transform:uppercase;color:var(--accent);
+                      list-style:none;display:flex;align-items:center;gap:0.5rem">
+        ⚙️ Создать турнир <span style="font-size:0.8rem;color:var(--text-muted)">(только для админа)</span>
+      </summary>
+
+      <div style="margin-top:1.25rem">
+        <div class="alert alert-info">
+          🔑 Нужен Admin Token из файла <code style="font-family:var(--font-mono)">.env</code>
+        </div>
+
+        <form id="create-tournament-form">
+          <div class="grid grid-2" style="gap:1rem">
+            <div class="form-group">
+              <label class="form-label">Название турнира</label>
+              <input class="form-control" type="text" id="t-name"
+                     placeholder="Winter Championship 2025" required maxlength="200"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Игра</label>
+              <input class="form-control" type="text" id="t-game"
+                     placeholder="CS2, Dota 2, Valorant..." required maxlength="100"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Макс. участников</label>
+              <input class="form-control" type="number" id="t-max" value="16" min="2" max="128"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Admin Token</label>
+              <input class="form-control" type="password" id="t-token"
+                     placeholder="Из файла .env" required/>
+            </div>
+          </div>
+          <div id="create-alert"></div>
+          <button type="submit" class="btn btn-primary">🏆 Создать турнир</button>
+        </form>
+      </div>
+    </details>
+  </div>
+
+  <hr class="neon-line" />
+
+  <!-- ══ СПИСОК ТУРНИРОВ ══════════════════════════════ -->
+  {% if tournaments %}
+  <div class="grid grid-2">
+    {% for t in tournaments %}
+    <a href="/tournaments/{{ t.id }}" class="card" style="text-decoration:none;color:inherit">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem">
+        <h3 style="font-family:var(--font-head);font-size:1.15rem;font-weight:700;color:var(--text-bright)">
+          {{ t.name }}
+        </h3>
+        <!-- Статус-бейдж -->
+        {% if t.status == 'registration' %}
+          <span class="badge badge-registration">📝 Регистрация</span>
+        {% elif t.status == 'ongoing' %}
+          <span class="badge badge-ongoing">▶️ Идёт</span>
+        {% else %}
+          <span class="badge badge-completed">✅ Завершён</span>
+        {% endif %}
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem">
+        <span class="meta-tag game">🎮 {{ t.game }}</span>
+        <span class="meta-tag rank">👥 до {{ t.max_participants }} уч.</span>
+      </div>
+
+      <div style="font-size:0.8rem;color:var(--text-muted);font-family:var(--font-mono)">
+        📅 {{ t.created_at.strftime('%d.%m.%Y') }}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="icon">🏆</div>
+    <p>Турниров пока нет — создай первый!</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+// ── Форма создания турнира ───────────────────────────────
+document.getElementById('create-tournament-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const alertEl = document.getElementById('create-alert');
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  btn.textContent = 'Создаём...';
+  alertEl.innerHTML = '';
+
+  const body = {
+    name:             document.getElementById('t-name').value.trim(),
+    game:             document.getElementById('t-game').value.trim(),
+    max_participants: parseInt(document.getElementById('t-max').value) || 16,
+    admin_token:      document.getElementById('t-token').value.trim(),
+  };
+
+  try {
+    const r = await fetch('/tournaments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const d = await r.json();
+
+    if (r.ok) {
+      showToast('Турнир создан! 🏆', 'success');
+      alertEl.innerHTML = '<div class="alert alert-success">✅ Турнир создан! Перезагружаем...</div>';
+      setTimeout(() => location.reload(), 1200);
+    } else {
+      alertEl.innerHTML = `<div class="alert alert-error">❌ ${d.detail || 'Ошибка'}</div>`;
+      btn.disabled = false;
+      btn.textContent = '🏆 Создать турнир';
+    }
+  } catch(err) {
+    alertEl.innerHTML = '<div class="alert alert-error">❌ Ошибка сети</div>';
+    btn.disabled = false;
+    btn.textContent = '🏆 Создать турнир';
+  }
+});
+</script>
+{% endblock %}
