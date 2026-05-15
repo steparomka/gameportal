@@ -330,23 +330,6 @@
 
 <script src="/static/js/main.js"></script>
 <script>
-(function() {
-  // Тема
-  var saved = localStorage.getItem('gp-theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', saved);
-
-  document.addEventListener('DOMContentLoaded', function() {
-
-    // Переключатель тем
-    var themeBtn = document.querySelector('.theme-toggle');
-    if (themeBtn) {
-      themeBtn.onclick = function() {
-        var c = document.documentElement.getAttribute('data-theme');
-        var n = c === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', n);
-        localStorage.setItem('gp-theme', n);
-      };
-    }
 
     // Бургер
     var burgerBtn  = document.getElementById('burger-btn');
