@@ -96,7 +96,7 @@
 <script>
 var HEROES = {};
 var ITEMS  = {};
-var CDN = 'https://cdn.cloudflare.steamstatic.com';
+var CDN = 'https://steamcdn-a.akamaihd.net';
 
 Promise.all([
   fetch('https://api.opendota.com/api/heroes').then(function(r){return r.json();}).catch(function(){return[];}),
