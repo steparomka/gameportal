@@ -265,6 +265,18 @@
        onerror="this.style.display='none'" />
 </div>
 <script>
+  var saved = localStorage.getItem('gp-theme') || 'dark';
+document.documentElement.setAttribute('data-theme', saved);
+
+var themeBtn = document.querySelector('.theme-toggle');
+if (themeBtn) {
+  themeBtn.onclick = function() {
+    var c = document.documentElement.getAttribute('data-theme');
+    var n = c === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', n);
+    localStorage.setItem('gp-theme', n);
+  };
+}
   var burgerBtn  = document.getElementById('burger-btn');
   var burgerMenu = document.getElementById('burger-menu');
   var overlay    = document.getElementById('burger-overlay');
