@@ -4,42 +4,91 @@
 {% block content %}
 <div class="container">
 
+  <!-- Профиль игрока -->
   <div class="profile-hero">
     <img id="p-avatar" src="" alt="avatar" class="profile-avatar" />
     <div class="profile-info">
       <h1 id="p-nickname" class="profile-name">Загрузка...</h1>
-      <a id="p-steam-link" href="#" target="_blank" class="profile-steam-link">Открыть в Steam ↗</a>
+      <a id="p-steam-link" href="#" target="_blank" class="profile-steam-link">
+        Открыть в Steam ↗
+      </a>
     </div>
   </div>
 
+  <!-- Статистика Dota 2 -->
   <div class="stats-grid" id="dota-stats" style="display:none">
-    <div class="stat-card"><div class="stat-value" id="s-matches">—</div><div class="stat-label">⚔️ Матчей</div></div>
-    <div class="stat-card"><div class="stat-value green" id="s-wins">—</div><div class="stat-label">🏆 Побед</div></div>
-    <div class="stat-card"><div class="stat-value red" id="s-losses">—</div><div class="stat-label">💀 Поражений</div></div>
-    <div class="stat-card"><div class="stat-value accent" id="s-winrate">—</div><div class="stat-label">📊 Винрейт</div></div>
-    <div class="stat-card"><div class="stat-value" id="s-kda">—</div><div class="stat-label">⚡ К/Д/А</div></div>
-    <div class="stat-card"><div class="stat-value" id="s-gpm">—</div><div class="stat-label">💰 Ср. закуп/мин</div></div>
+    <div class="stat-card">
+      <div class="stat-value" id="s-matches">—</div>
+      <div class="stat-label">⚔️ Матчей</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value green" id="s-wins">—</div>
+      <div class="stat-label">🏆 Побед</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value red" id="s-losses">—</div>
+      <div class="stat-label">💀 Поражений</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value accent" id="s-winrate">—</div>
+      <div class="stat-label">📊 Винрейт</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="s-kda">—</div>
+      <div class="stat-label">⚡ К/Д/А</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="s-gpm">—</div>
+      <div class="stat-label">💰 Ср. GPM</div>
+    </div>
   </div>
 
+  <!-- Загрузка -->
   <div id="loading-stats" style="text-align:center;padding:3rem;color:var(--text-muted)">
     <div style="font-size:2rem;margin-bottom:1rem">⚔️</div>
     <p>Загружаем статистику Dota 2...</p>
   </div>
 
+  <!-- Ошибка приватного профиля -->
   <div id="private-profile" style="display:none" class="alert alert-info">
     🔒 Статистика недоступна — профиль закрыт в настройках Steam
   </div>
 
   <hr class="neon-line" />
 
+  <!-- Топ героев -->
   <div id="heroes-section" style="display:none">
-    <h2 class="section-title">🦸 Топ героев <span class="heroes-subtitle">≥ 20 игр</span></h2>
+    <h2 class="section-title">🦸 Топ героев</h2>
     <div class="heroes-grid" id="heroes-grid"></div>
-    <div id="heroes-empty" style="display:none;color:var(--text-muted);font-family:var(--font-mono);font-size:0.85rem;padding:1rem 0">Нет героев с 20+ играми</div>
+  </div>
+
+  <!-- Модальное окно матчей героя -->
+  <div id="hero-modal" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);overflow-y:auto">
+    <div style="max-width:800px;margin:2rem auto;padding:1rem">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+          <div style="display:flex;align-items:center;gap:1rem">
+            <img id="modal-hero-img" src="" style="width:64px;height:36px;border-radius:6px;object-fit:cover" />
+            <h2 id="modal-hero-name" class="section-title" style="margin:0"></h2>
+          </div>
+          <button onclick="closeModal()" style="background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1.1rem">✕</button>
+        </div>
+
+        <!-- Статистика по герою -->
+        <div id="modal-stats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;margin-bottom:1.5rem"></div>
+
+        <!-- Матчи -->
+        <h3 style="font-family:var(--font-head);font-size:1rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.75rem">Последние матчи</h3>
+        <div id="modal-matches" style="display:flex;flex-direction:column;gap:0.5rem">
+          <div style="text-align:center;padding:2rem;color:var(--text-muted)">⏳ Загружаем матчи...</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <hr class="neon-line" id="matches-divider" style="display:none" />
 
+  <!-- Последние матчи -->
   <div id="matches-section" style="display:none">
     <h2 class="section-title">🎮 Последние матчи</h2>
     <div class="matches-list" id="matches-list"></div>
@@ -48,183 +97,332 @@
 </div>
 
 <style>
-.profile-hero{display:flex;align-items:center;gap:1.5rem;padding:2rem 0;margin-bottom:2rem}
-.profile-avatar{width:96px;height:96px;border-radius:12px;border:3px solid var(--accent);box-shadow:0 0 20px rgba(0,0,0,0.4);object-fit:cover}
-.profile-name{font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--text-bright);letter-spacing:2px}
-.profile-steam-link{font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
-.profile-steam-link:hover{color:var(--accent)}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin-bottom:2rem}
-.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;text-align:center;transition:all 0.25s}
-.stat-card:hover{border-color:var(--accent);box-shadow:var(--shadow-glow)}
-.stat-value{font-family:var(--font-mono);font-size:1.8rem;font-weight:700;color:var(--text-bright);margin-bottom:0.35rem}
-.stat-value.green{color:var(--success)}.stat-value.red{color:var(--danger)}.stat-value.accent{color:var(--accent)}
-.stat-label{font-family:var(--font-head);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted)}
-.section-title{font-family:var(--font-head);font-size:1.3rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-bright);margin-bottom:1.25rem;display:flex;align-items:center;gap:0.75rem}
-.heroes-subtitle{font-size:0.75rem;font-weight:500;letter-spacing:1px;color:var(--text-muted);border:1px solid var(--border);border-radius:99px;padding:0.15rem 0.6rem;text-transform:none}
-.heroes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.85rem;margin-bottom:2rem}
-.hero-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:0.75rem 1rem;display:flex;align-items:center;gap:0.75rem;transition:all 0.2s;overflow:hidden}
-.hero-card:hover{border-color:var(--accent);transform:translateY(-1px)}
-.hero-img-wrap{flex-shrink:0}
-.hero-img{width:64px;height:36px;border-radius:6px;object-fit:cover;display:block;background:var(--bg-surface)}
-.hero-img-placeholder{width:64px;height:36px;border-radius:6px;background:var(--bg-surface);display:flex;align-items:center;justify-content:center;font-size:1.2rem}
-.hero-info{flex:1;min-width:0}
-.hero-name{font-family:var(--font-head);font-size:0.82rem;font-weight:700;color:var(--text-primary);letter-spacing:0.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hero-games{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);margin-top:2px}
-.hero-wr{font-family:var(--font-mono);font-size:0.72rem;font-weight:700;margin-top:3px}
-.hero-wr.good{color:var(--success)}.hero-wr.bad{color:var(--danger)}.hero-wr.mid{color:var(--warning)}
-.matches-list{display:flex;flex-direction:column;gap:0.6rem}
-.match-row{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:0.85rem 1.25rem;display:grid;grid-template-columns:auto auto 1fr auto auto auto;align-items:center;gap:0.85rem;transition:all 0.2s;cursor:pointer}
-.match-row:hover{border-color:var(--accent)}
-.match-result{font-family:var(--font-head);font-weight:800;font-size:0.8rem;letter-spacing:1px;padding:0.2rem 0.7rem;border-radius:99px;white-space:nowrap}
-.match-result.win{background:rgba(16,185,129,0.15);color:var(--success);border:1px solid rgba(16,185,129,0.3)}
-.match-result.loss{background:rgba(239,68,68,0.15);color:var(--danger);border:1px solid rgba(239,68,68,0.3)}
-.match-hero-wrap{display:flex;align-items:center;gap:0.5rem}
-.match-hero-img{width:36px;height:20px;border-radius:4px;object-fit:cover;flex-shrink:0}
-.match-hero{font-family:var(--font-head);font-weight:600;font-size:0.85rem;color:var(--text-primary)}
-.match-kda{font-family:var(--font-mono);font-size:0.82rem;color:var(--text-muted);white-space:nowrap}
-.match-kda span{color:var(--text-primary);font-weight:700}
-.match-gpm{font-family:var(--font-mono);font-size:0.78rem;color:var(--warning);white-space:nowrap}
-.match-duration{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);white-space:nowrap}
-.match-items{display:flex;align-items:center;gap:3px;flex-wrap:wrap}
-.item-icon{width:28px;height:20px;border-radius:3px;object-fit:cover;border:1px solid rgba(255,255,255,0.08);background:var(--bg-surface)}
-.item-icon-empty{width:28px;height:20px;border-radius:3px;background:var(--bg-surface);border:1px solid var(--border);opacity:0.3}
-.match-items-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-right:2px;white-space:nowrap}
+.profile-hero {
+  display: flex; align-items: center; gap: 1.5rem;
+  padding: 2rem 0; margin-bottom: 2rem;
+}
+.profile-avatar {
+  width: 96px; height: 96px; border-radius: 12px;
+  border: 3px solid var(--accent); box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  object-fit: cover;
+}
+.profile-name {
+  font-family: var(--font-head); font-size: 2rem;
+  font-weight: 800; color: var(--text-bright); letter-spacing: 2px;
+}
+.profile-steam-link {
+  font-family: var(--font-mono); font-size: 0.8rem;
+  color: var(--text-muted); text-decoration: none; transition: color 0.2s;
+}
+.profile-steam-link:hover { color: var(--accent); }
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem; margin-bottom: 2rem;
+}
+.stat-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.25rem; text-align: center;
+  transition: all 0.25s;
+}
+.stat-card:hover { border-color: var(--accent); box-shadow: var(--shadow-glow); }
+.stat-value {
+  font-family: var(--font-mono); font-size: 1.8rem;
+  font-weight: 700; color: var(--text-bright); margin-bottom: 0.35rem;
+}
+.stat-value.green  { color: var(--success); }
+.stat-value.red    { color: var(--danger); }
+.stat-value.accent { color: var(--accent); }
+.stat-label {
+  font-family: var(--font-head); font-size: 0.75rem;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted);
+}
+.section-title {
+  font-family: var(--font-head); font-size: 1.3rem; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-bright); margin-bottom: 1.25rem;
+}
+.heroes-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.85rem; margin-bottom: 2rem;
+}
+.hero-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  cursor: pointer; transition: all 0.2s;
+}
+.hero-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}
+.hero-card-img {
+  width: 100%; height: 60px; object-fit: cover;
+  background: var(--bg-surface);
+}
+.hero-card-body { padding: 0.6rem 0.75rem; }
+.hero-name {
+  font-family: var(--font-head); font-size: 0.85rem;
+  font-weight: 700; color: var(--text-primary); letter-spacing: 0.5px;
+}
+.hero-games {
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+.hero-wr-bar {
+  height: 3px; background: var(--bg-surface);
+  border-radius: 99px; margin-top: 0.4rem; overflow: hidden;
+}
+.hero-wr-fill { height: 100%; border-radius: 99px; }
+.matches-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.match-row {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 0.85rem 1.25rem;
+  display: flex; align-items: center; gap: 1rem;
+  transition: all 0.2s; flex-wrap: wrap;
+}
+.match-row:hover { border-color: var(--accent); }
+.match-result {
+  font-family: var(--font-head); font-weight: 800; font-size: 0.85rem;
+  letter-spacing: 1px; padding: 0.2rem 0.7rem;
+  border-radius: 99px; flex-shrink: 0;
+}
+.match-result.win  { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
+.match-result.loss { background: rgba(239,68,68,0.15);  color: var(--danger);  border: 1px solid rgba(239,68,68,0.3); }
+.match-hero { font-family: var(--font-head); font-weight: 600; font-size: 0.9rem; color: var(--text-primary); flex: 1; }
+.match-kda  { font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-muted); }
+.match-kda span { color: var(--text-primary); font-weight: 700; }
+.match-gpm  { font-family: var(--font-mono); font-size: 0.78rem; color: var(--warning); }
+.match-duration { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); }
 </style>
 {% endblock %}
 
 {% block extra_js %}
 <script>
 var HEROES = {};
-var ITEMS  = {};
-var CDN = 'https://steamcdn-a.akamaihd.net';
+var currentAccountId = '';
 
-Promise.all([
-  fetch('https://api.opendota.com/api/heroes').then(function(r){return r.json();}).catch(function(){return[];}),
-  fetch('https://api.opendota.com/api/constants/items').then(function(r){return r.json();}).catch(function(){return{};}),
-  fetch('/api/me').then(function(r){return r.json();}).catch(function(){return{logged_in:false};})
-]).then(function(results){
-  var heroes=results[0], items=results[1], user=results[2];
-
-  heroes.forEach(function(h){
-    HEROES[h.id]={name:h.localized_name, img: CDN+h.img};
-  });
-
-  Object.keys(items).forEach(function(key){
-    var item=items[key];
-    if(!item) return;
-    var entry={name:item.dname||key, img:item.img?CDN+item.img:null};
-    if(item.id!==undefined) ITEMS[item.id]=entry;
-    ITEMS[key]=entry;
-  });
-
-  if(!user.logged_in){window.location.href='/';return;}
-
-  document.getElementById('p-avatar').src=user.avatar;
-  document.getElementById('p-nickname').textContent=user.nickname;
-  document.getElementById('p-steam-link').href='https://steamcommunity.com/profiles/'+user.steam_id;
-
-  var accountId=(BigInt(user.steam_id)-BigInt('76561197960265728')).toString();
-  loadDotaStats(accountId);
-  loadTopHeroes(accountId);
-  loadRecentMatches(accountId);
-});
-
-function loadDotaStats(accountId){
-  fetch('https://api.opendota.com/api/players/'+accountId)
-    .then(function(r){return r.json();})
-    .then(function(data){
-      document.getElementById('loading-stats').style.display='none';
-      if(data.profile&&data.profile.fh_unavailable){document.getElementById('private-profile').style.display='block';return;}
-      fetch('https://api.opendota.com/api/players/'+accountId+'/wl').then(function(r){return r.json();}).then(function(wl){
-        var wins=wl.win||0,losses=wl.lose||0,total=wins+losses,wr=total>0?Math.round(wins/total*100):0;
-        document.getElementById('s-matches').textContent=total;
-        document.getElementById('s-wins').textContent=wins;
-        document.getElementById('s-losses').textContent=losses;
-        document.getElementById('s-winrate').textContent=wr+'%';
-        document.getElementById('dota-stats').style.display='grid';
-      });
-      fetch('https://api.opendota.com/api/players/'+accountId+'/totals').then(function(r){return r.json();}).then(function(totals){
-        var kills=0,deaths=0,assists=0,gpm=0,gcount=0;
-        totals.forEach(function(t){
-          if(t.field==='kills')kills=t.sum;
-          if(t.field==='deaths')deaths=t.sum;
-          if(t.field==='assists')assists=t.sum;
-          if(t.field==='gold_per_min'){gpm=t.sum;gcount=t.n;}
-        });
-        var n=gcount||1;
-        document.getElementById('s-kda').textContent=deaths>0?((kills+assists)/deaths).toFixed(2):(kills+assists).toFixed(2);
-        document.getElementById('s-gpm').textContent=Math.round(gpm/n);
-      });
-    }).catch(function(){
-      document.getElementById('loading-stats').style.display='none';
-      document.getElementById('private-profile').style.display='block';
+// Загружаем список героев
+fetch('https://api.opendota.com/api/heroes')
+  .then(function(r){ return r.json(); })
+  .then(function(heroes){
+    heroes.forEach(function(h){
+      var shortName = h.name.replace('npc_dota_hero_', '');
+      HEROES[h.id] = {
+        name: h.localized_name,
+        img:  'https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/heroes/icons/' + shortName + '.png',
+        img_vert: 'https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/heroes/' + shortName + '.png'
+      };
     });
+  }).catch(function(){});
+
+// Получаем данные текущего пользователя
+fetch('/api/me')
+  .then(function(r){ return r.json(); })
+  .then(function(user){
+    if (!user.logged_in) { window.location.href = '/'; return; }
+
+    document.getElementById('p-avatar').src = user.avatar;
+    document.getElementById('p-nickname').textContent = user.nickname;
+    document.getElementById('p-steam-link').href = 'https://steamcommunity.com/profiles/' + user.steam_id;
+
+    // Конвертируем Steam64 в accountId для OpenDota
+    var big = BigInt(user.steam_id) - BigInt('76561197960265728');
+    currentAccountId = big.toString();
+
+    loadDotaStats(currentAccountId);
+    loadTopHeroes(currentAccountId);
+    loadRecentMatches(currentAccountId);
+  }).catch(function(){});
+
+
+function loadDotaStats(accountId) {
+  Promise.all([
+    fetch('https://api.opendota.com/api/players/' + accountId + '/wl').then(function(r){ return r.json(); }),
+    fetch('https://api.opendota.com/api/players/' + accountId + '/totals').then(function(r){ return r.json(); })
+  ]).then(function(results){
+    document.getElementById('loading-stats').style.display = 'none';
+
+    var wl     = results[0];
+    var totals = results[1];
+
+    var wins   = wl.win  || 0;
+    var losses = wl.lose || 0;
+    var total  = wins + losses;
+    var wr     = total > 0 ? Math.round(wins / total * 100) : 0;
+
+    document.getElementById('s-matches').textContent = total;
+    document.getElementById('s-wins').textContent    = wins;
+    document.getElementById('s-losses').textContent  = losses;
+    document.getElementById('s-winrate').textContent = wr + '%';
+    document.getElementById('dota-stats').style.display = 'grid';
+
+    // К/Д/А и GPM из totals
+    var kills = 0, deaths = 0, assists = 0, gpmSum = 0, gpmN = 1;
+    if (Array.isArray(totals)) {
+      totals.forEach(function(t){
+        if (t.field === 'kills')        kills   = t.sum;
+        if (t.field === 'deaths')       deaths  = t.sum;
+        if (t.field === 'assists')      assists = t.sum;
+        if (t.field === 'gold_per_min'){ gpmSum = t.sum; gpmN = t.n || 1; }
+      });
+    }
+    var kda = deaths > 0 ? ((kills + assists) / deaths).toFixed(2) : (kills + assists).toFixed(2);
+    document.getElementById('s-kda').textContent = kda;
+    document.getElementById('s-gpm').textContent = Math.round(gpmSum / gpmN);
+  }).catch(function(){
+    document.getElementById('loading-stats').style.display = 'none';
+    document.getElementById('private-profile').style.display = 'block';
+  });
 }
 
-function loadTopHeroes(accountId){
-  fetch('https://api.opendota.com/api/players/'+accountId+'/heroes')
-    .then(function(r){return r.json();})
+
+function loadTopHeroes(accountId) {
+  fetch('https://api.opendota.com/api/players/' + accountId + '/heroes?limit=12')
+    .then(function(r){ return r.json(); })
     .then(function(heroes){
-      var filtered=heroes.filter(function(h){return h.games>=20;}).sort(function(a,b){return b.games-a.games;});
-      document.getElementById('heroes-section').style.display='block';
-      if(filtered.length===0){document.getElementById('heroes-empty').style.display='block';return;}
-      var grid=document.getElementById('heroes-grid');
+      if (!heroes || heroes.length === 0) return;
+      // Фильтруем только тех у кого больше 5 игр
+      var filtered = heroes.filter(function(h){ return h.games >= 5; }).slice(0, 12);
+      if (filtered.length === 0) filtered = heroes.slice(0, 12);
+
+      var grid = document.getElementById('heroes-grid');
+      grid.innerHTML = '';
+
       filtered.forEach(function(h){
-        var hero=HEROES[h.hero_id]||{name:'Герой #'+h.hero_id,img:''};
-        var wr=h.games>0?Math.round(h.win/h.games*100):0;
-        var wrClass=wr>=55?'good':(wr<=45?'bad':'mid');
-        var card=document.createElement('div');card.className='hero-card';
-        var imgHtml=hero.img?'<img class="hero-img" src="'+hero.img+'" alt="'+hero.name+'" onerror="this.parentNode.innerHTML=\'<div class=hero-img-placeholder>⚔️</div>\'" />':'<div class="hero-img-placeholder">⚔️</div>';
-        card.innerHTML='<div class="hero-img-wrap">'+imgHtml+'</div><div class="hero-info"><div class="hero-name">'+hero.name+'</div><div class="hero-games">'+h.games+' игр</div><div class="hero-wr '+wrClass+'">'+wr+'% побед</div></div>';
+        var hero = HEROES[h.hero_id] || { name: 'Герой #' + h.hero_id, img: '', img_vert: '' };
+        var wr   = h.games > 0 ? Math.round(h.win / h.games * 100) : 0;
+        var wrColor = wr >= 55 ? '#10b981' : wr >= 45 ? '#f59e0b' : '#ef4444';
+
+        var card = document.createElement('div');
+        card.className = 'hero-card';
+        card.onclick = function(){ openHeroModal(h.hero_id, hero, accountId); };
+        card.innerHTML =
+          '<img class="hero-card-img" src="' + hero.img_vert + '" ' +
+               'onerror="this.src=\'' + hero.img + '\';this.style.height=\'40px\'" />' +
+          '<div class="hero-card-body">' +
+            '<div class="hero-name">' + hero.name + '</div>' +
+            '<div class="hero-games">' + h.games + ' игр · <span style="color:' + wrColor + '">' + wr + '% побед</span></div>' +
+            '<div class="hero-wr-bar"><div class="hero-wr-fill" style="width:' + wr + '%;background:' + wrColor + '"></div></div>' +
+          '</div>';
         grid.appendChild(card);
       });
+      document.getElementById('heroes-section').style.display = 'block';
     }).catch(function(){});
 }
 
-function renderMatchRow(m,list){
-  var won=(m.player_slot<128&&m.radiant_win)||(m.player_slot>=128&&!m.radiant_win);
-  var hero=HEROES[m.hero_id]||{name:'Герой #'+m.hero_id,img:''};
-  var mins=Math.floor(m.duration/60),secs=m.duration%60;
-  var itemSlots=[m.item_0,m.item_1,m.item_2,m.item_3,m.item_4,m.item_5];
-  var itemsHtml='<span class="match-items-label">🛒</span>';
-  itemSlots.forEach(function(itemId){
-    if(itemId&&itemId>0&&ITEMS[itemId]&&ITEMS[itemId].img){
-      itemsHtml+='<img class="item-icon" src="'+ITEMS[itemId].img+'" title="'+(ITEMS[itemId].name||'')+'" onerror="this.className=\'item-icon-empty\';this.removeAttribute(\'src\')" />';
-    } else {
-      itemsHtml+='<div class="item-icon-empty"></div>';
-    }
-  });
-  var heroImgHtml=hero.img?'<img class="match-hero-img" src="'+hero.img+'" onerror="this.style.display=\'none\'" />':'';
-  var row=document.createElement('div');row.className='match-row';
-  row.style.cursor='pointer';
-  row.onclick=function(){window.open('https://www.opendota.com/matches/'+m.match_id,'_blank');};
-  row.innerHTML=
-    '<span class="match-result '+(won?'win':'loss')+'">'+(won?'Победа':'Поражение')+'</span>'+
-    '<div class="match-hero-wrap">'+heroImgHtml+'<span class="match-hero">'+hero.name+'</span></div>'+
-    '<span class="match-kda"><span>'+m.kills+'</span>/<span style="color:var(--danger)">'+m.deaths+'</span>/<span>'+m.assists+'</span></span>'+
-    '<span class="match-gpm">💰 '+(m.gold_per_min||m.gpm||'—')+'</span>'+
-    '<span class="match-duration">⏱ '+mins+':'+(secs<10?'0':'')+secs+'</span>'+
-    '<div class="match-items">'+itemsHtml+'</div>';
-  list.appendChild(row);
+
+function openHeroModal(heroId, hero, accountId) {
+  var modal = document.getElementById('hero-modal');
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+
+  document.getElementById('modal-hero-img').src  = hero.img_vert || hero.img;
+  document.getElementById('modal-hero-name').textContent = hero.name;
+  document.getElementById('modal-matches').innerHTML =
+    '<div style="text-align:center;padding:2rem;color:var(--text-muted)">⏳ Загружаем матчи...</div>';
+  document.getElementById('modal-stats').innerHTML = '';
+
+  // Загружаем матчи по герою
+  fetch('https://api.opendota.com/api/players/' + accountId + '/matches?hero_id=' + heroId + '&limit=20')
+    .then(function(r){ return r.json(); })
+    .then(function(matches){
+      if (!matches || matches.length === 0) {
+        document.getElementById('modal-matches').innerHTML =
+          '<div style="text-align:center;padding:2rem;color:var(--text-muted)">Матчей не найдено</div>';
+        return;
+      }
+
+      // Считаем суммарную статистику
+      var totalK = 0, totalD = 0, totalA = 0, totalGPM = 0, wins = 0;
+      matches.forEach(function(m){
+        totalK += m.kills; totalD += m.deaths; totalA += m.assists;
+        totalGPM += m.gold_per_min;
+        var won = (m.player_slot < 128 && m.radiant_win) || (m.player_slot >= 128 && !m.radiant_win);
+        if (won) wins++;
+      });
+      var n  = matches.length;
+      var wr = Math.round(wins / n * 100);
+      var kda = totalD > 0 ? ((totalK + totalA) / totalD).toFixed(2) : (totalK + totalA).toFixed(2);
+
+      // Статистика в модалке
+      var statsEl = document.getElementById('modal-stats');
+      [
+        ['Матчей', n],
+        ['Винрейт', wr + '%'],
+        ['К/Д/А', kda],
+        ['Ср. GPM', Math.round(totalGPM / n)],
+      ].forEach(function(s){
+        var box = document.createElement('div');
+        box.className = 'stat-card';
+        box.style.padding = '0.75rem';
+        box.innerHTML = '<div class="stat-value" style="font-size:1.3rem">' + s[1] + '</div><div class="stat-label">' + s[0] + '</div>';
+        statsEl.appendChild(box);
+      });
+
+      // Список матчей
+      var list = document.getElementById('modal-matches');
+      list.innerHTML = '';
+      matches.forEach(function(m){
+        var won  = (m.player_slot < 128 && m.radiant_win) || (m.player_slot >= 128 && !m.radiant_win);
+        var mins = Math.floor(m.duration / 60);
+        var secs = m.duration % 60;
+        var row  = document.createElement('div');
+        row.className = 'match-row';
+        row.innerHTML =
+          '<span class="match-result ' + (won ? 'win' : 'loss') + '">' + (won ? 'Победа' : 'Поражение') + '</span>' +
+          '<span class="match-kda">' +
+            '<span>' + m.kills + '</span>/' +
+            '<span style="color:var(--danger)">' + m.deaths + '</span>/' +
+            '<span>' + m.assists + '</span>' +
+          '</span>' +
+          '<span class="match-gpm">💰 ' + m.gold_per_min + ' GPM</span>' +
+          '<span class="match-duration">⏱ ' + mins + ':' + (secs < 10 ? '0' : '') + secs + '</span>';
+        list.appendChild(row);
+      });
+    }).catch(function(){
+      document.getElementById('modal-matches').innerHTML =
+        '<div style="text-align:center;padding:2rem;color:var(--danger)">Ошибка загрузки</div>';
+    });
 }
 
-function loadRecentMatches(accountId){
-  fetch('https://api.opendota.com/api/players/'+accountId+'/matches?limit=10&significant=0')
-    .then(function(r){return r.json();})
+function closeModal() {
+  document.getElementById('hero-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// Закрываем по клику вне модалки
+document.getElementById('hero-modal').addEventListener('click', function(e){
+  if (e.target === this) closeModal();
+});
+
+
+function loadRecentMatches(accountId) {
+  fetch('https://api.opendota.com/api/players/' + accountId + '/recentMatches')
+    .then(function(r){ return r.json(); })
     .then(function(matches){
-      if(!matches||matches.length===0) return;
-      var list=document.getElementById('matches-list');
-      var rendered=0;
-      matches.slice(0,10).forEach(function(m){
-        fetch('https://api.opendota.com/api/matches/'+m.match_id)
-          .then(function(r){return r.json();})
-          .then(function(detail){
-            var player=(detail.players||[]).find(function(p){return p.account_id===parseInt(accountId);});
-            if(player){m.item_0=player.item_0;m.item_1=player.item_1;m.item_2=player.item_2;m.item_3=player.item_3;m.item_4=player.item_4;m.item_5=player.item_5;m.gold_per_min=player.gold_per_min;}
-            renderMatchRow(m,list);rendered++;
-            if(rendered===1){document.getElementById('matches-section').style.display='block';document.getElementById('matches-divider').style.display='block';}
-          }).catch(function(){renderMatchRow(m,list);rendered++;if(rendered===1){document.getElementById('matches-section').style.display='block';document.getElementById('matches-divider').style.display='block';}});
+      if (!matches || matches.length === 0) return;
+      var list = document.getElementById('matches-list');
+      matches.slice(0, 10).forEach(function(m){
+        var won  = (m.player_slot < 128 && m.radiant_win) || (m.player_slot >= 128 && !m.radiant_win);
+        var hero = HEROES[m.hero_id] || { name: 'Герой #' + m.hero_id };
+        var mins = Math.floor(m.duration / 60);
+        var secs = m.duration % 60;
+        var row  = document.createElement('div');
+        row.className = 'match-row';
+        row.innerHTML =
+          '<span class="match-result ' + (won ? 'win' : 'loss') + '">' + (won ? 'Победа' : 'Поражение') + '</span>' +
+          '<span class="match-hero">' + hero.name + '</span>' +
+          '<span class="match-kda">' +
+            '<span>' + m.kills + '</span>/' +
+            '<span style="color:var(--danger)">' + m.deaths + '</span>/' +
+            '<span>' + m.assists + '</span>' +
+          '</span>' +
+          '<span class="match-gpm">💰 ' + m.gold_per_min + ' GPM</span>' +
+          '<span class="match-duration">⏱ ' + mins + ':' + (secs < 10 ? '0' : '') + secs + '</span>';
+        list.appendChild(row);
       });
+      document.getElementById('matches-section').style.display = 'block';
+      document.getElementById('matches-divider').style.display = 'block';
     }).catch(function(){});
 }
 </script>
