@@ -1,0 +1,397 @@
+{% extends "base.html" %}
+{% block title %}Профиль — DotaClutch{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Профиль игрока -->
+  <div class="profile-hero">
+    <img id="p-avatar" src="" alt="avatar" class="profile-avatar" />
+    <div class="profile-info">
+      <h1 id="p-nickname" class="profile-name">Загрузка...</h1>
+      <a id="p-steam-link" href="#" target="_blank" class="profile-steam-link">
+        Открыть в Steam ↗
+      </a>
+    </div>
+  </div>
+
+  <!-- Статистика Dota 2 -->
+  <div class="stats-grid" id="dota-stats" style="display:none">
+    <div class="stat-card">
+      <div class="stat-value" id="s-matches">—</div>
+      <div class="stat-label">⚔️ Матчей</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value green" id="s-wins">—</div>
+      <div class="stat-label">🏆 Побед</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value red" id="s-losses">—</div>
+      <div class="stat-label">💀 Поражений</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value accent" id="s-winrate">—</div>
+      <div class="stat-label">📊 Винрейт</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="s-kda">—</div>
+      <div class="stat-label">⚡ К/Д/А</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="s-gpm">—</div>
+      <div class="stat-label">💰 Ср. закуп/мин</div>
+    </div>
+  </div>
+
+  <!-- Загрузка -->
+  <div id="loading-stats" style="text-align:center;padding:3rem;color:var(--text-muted)">
+    <div style="font-size:2rem;margin-bottom:1rem">⚔️</div>
+    <p>Загружаем статистику Dota 2...</p>
+  </div>
+
+  <!-- Ошибка приватного профиля -->
+  <div id="private-profile" style="display:none" class="alert alert-info">
+    🔒 Статистика недоступна — профиль закрыт в настройках Steam
+  </div>
+
+  <hr class="neon-line" />
+
+  <!-- Топ героев -->
+  <div id="heroes-section" style="display:none">
+    <h2 class="section-title">🦸 Топ героев</h2>
+    <div class="heroes-grid" id="heroes-grid"></div>
+  </div>
+
+  <hr class="neon-line" id="matches-divider" style="display:none" />
+
+  <!-- Последние матчи -->
+  <div id="matches-section" style="display:none">
+    <h2 class="section-title">🎮 Последние матчи</h2>
+    <div class="matches-list" id="matches-list"></div>
+  </div>
+
+</div>
+
+<style>
+.profile-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+}
+.profile-avatar {
+  width: 96px; height: 96px;
+  border-radius: 12px;
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  object-fit: cover;
+}
+.profile-name {
+  font-family: var(--font-head);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-bright);
+  letter-spacing: 2px;
+}
+.profile-steam-link {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.profile-steam-link:hover { color: var(--accent); }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  text-align: center;
+  transition: all 0.25s;
+}
+.stat-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-glow);
+}
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 0.35rem;
+}
+.stat-value.green  { color: var(--success); }
+.stat-value.red    { color: var(--danger); }
+.stat-value.accent { color: var(--accent); }
+.stat-label {
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.section-title {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-bright);
+  margin-bottom: 1.25rem;
+}
+
+.heroes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 2rem;
+}
+.hero-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.2s;
+}
+.hero-card:hover { border-color: var(--accent); }
+.hero-img {
+  width: 48px; height: 27px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.hero-name {
+  font-family: var(--font-head);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+.hero-games {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.matches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.match-row {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.2s;
+  flex-wrap: wrap;
+}
+.match-row:hover { border-color: var(--accent); }
+.match-result {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  padding: 0.2rem 0.7rem;
+  border-radius: 99px;
+  flex-shrink: 0;
+}
+.match-result.win  { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
+.match-result.loss { background: rgba(239,68,68,0.15);  color: var(--danger);  border: 1px solid rgba(239,68,68,0.3); }
+.match-hero {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  flex: 1;
+}
+.match-kda {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.match-kda span { color: var(--text-primary); font-weight: 700; }
+.match-gpm {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--warning);
+}
+.match-duration {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Словарь героев Dota 2 (id -> имя)
+var HEROES = {};
+
+// Загружаем список героев из OpenDota
+fetch('https://api.opendota.com/api/heroes')
+  .then(function(r){ return r.json(); })
+  .then(function(heroes){
+    heroes.forEach(function(h){
+      HEROES[h.id] = {
+        name: h.localized_name,
+        img: 'https://cdn.cloudflare.steamstatic.com' + h.img
+      };
+    });
+  }).catch(function(){});
+
+// Получаем данные текущего пользователя
+fetch('/api/me')
+  .then(function(r){ return r.json(); })
+  .then(function(user){
+    if (!user.logged_in) {
+      window.location.href = '/';
+      return;
+    }
+
+    // Заполняем профиль
+    document.getElementById('p-avatar').src = user.avatar;
+    document.getElementById('p-nickname').textContent = user.nickname;
+    document.getElementById('p-steam-link').href =
+      'https://steamcommunity.com/profiles/' + user.steam_id;
+
+    var steamId = user.steam_id;
+    // Конвертируем Steam64 ID в accountId для OpenDota
+    var accountId = (BigInt(steamId) - BigInt('76561197960265728')).toString();
+
+    loadDotaStats(accountId);
+    loadRecentMatches(accountId);
+    loadTopHeroes(accountId);
+  }).catch(function(){});
+
+
+function loadDotaStats(accountId) {
+  fetch('https://api.opendota.com/api/players/' + accountId)
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      document.getElementById('loading-stats').style.display = 'none';
+
+      if (data.profile && data.profile.fh_unavailable) {
+        document.getElementById('private-profile').style.display = 'block';
+        return;
+      }
+
+      // Загружаем wl (wins/losses)
+      fetch('https://api.opendota.com/api/players/' + accountId + '/wl')
+        .then(function(r){ return r.json(); })
+        .then(function(wl){
+          var wins   = wl.win   || 0;
+          var losses = wl.lose  || 0;
+          var total  = wins + losses;
+          var wr = total > 0 ? Math.round(wins / total * 100) : 0;
+
+          document.getElementById('s-matches').textContent = total;
+          document.getElementById('s-wins').textContent    = wins;
+          document.getElementById('s-losses').textContent  = losses;
+          document.getElementById('s-winrate').textContent = wr + '%';
+          document.getElementById('dota-stats').style.display = 'grid';
+        });
+
+      // Загружаем totals (KDA, GPM)
+      fetch('https://api.opendota.com/api/players/' + accountId + '/totals')
+        .then(function(r){ return r.json(); })
+        .then(function(totals){
+          var kills = 0, deaths = 0, assists = 0, gpm = 0, gcount = 0;
+          totals.forEach(function(t){
+            if (t.field === 'kills')   { kills   = t.sum; }
+            if (t.field === 'deaths')  { deaths  = t.sum; }
+            if (t.field === 'assists') { assists  = t.sum; }
+            if (t.field === 'gold_per_min') { gpm = t.sum; gcount = t.n; }
+          });
+          var n = gcount || 1;
+          var kda = deaths > 0
+            ? ((kills + assists) / deaths).toFixed(2)
+            : (kills + assists).toFixed(2);
+          document.getElementById('s-kda').textContent = kda;
+          document.getElementById('s-gpm').textContent = Math.round(gpm / n);
+        });
+    })
+    .catch(function(){
+      document.getElementById('loading-stats').style.display = 'none';
+      document.getElementById('private-profile').style.display = 'block';
+    });
+}
+
+
+function loadTopHeroes(accountId) {
+  fetch('https://api.opendota.com/api/players/' + accountId + '/heroes?limit=6')
+    .then(function(r){ return r.json(); })
+    .then(function(heroes){
+      if (!heroes || heroes.length === 0) return;
+      var grid = document.getElementById('heroes-grid');
+      heroes.forEach(function(h){
+        var hero = HEROES[h.hero_id] || { name: 'Герой #' + h.hero_id, img: '' };
+        var wr = h.games > 0 ? Math.round(h.win / h.games * 100) : 0;
+        var card = document.createElement('div');
+        card.className = 'hero-card';
+        card.innerHTML =
+          '<img class="hero-img" src="' + hero.img + '" onerror="this.style.display=\'none\'" />' +
+          '<div>' +
+            '<div class="hero-name">' + hero.name + '</div>' +
+            '<div class="hero-games">' + h.games + ' игр · ' + wr + '% побед</div>' +
+          '</div>';
+        grid.appendChild(card);
+      });
+      document.getElementById('heroes-section').style.display = 'block';
+    }).catch(function(){});
+}
+
+
+function loadRecentMatches(accountId) {
+  fetch('https://api.opendota.com/api/players/' + accountId + '/recentMatches')
+    .then(function(r){ return r.json(); })
+    .then(function(matches){
+      if (!matches || matches.length === 0) return;
+      var list = document.getElementById('matches-list');
+
+      matches.slice(0, 10).forEach(function(m){
+        var won = (m.player_slot < 128 && m.radiant_win) ||
+                  (m.player_slot >= 128 && !m.radiant_win);
+        var hero = HEROES[m.hero_id] || { name: 'Герой #' + m.hero_id };
+        var mins = Math.floor(m.duration / 60);
+        var secs = m.duration % 60;
+
+        var row = document.createElement('div');
+        row.className = 'match-row';
+        row.innerHTML =
+          '<span class="match-result ' + (won ? 'win' : 'loss') + '">' +
+            (won ? 'Победа' : 'Поражение') +
+          '</span>' +
+          '<span class="match-hero">' + hero.name + '</span>' +
+          '<span class="match-kda">' +
+            '<span>' + m.kills + '</span>/' +
+            '<span style="color:var(--danger)">' + m.deaths + '</span>/' +
+            '<span>' + m.assists + '</span>' +
+          '</span>' +
+          '<span class="match-gpm">💰 ' + m.gold_per_min + ' GPM</span>' +
+          '<span class="match-duration">⏱ ' + mins + ':' + (secs<10?'0':'') + secs + '</span>';
+        list.appendChild(row);
+      });
+
+      document.getElementById('matches-section').style.display = 'block';
+      document.getElementById('matches-divider').style.display = 'block';
+    }).catch(function(){});
+}
+</script>
+{% endblock %}

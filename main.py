@@ -547,3 +547,15 @@ async def get_me(request: Request):
         "nickname":  request.cookies.get("steam_nickname"),
         "avatar":    request.cookies.get("steam_avatar"),
     }
+
+
+@app.get("/profile", response_class=HTMLResponse)
+async def profile_page(request: Request):
+    """Страница профиля игрока со статистикой Dota 2"""
+    steam_id = request.cookies.get("steam_id")
+    if not steam_id:
+        return RedirectResponse("/")
+    return templates.TemplateResponse("profile.html", {
+        "request": request,
+        "online": count_online(),
+    })
