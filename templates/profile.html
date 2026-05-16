@@ -8,9 +8,7 @@
     <img id="p-avatar" src="" alt="avatar" class="profile-avatar" />
     <div class="profile-info">
       <h1 id="p-nickname" class="profile-name">Загрузка...</h1>
-      <a id="p-steam-link" href="#" target="_blank" class="profile-steam-link">
-        Открыть в Steam ↗
-      </a>
+      <a id="p-steam-link" href="#" target="_blank" class="profile-steam-link">Открыть в Steam ↗</a>
     </div>
   </div>
 
@@ -50,47 +48,47 @@
 </div>
 
 <style>
-.profile-hero { display:flex; align-items:center; gap:1.5rem; padding:2rem 0; margin-bottom:2rem; }
-.profile-avatar { width:96px; height:96px; border-radius:12px; border:3px solid var(--accent); box-shadow:0 0 20px rgba(0,0,0,0.4); object-fit:cover; }
-.profile-name { font-family:var(--font-head); font-size:2rem; font-weight:800; color:var(--text-bright); letter-spacing:2px; }
-.profile-steam-link { font-family:var(--font-mono); font-size:0.8rem; color:var(--text-muted); text-decoration:none; transition:color 0.2s; }
-.profile-steam-link:hover { color:var(--accent); }
-.stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:1rem; margin-bottom:2rem; }
-.stat-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.25rem; text-align:center; transition:all 0.25s; }
-.stat-card:hover { border-color:var(--accent); box-shadow:var(--shadow-glow); }
-.stat-value { font-family:var(--font-mono); font-size:1.8rem; font-weight:700; color:var(--text-bright); margin-bottom:0.35rem; }
-.stat-value.green { color:var(--success); } .stat-value.red { color:var(--danger); } .stat-value.accent { color:var(--accent); }
-.stat-label { font-family:var(--font-head); font-size:0.75rem; letter-spacing:1px; text-transform:uppercase; color:var(--text-muted); }
-.section-title { font-family:var(--font-head); font-size:1.3rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-bright); margin-bottom:1.25rem; display:flex; align-items:center; gap:0.75rem; }
-.heroes-subtitle { font-size:0.75rem; font-weight:500; letter-spacing:1px; color:var(--text-muted); border:1px solid var(--border); border-radius:99px; padding:0.15rem 0.6rem; text-transform:none; }
-.heroes-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:0.85rem; margin-bottom:2rem; }
-.hero-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:0.75rem 1rem; display:flex; align-items:center; gap:0.75rem; transition:all 0.2s; overflow:hidden; }
-.hero-card:hover { border-color:var(--accent); transform:translateY(-1px); }
-.hero-img-wrap { flex-shrink:0; }
-.hero-img { width:64px; height:36px; border-radius:6px; object-fit:cover; display:block; background:var(--bg-surface); }
-.hero-img-placeholder { width:64px; height:36px; border-radius:6px; background:var(--bg-surface); display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
-.hero-info { flex:1; min-width:0; }
-.hero-name { font-family:var(--font-head); font-size:0.82rem; font-weight:700; color:var(--text-primary); letter-spacing:0.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.hero-games { font-family:var(--font-mono); font-size:0.7rem; color:var(--text-muted); margin-top:2px; }
-.hero-wr { font-family:var(--font-mono); font-size:0.72rem; font-weight:700; margin-top:3px; }
-.hero-wr.good { color:var(--success); } .hero-wr.bad { color:var(--danger); } .hero-wr.mid { color:var(--warning); }
-.matches-list { display:flex; flex-direction:column; gap:0.6rem; }
-.match-row { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:0.85rem 1.25rem; display:grid; grid-template-columns:auto auto 1fr auto auto auto; align-items:center; gap:0.85rem; transition:all 0.2s; }
-.match-row:hover { border-color:var(--accent); }
-.match-result { font-family:var(--font-head); font-weight:800; font-size:0.8rem; letter-spacing:1px; padding:0.2rem 0.7rem; border-radius:99px; white-space:nowrap; }
-.match-result.win { background:rgba(16,185,129,0.15); color:var(--success); border:1px solid rgba(16,185,129,0.3); }
-.match-result.loss { background:rgba(239,68,68,0.15); color:var(--danger); border:1px solid rgba(239,68,68,0.3); }
-.match-hero-wrap { display:flex; align-items:center; gap:0.5rem; }
-.match-hero-img { width:36px; height:20px; border-radius:4px; object-fit:cover; flex-shrink:0; }
-.match-hero { font-family:var(--font-head); font-weight:600; font-size:0.85rem; color:var(--text-primary); }
-.match-kda { font-family:var(--font-mono); font-size:0.82rem; color:var(--text-muted); white-space:nowrap; }
-.match-kda span { color:var(--text-primary); font-weight:700; }
-.match-gpm { font-family:var(--font-mono); font-size:0.78rem; color:var(--warning); white-space:nowrap; }
-.match-duration { font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); white-space:nowrap; }
-.match-items { display:flex; align-items:center; gap:3px; flex-wrap:wrap; }
-.item-icon { width:28px; height:20px; border-radius:3px; object-fit:cover; border:1px solid rgba(255,255,255,0.08); background:var(--bg-surface); }
-.item-icon-empty { width:28px; height:20px; border-radius:3px; background:var(--bg-surface); border:1px solid var(--border); opacity:0.3; }
-.match-items-label { font-family:var(--font-mono); font-size:0.65rem; color:var(--text-muted); margin-right:2px; white-space:nowrap; }
+.profile-hero{display:flex;align-items:center;gap:1.5rem;padding:2rem 0;margin-bottom:2rem}
+.profile-avatar{width:96px;height:96px;border-radius:12px;border:3px solid var(--accent);box-shadow:0 0 20px rgba(0,0,0,0.4);object-fit:cover}
+.profile-name{font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--text-bright);letter-spacing:2px}
+.profile-steam-link{font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+.profile-steam-link:hover{color:var(--accent)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;text-align:center;transition:all 0.25s}
+.stat-card:hover{border-color:var(--accent);box-shadow:var(--shadow-glow)}
+.stat-value{font-family:var(--font-mono);font-size:1.8rem;font-weight:700;color:var(--text-bright);margin-bottom:0.35rem}
+.stat-value.green{color:var(--success)}.stat-value.red{color:var(--danger)}.stat-value.accent{color:var(--accent)}
+.stat-label{font-family:var(--font-head);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted)}
+.section-title{font-family:var(--font-head);font-size:1.3rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-bright);margin-bottom:1.25rem;display:flex;align-items:center;gap:0.75rem}
+.heroes-subtitle{font-size:0.75rem;font-weight:500;letter-spacing:1px;color:var(--text-muted);border:1px solid var(--border);border-radius:99px;padding:0.15rem 0.6rem;text-transform:none}
+.heroes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.85rem;margin-bottom:2rem}
+.hero-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:0.75rem 1rem;display:flex;align-items:center;gap:0.75rem;transition:all 0.2s;overflow:hidden}
+.hero-card:hover{border-color:var(--accent);transform:translateY(-1px)}
+.hero-img-wrap{flex-shrink:0}
+.hero-img{width:64px;height:36px;border-radius:6px;object-fit:cover;display:block;background:var(--bg-surface)}
+.hero-img-placeholder{width:64px;height:36px;border-radius:6px;background:var(--bg-surface);display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.hero-info{flex:1;min-width:0}
+.hero-name{font-family:var(--font-head);font-size:0.82rem;font-weight:700;color:var(--text-primary);letter-spacing:0.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero-games{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);margin-top:2px}
+.hero-wr{font-family:var(--font-mono);font-size:0.72rem;font-weight:700;margin-top:3px}
+.hero-wr.good{color:var(--success)}.hero-wr.bad{color:var(--danger)}.hero-wr.mid{color:var(--warning)}
+.matches-list{display:flex;flex-direction:column;gap:0.6rem}
+.match-row{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:0.85rem 1.25rem;display:grid;grid-template-columns:auto auto 1fr auto auto auto;align-items:center;gap:0.85rem;transition:all 0.2s;cursor:pointer}
+.match-row:hover{border-color:var(--accent)}
+.match-result{font-family:var(--font-head);font-weight:800;font-size:0.8rem;letter-spacing:1px;padding:0.2rem 0.7rem;border-radius:99px;white-space:nowrap}
+.match-result.win{background:rgba(16,185,129,0.15);color:var(--success);border:1px solid rgba(16,185,129,0.3)}
+.match-result.loss{background:rgba(239,68,68,0.15);color:var(--danger);border:1px solid rgba(239,68,68,0.3)}
+.match-hero-wrap{display:flex;align-items:center;gap:0.5rem}
+.match-hero-img{width:36px;height:20px;border-radius:4px;object-fit:cover;flex-shrink:0}
+.match-hero{font-family:var(--font-head);font-weight:600;font-size:0.85rem;color:var(--text-primary)}
+.match-kda{font-family:var(--font-mono);font-size:0.82rem;color:var(--text-muted);white-space:nowrap}
+.match-kda span{color:var(--text-primary);font-weight:700}
+.match-gpm{font-family:var(--font-mono);font-size:0.78rem;color:var(--warning);white-space:nowrap}
+.match-duration{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);white-space:nowrap}
+.match-items{display:flex;align-items:center;gap:3px;flex-wrap:wrap}
+.item-icon{width:28px;height:20px;border-radius:3px;object-fit:cover;border:1px solid rgba(255,255,255,0.08);background:var(--bg-surface)}
+.item-icon-empty{width:28px;height:20px;border-radius:3px;background:var(--bg-surface);border:1px solid var(--border);opacity:0.3}
+.match-items-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-right:2px;white-space:nowrap}
 </style>
 {% endblock %}
 
@@ -98,105 +96,109 @@
 <script>
 var HEROES = {};
 var ITEMS  = {};
+var CDN = 'https://cdn.dota2.com';
 
 Promise.all([
-  fetch('https://api.opendota.com/api/heroes').then(function(r){ return r.json(); }).catch(function(){ return []; }),
-  fetch('https://api.opendota.com/api/constants/items').then(function(r){ return r.json(); }).catch(function(){ return {}; }),
-  fetch('/api/me').then(function(r){ return r.json(); }).catch(function(){ return {logged_in: false}; })
+  fetch('https://api.opendota.com/api/heroes').then(function(r){return r.json();}).catch(function(){return[];}),
+  fetch('https://api.opendota.com/api/constants/items').then(function(r){return r.json();}).catch(function(){return{};}),
+  fetch('/api/me').then(function(r){return r.json();}).catch(function(){return{logged_in:false};})
 ]).then(function(results){
-  var heroes = results[0];
-  var items  = results[1];
-  var user   = results[2];
+  var heroes=results[0], items=results[1], user=results[2];
 
   heroes.forEach(function(h){
-    HEROES[h.id] = { name: h.localized_name, img: 'https://cdn.cloudflare.steamstatic.com' + h.img };
+    HEROES[h.id]={name:h.localized_name, img: CDN+h.img};
   });
 
   Object.keys(items).forEach(function(key){
-    var item = items[key];
-    if (!item) return;
-    var entry = { name: item.dname || key, img: item.img ? 'https://cdn.cloudflare.steamstatic.com' + item.img : null };
-    if (item.id !== undefined) ITEMS[item.id] = entry;
-    ITEMS[key] = entry;
+    var item=items[key];
+    if(!item) return;
+    var entry={name:item.dname||key, img:item.img?CDN+item.img:null};
+    if(item.id!==undefined) ITEMS[item.id]=entry;
+    ITEMS[key]=entry;
   });
 
-  if (!user.logged_in) { window.location.href = '/'; return; }
+  if(!user.logged_in){window.location.href='/';return;}
 
-  document.getElementById('p-avatar').src = user.avatar;
-  document.getElementById('p-nickname').textContent = user.nickname;
-  document.getElementById('p-steam-link').href = 'https://steamcommunity.com/profiles/' + user.steam_id;
+  document.getElementById('p-avatar').src=user.avatar;
+  document.getElementById('p-nickname').textContent=user.nickname;
+  document.getElementById('p-steam-link').href='https://steamcommunity.com/profiles/'+user.steam_id;
 
-  var accountId = (BigInt(user.steam_id) - BigInt('76561197960265728')).toString();
+  var accountId=(BigInt(user.steam_id)-BigInt('76561197960265728')).toString();
   loadDotaStats(accountId);
   loadTopHeroes(accountId);
   loadRecentMatches(accountId);
 });
 
-function loadDotaStats(accountId) {
-  fetch('https://api.opendota.com/api/players/' + accountId)
-    .then(function(r){ return r.json(); })
+function loadDotaStats(accountId){
+  fetch('https://api.opendota.com/api/players/'+accountId)
+    .then(function(r){return r.json();})
     .then(function(data){
-      document.getElementById('loading-stats').style.display = 'none';
-      if (data.profile && data.profile.fh_unavailable) { document.getElementById('private-profile').style.display = 'block'; return; }
-      fetch('https://api.opendota.com/api/players/' + accountId + '/wl').then(function(r){ return r.json(); }).then(function(wl){
-        var wins = wl.win||0, losses = wl.lose||0, total = wins+losses, wr = total>0?Math.round(wins/total*100):0;
-        document.getElementById('s-matches').textContent = total;
-        document.getElementById('s-wins').textContent = wins;
-        document.getElementById('s-losses').textContent = losses;
-        document.getElementById('s-winrate').textContent = wr+'%';
-        document.getElementById('dota-stats').style.display = 'grid';
+      document.getElementById('loading-stats').style.display='none';
+      if(data.profile&&data.profile.fh_unavailable){document.getElementById('private-profile').style.display='block';return;}
+      fetch('https://api.opendota.com/api/players/'+accountId+'/wl').then(function(r){return r.json();}).then(function(wl){
+        var wins=wl.win||0,losses=wl.lose||0,total=wins+losses,wr=total>0?Math.round(wins/total*100):0;
+        document.getElementById('s-matches').textContent=total;
+        document.getElementById('s-wins').textContent=wins;
+        document.getElementById('s-losses').textContent=losses;
+        document.getElementById('s-winrate').textContent=wr+'%';
+        document.getElementById('dota-stats').style.display='grid';
       });
-      fetch('https://api.opendota.com/api/players/' + accountId + '/totals').then(function(r){ return r.json(); }).then(function(totals){
+      fetch('https://api.opendota.com/api/players/'+accountId+'/totals').then(function(r){return r.json();}).then(function(totals){
         var kills=0,deaths=0,assists=0,gpm=0,gcount=0;
         totals.forEach(function(t){
-          if(t.field==='kills') kills=t.sum;
-          if(t.field==='deaths') deaths=t.sum;
-          if(t.field==='assists') assists=t.sum;
+          if(t.field==='kills')kills=t.sum;
+          if(t.field==='deaths')deaths=t.sum;
+          if(t.field==='assists')assists=t.sum;
           if(t.field==='gold_per_min'){gpm=t.sum;gcount=t.n;}
         });
         var n=gcount||1;
-        document.getElementById('s-kda').textContent = deaths>0?((kills+assists)/deaths).toFixed(2):(kills+assists).toFixed(2);
-        document.getElementById('s-gpm').textContent = Math.round(gpm/n);
+        document.getElementById('s-kda').textContent=deaths>0?((kills+assists)/deaths).toFixed(2):(kills+assists).toFixed(2);
+        document.getElementById('s-gpm').textContent=Math.round(gpm/n);
       });
-    }).catch(function(){ document.getElementById('loading-stats').style.display='none'; document.getElementById('private-profile').style.display='block'; });
+    }).catch(function(){
+      document.getElementById('loading-stats').style.display='none';
+      document.getElementById('private-profile').style.display='block';
+    });
 }
 
-function loadTopHeroes(accountId) {
-  fetch('https://api.opendota.com/api/players/' + accountId + '/heroes')
-    .then(function(r){ return r.json(); })
+function loadTopHeroes(accountId){
+  fetch('https://api.opendota.com/api/players/'+accountId+'/heroes')
+    .then(function(r){return r.json();})
     .then(function(heroes){
-      var filtered = heroes.filter(function(h){ return h.games>=20; }).sort(function(a,b){ return b.games-a.games; });
-      document.getElementById('heroes-section').style.display = 'block';
-      if (filtered.length===0) { document.getElementById('heroes-empty').style.display='block'; return; }
-      var grid = document.getElementById('heroes-grid');
+      var filtered=heroes.filter(function(h){return h.games>=20;}).sort(function(a,b){return b.games-a.games;});
+      document.getElementById('heroes-section').style.display='block';
+      if(filtered.length===0){document.getElementById('heroes-empty').style.display='block';return;}
+      var grid=document.getElementById('heroes-grid');
       filtered.forEach(function(h){
-        var hero = HEROES[h.hero_id]||{name:'Герой #'+h.hero_id,img:''};
-        var wr = h.games>0?Math.round(h.win/h.games*100):0;
-        var wrClass = wr>=55?'good':(wr<=45?'bad':'mid');
-        var card = document.createElement('div'); card.className='hero-card';
-        var imgHtml = hero.img ? '<img class="hero-img" src="'+hero.img+'" alt="'+hero.name+'" onerror="this.parentNode.innerHTML=\'<div class=hero-img-placeholder>⚔️</div>\'" />' : '<div class="hero-img-placeholder">⚔️</div>';
-        card.innerHTML = '<div class="hero-img-wrap">'+imgHtml+'</div><div class="hero-info"><div class="hero-name">'+hero.name+'</div><div class="hero-games">'+h.games+' игр</div><div class="hero-wr '+wrClass+'">'+wr+'% побед</div></div>';
+        var hero=HEROES[h.hero_id]||{name:'Герой #'+h.hero_id,img:''};
+        var wr=h.games>0?Math.round(h.win/h.games*100):0;
+        var wrClass=wr>=55?'good':(wr<=45?'bad':'mid');
+        var card=document.createElement('div');card.className='hero-card';
+        var imgHtml=hero.img?'<img class="hero-img" src="'+hero.img+'" alt="'+hero.name+'" onerror="this.parentNode.innerHTML=\'<div class=hero-img-placeholder>⚔️</div>\'" />':'<div class="hero-img-placeholder">⚔️</div>';
+        card.innerHTML='<div class="hero-img-wrap">'+imgHtml+'</div><div class="hero-info"><div class="hero-name">'+hero.name+'</div><div class="hero-games">'+h.games+' игр</div><div class="hero-wr '+wrClass+'">'+wr+'% побед</div></div>';
         grid.appendChild(card);
       });
     }).catch(function(){});
 }
 
-function renderMatchRow(m, list) {
-  var won = (m.player_slot<128&&m.radiant_win)||(m.player_slot>=128&&!m.radiant_win);
-  var hero = HEROES[m.hero_id]||{name:'Герой #'+m.hero_id,img:''};
-  var mins = Math.floor(m.duration/60), secs = m.duration%60;
-  var itemSlots = [m.item_0,m.item_1,m.item_2,m.item_3,m.item_4,m.item_5];
-  var itemsHtml = '<span class="match-items-label">🛒</span>';
+function renderMatchRow(m,list){
+  var won=(m.player_slot<128&&m.radiant_win)||(m.player_slot>=128&&!m.radiant_win);
+  var hero=HEROES[m.hero_id]||{name:'Герой #'+m.hero_id,img:''};
+  var mins=Math.floor(m.duration/60),secs=m.duration%60;
+  var itemSlots=[m.item_0,m.item_1,m.item_2,m.item_3,m.item_4,m.item_5];
+  var itemsHtml='<span class="match-items-label">🛒</span>';
   itemSlots.forEach(function(itemId){
-    if (itemId&&itemId>0&&ITEMS[itemId]&&ITEMS[itemId].img) {
-      itemsHtml += '<img class="item-icon" src="'+ITEMS[itemId].img+'" title="'+(ITEMS[itemId].name||'')+'" onerror="this.className=\'item-icon-empty\';this.removeAttribute(\'src\')" />';
-    } else { itemsHtml += '<div class="item-icon-empty"></div>'; }
+    if(itemId&&itemId>0&&ITEMS[itemId]&&ITEMS[itemId].img){
+      itemsHtml+='<img class="item-icon" src="'+ITEMS[itemId].img+'" title="'+(ITEMS[itemId].name||'')+'" onerror="this.className=\'item-icon-empty\';this.removeAttribute(\'src\')" />';
+    } else {
+      itemsHtml+='<div class="item-icon-empty"></div>';
+    }
   });
-  var heroImgHtml = hero.img ? '<img class="match-hero-img" src="'+hero.img+'" onerror="this.style.display=\'none\'" />' : '';
-  var row = document.createElement('div'); row.className='match-row';
-  row.style.cursor = 'pointer';
-  row.onclick = function(){ window.open('https://www.opendota.com/matches/' + m.match_id, '_blank'); };
-  row.innerHTML =
+  var heroImgHtml=hero.img?'<img class="match-hero-img" src="'+hero.img+'" onerror="this.style.display=\'none\'" />':'';
+  var row=document.createElement('div');row.className='match-row';
+  row.style.cursor='pointer';
+  row.onclick=function(){window.open('https://www.opendota.com/matches/'+m.match_id,'_blank');};
+  row.innerHTML=
     '<span class="match-result '+(won?'win':'loss')+'">'+(won?'Победа':'Поражение')+'</span>'+
     '<div class="match-hero-wrap">'+heroImgHtml+'<span class="match-hero">'+hero.name+'</span></div>'+
     '<span class="match-kda"><span>'+m.kills+'</span>/<span style="color:var(--danger)">'+m.deaths+'</span>/<span>'+m.assists+'</span></span>'+
@@ -206,22 +208,22 @@ function renderMatchRow(m, list) {
   list.appendChild(row);
 }
 
-function loadRecentMatches(accountId) {
-  fetch('https://api.opendota.com/api/players/' + accountId + '/matches?limit=10&significant=0')
-    .then(function(r){ return r.json(); })
+function loadRecentMatches(accountId){
+  fetch('https://api.opendota.com/api/players/'+accountId+'/matches?limit=10&significant=0')
+    .then(function(r){return r.json();})
     .then(function(matches){
-      if (!matches||matches.length===0) return;
-      var list = document.getElementById('matches-list');
-      var rendered = 0;
+      if(!matches||matches.length===0) return;
+      var list=document.getElementById('matches-list');
+      var rendered=0;
       matches.slice(0,10).forEach(function(m){
-        fetch('https://api.opendota.com/api/matches/' + m.match_id)
-          .then(function(r){ return r.json(); })
+        fetch('https://api.opendota.com/api/matches/'+m.match_id)
+          .then(function(r){return r.json();})
           .then(function(detail){
-            var player = (detail.players||[]).find(function(p){ return p.account_id===parseInt(accountId); });
-            if (player) { m.item_0=player.item_0; m.item_1=player.item_1; m.item_2=player.item_2; m.item_3=player.item_3; m.item_4=player.item_4; m.item_5=player.item_5; }
-            renderMatchRow(m, list); rendered++;
-            if (rendered===1) { document.getElementById('matches-section').style.display='block'; document.getElementById('matches-divider').style.display='block'; }
-          }).catch(function(){ renderMatchRow(m,list); rendered++; if(rendered===1){document.getElementById('matches-section').style.display='block';document.getElementById('matches-divider').style.display='block';} });
+            var player=(detail.players||[]).find(function(p){return p.account_id===parseInt(accountId);});
+            if(player){m.item_0=player.item_0;m.item_1=player.item_1;m.item_2=player.item_2;m.item_3=player.item_3;m.item_4=player.item_4;m.item_5=player.item_5;}
+            renderMatchRow(m,list);rendered++;
+            if(rendered===1){document.getElementById('matches-section').style.display='block';document.getElementById('matches-divider').style.display='block';}
+          }).catch(function(){renderMatchRow(m,list);rendered++;if(rendered===1){document.getElementById('matches-section').style.display='block';document.getElementById('matches-divider').style.display='block';}});
       });
     }).catch(function(){});
 }
