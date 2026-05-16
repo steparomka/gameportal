@@ -56,10 +56,13 @@
 
   <hr class="neon-line" />
 
-  <!-- Топ героев -->
+  <!-- Топ героев (только ≥20 игр) -->
   <div id="heroes-section" style="display:none">
-    <h2 class="section-title">🦸 Топ героев</h2>
+    <h2 class="section-title">🦸 Топ героев <span class="heroes-subtitle">≥ 20 игр</span></h2>
     <div class="heroes-grid" id="heroes-grid"></div>
+    <div id="heroes-empty" style="display:none;color:var(--text-muted);font-family:var(--font-mono);font-size:0.85rem;padding:1rem 0">
+      Нет героев с 20+ играми
+    </div>
   </div>
 
   <hr class="neon-line" id="matches-divider" style="display:none" />
@@ -147,11 +150,25 @@
   text-transform: uppercase;
   color: var(--text-bright);
   margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.heroes-subtitle {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 0.15rem 0.6rem;
+  text-transform: none;
 }
 
+/* ── Герои ── */
 .heroes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 0.85rem;
   margin-bottom: 2rem;
 }
@@ -159,32 +176,63 @@
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
 }
-.hero-card:hover { border-color: var(--accent); }
-.hero-img {
-  width: 48px; height: 27px;
-  border-radius: 4px;
-  object-fit: cover;
+.hero-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+.hero-img-wrap {
+  position: relative;
   flex-shrink: 0;
 }
+.hero-img {
+  width: 64px; height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+  display: block;
+  background: var(--bg-surface);
+}
+.hero-img-placeholder {
+  width: 64px; height: 36px;
+  border-radius: 6px;
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+.hero-info { flex: 1; min-width: 0; }
 .hero-name {
   font-family: var(--font-head);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .hero-games {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--text-muted);
+  margin-top: 2px;
 }
+.hero-wr {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-top: 3px;
+}
+.hero-wr.good { color: var(--success); }
+.hero-wr.bad  { color: var(--danger); }
+.hero-wr.mid  { color: var(--warning); }
 
+/* ── Матчи ── */
 .matches-list {
   display: flex;
   flex-direction: column;
@@ -195,56 +243,112 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 0.85rem 1.25rem;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto auto auto;
   align-items: center;
-  gap: 1rem;
+  gap: 0.85rem;
   transition: all 0.2s;
-  flex-wrap: wrap;
 }
 .match-row:hover { border-color: var(--accent); }
+
+/* На мобиле */
+@media (max-width: 640px) {
+  .match-row {
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+  }
+  .match-items { grid-column: 1 / -1; }
+}
+
 .match-result {
   font-family: var(--font-head);
   font-weight: 800;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   letter-spacing: 1px;
   padding: 0.2rem 0.7rem;
   border-radius: 99px;
   flex-shrink: 0;
+  white-space: nowrap;
 }
 .match-result.win  { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
 .match-result.loss { background: rgba(239,68,68,0.15);  color: var(--danger);  border: 1px solid rgba(239,68,68,0.3); }
+
+.match-hero-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.match-hero-img {
+  width: 36px; height: 20px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
 .match-hero {
   font-family: var(--font-head);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-primary);
-  flex: 1;
 }
 .match-kda {
   font-family: var(--font-mono);
   font-size: 0.82rem;
   color: var(--text-muted);
+  white-space: nowrap;
 }
 .match-kda span { color: var(--text-primary); font-weight: 700; }
 .match-gpm {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--warning);
+  white-space: nowrap;
 }
 .match-duration {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Закуп — иконки предметов */
+.match-items {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+.item-icon {
+  width: 28px; height: 20px;
+  border-radius: 3px;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: var(--bg-surface);
+}
+.item-icon-empty {
+  width: 28px; height: 20px;
+  border-radius: 3px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  opacity: 0.3;
+}
+.match-items-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-right: 2px;
+  white-space: nowrap;
 }
 </style>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-// Словарь героев Dota 2 (id -> имя)
+// Словарь героев Dota 2 (id -> имя + img)
 var HEROES = {};
+// Словарь предметов (id -> имя + img)
+var ITEMS = {};
 
-// Загружаем список героев из OpenDota
+// Загружаем героев
 fetch('https://api.opendota.com/api/heroes')
   .then(function(r){ return r.json(); })
   .then(function(heroes){
@@ -256,7 +360,25 @@ fetch('https://api.opendota.com/api/heroes')
     });
   }).catch(function(){});
 
-// Получаем данные текущего пользователя
+// Загружаем предметы
+fetch('https://api.opendota.com/api/constants/items')
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    Object.keys(data).forEach(function(key){
+      var item = data[key];
+      if (item && item.id !== undefined) {
+        ITEMS[item.id] = {
+          name: item.dname || key,
+          img: item.img
+            ? 'https://cdn.cloudflare.steamstatic.com' + item.img
+            : null
+        };
+      }
+    });
+  }).catch(function(){});
+
+
+// Получаем текущего пользователя
 fetch('/api/me')
   .then(function(r){ return r.json(); })
   .then(function(user){
@@ -265,22 +387,20 @@ fetch('/api/me')
       return;
     }
 
-    // Заполняем профиль
     document.getElementById('p-avatar').src = user.avatar;
     document.getElementById('p-nickname').textContent = user.nickname;
     document.getElementById('p-steam-link').href =
       'https://steamcommunity.com/profiles/' + user.steam_id;
 
-    var steamId = user.steam_id;
-    // Конвертируем Steam64 ID в accountId для OpenDota
-    var accountId = (BigInt(steamId) - BigInt('76561197960265728')).toString();
+    var accountId = (BigInt(user.steam_id) - BigInt('76561197960265728')).toString();
 
     loadDotaStats(accountId);
-    loadRecentMatches(accountId);
     loadTopHeroes(accountId);
+    loadRecentMatches(accountId);
   }).catch(function(){});
 
 
+// ── Статистика ──────────────────────────────────────────
 function loadDotaStats(accountId) {
   fetch('https://api.opendota.com/api/players/' + accountId)
     .then(function(r){ return r.json(); })
@@ -292,34 +412,31 @@ function loadDotaStats(accountId) {
         return;
       }
 
-      // Загружаем wl (wins/losses)
       fetch('https://api.opendota.com/api/players/' + accountId + '/wl')
         .then(function(r){ return r.json(); })
         .then(function(wl){
-          var wins   = wl.win   || 0;
-          var losses = wl.lose  || 0;
+          var wins   = wl.win  || 0;
+          var losses = wl.lose || 0;
           var total  = wins + losses;
-          var wr = total > 0 ? Math.round(wins / total * 100) : 0;
-
-          document.getElementById('s-matches').textContent = total;
-          document.getElementById('s-wins').textContent    = wins;
-          document.getElementById('s-losses').textContent  = losses;
-          document.getElementById('s-winrate').textContent = wr + '%';
+          var wr     = total > 0 ? Math.round(wins / total * 100) : 0;
+          document.getElementById('s-matches').textContent  = total;
+          document.getElementById('s-wins').textContent     = wins;
+          document.getElementById('s-losses').textContent   = losses;
+          document.getElementById('s-winrate').textContent  = wr + '%';
           document.getElementById('dota-stats').style.display = 'grid';
         });
 
-      // Загружаем totals (KDA, GPM)
       fetch('https://api.opendota.com/api/players/' + accountId + '/totals')
         .then(function(r){ return r.json(); })
         .then(function(totals){
           var kills = 0, deaths = 0, assists = 0, gpm = 0, gcount = 0;
           totals.forEach(function(t){
-            if (t.field === 'kills')   { kills   = t.sum; }
-            if (t.field === 'deaths')  { deaths  = t.sum; }
-            if (t.field === 'assists') { assists  = t.sum; }
-            if (t.field === 'gold_per_min') { gpm = t.sum; gcount = t.n; }
+            if (t.field === 'kills')         { kills   = t.sum; }
+            if (t.field === 'deaths')        { deaths  = t.sum; }
+            if (t.field === 'assists')       { assists = t.sum; }
+            if (t.field === 'gold_per_min')  { gpm = t.sum; gcount = t.n; }
           });
-          var n = gcount || 1;
+          var n   = gcount || 1;
           var kda = deaths > 0
             ? ((kills + assists) / deaths).toFixed(2)
             : (kills + assists).toFixed(2);
@@ -334,30 +451,52 @@ function loadDotaStats(accountId) {
 }
 
 
+// ── Топ героев (≥ 20 игр) ───────────────────────────────
 function loadTopHeroes(accountId) {
-  fetch('https://api.opendota.com/api/players/' + accountId + '/heroes?limit=6')
+  // Запрашиваем всех героев без лимита, потом фильтруем
+  fetch('https://api.opendota.com/api/players/' + accountId + '/heroes')
     .then(function(r){ return r.json(); })
     .then(function(heroes){
-      if (!heroes || heroes.length === 0) return;
+      // Фильтр: только ≥ 20 игр, сортировка по количеству игр
+      var filtered = heroes
+        .filter(function(h){ return h.games >= 20; })
+        .sort(function(a, b){ return b.games - a.games; });
+
+      document.getElementById('heroes-section').style.display = 'block';
+
+      if (filtered.length === 0) {
+        document.getElementById('heroes-empty').style.display = 'block';
+        return;
+      }
+
       var grid = document.getElementById('heroes-grid');
-      heroes.forEach(function(h){
+
+      filtered.forEach(function(h){
         var hero = HEROES[h.hero_id] || { name: 'Герой #' + h.hero_id, img: '' };
-        var wr = h.games > 0 ? Math.round(h.win / h.games * 100) : 0;
+        var wr   = h.games > 0 ? Math.round(h.win / h.games * 100) : 0;
+        var wrClass = wr >= 55 ? 'good' : (wr <= 45 ? 'bad' : 'mid');
+
         var card = document.createElement('div');
         card.className = 'hero-card';
+
+        var imgHtml = hero.img
+          ? '<img class="hero-img" src="' + hero.img + '" alt="' + hero.name + '" onerror="this.parentNode.innerHTML=\'<div class=hero-img-placeholder>⚔️</div>\'" />'
+          : '<div class="hero-img-placeholder">⚔️</div>';
+
         card.innerHTML =
-          '<img class="hero-img" src="' + hero.img + '" onerror="this.style.display=\'none\'" />' +
-          '<div>' +
+          '<div class="hero-img-wrap">' + imgHtml + '</div>' +
+          '<div class="hero-info">' +
             '<div class="hero-name">' + hero.name + '</div>' +
-            '<div class="hero-games">' + h.games + ' игр · ' + wr + '% побед</div>' +
+            '<div class="hero-games">' + h.games + ' игр</div>' +
+            '<div class="hero-wr ' + wrClass + '">' + wr + '% побед</div>' +
           '</div>';
         grid.appendChild(card);
       });
-      document.getElementById('heroes-section').style.display = 'block';
     }).catch(function(){});
 }
 
 
+// ── Последние матчи ────────────────────────────────────
 function loadRecentMatches(accountId) {
   fetch('https://api.opendota.com/api/players/' + accountId + '/recentMatches')
     .then(function(r){ return r.json(); })
@@ -366,11 +505,33 @@ function loadRecentMatches(accountId) {
       var list = document.getElementById('matches-list');
 
       matches.slice(0, 10).forEach(function(m){
-        var won = (m.player_slot < 128 && m.radiant_win) ||
-                  (m.player_slot >= 128 && !m.radiant_win);
-        var hero = HEROES[m.hero_id] || { name: 'Герой #' + m.hero_id };
+        var won  = (m.player_slot < 128 && m.radiant_win) ||
+                   (m.player_slot >= 128 && !m.radiant_win);
+        var hero = HEROES[m.hero_id] || { name: 'Герой #' + m.hero_id, img: '' };
         var mins = Math.floor(m.duration / 60);
         var secs = m.duration % 60;
+
+        // Слоты предметов: item_0..item_5 + backpack_0..backpack_2
+        var itemSlots = [
+          m.item_0, m.item_1, m.item_2,
+          m.item_3, m.item_4, m.item_5
+        ];
+
+        var itemsHtml = '<span class="match-items-label">🛒</span>';
+        itemSlots.forEach(function(itemId){
+          if (itemId && itemId > 0 && ITEMS[itemId] && ITEMS[itemId].img) {
+            itemsHtml +=
+              '<img class="item-icon" src="' + ITEMS[itemId].img + '"' +
+              ' title="' + (ITEMS[itemId].name || '') + '"' +
+              ' onerror="this.className=\'item-icon-empty\';this.removeAttribute(\'src\')" />';
+          } else {
+            itemsHtml += '<div class="item-icon-empty"></div>';
+          }
+        });
+
+        var heroImgHtml = hero.img
+          ? '<img class="match-hero-img" src="' + hero.img + '" onerror="this.style.display=\'none\'" />'
+          : '';
 
         var row = document.createElement('div');
         row.className = 'match-row';
@@ -378,14 +539,19 @@ function loadRecentMatches(accountId) {
           '<span class="match-result ' + (won ? 'win' : 'loss') + '">' +
             (won ? 'Победа' : 'Поражение') +
           '</span>' +
-          '<span class="match-hero">' + hero.name + '</span>' +
+          '<div class="match-hero-wrap">' +
+            heroImgHtml +
+            '<span class="match-hero">' + hero.name + '</span>' +
+          '</div>' +
           '<span class="match-kda">' +
             '<span>' + m.kills + '</span>/' +
             '<span style="color:var(--danger)">' + m.deaths + '</span>/' +
             '<span>' + m.assists + '</span>' +
           '</span>' +
-          '<span class="match-gpm">💰 ' + m.gold_per_min + ' GPM</span>' +
-          '<span class="match-duration">⏱ ' + mins + ':' + (secs<10?'0':'') + secs + '</span>';
+          '<span class="match-gpm">💰 ' + m.gold_per_min + '</span>' +
+          '<span class="match-duration">⏱ ' + mins + ':' + (secs < 10 ? '0' : '') + secs + '</span>' +
+          '<div class="match-items">' + itemsHtml + '</div>';
+
         list.appendChild(row);
       });
 
