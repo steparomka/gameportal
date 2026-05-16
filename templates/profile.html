@@ -194,6 +194,8 @@ function renderMatchRow(m, list) {
   });
   var heroImgHtml = hero.img ? '<img class="match-hero-img" src="'+hero.img+'" onerror="this.style.display=\'none\'" />' : '';
   var row = document.createElement('div'); row.className='match-row';
+  row.style.cursor = 'pointer';
+  row.onclick = function(){ window.open('https://www.opendota.com/matches/' + m.match_id, '_blank'); };
   row.innerHTML =
     '<span class="match-result '+(won?'win':'loss')+'">'+(won?'Победа':'Поражение')+'</span>'+
     '<div class="match-hero-wrap">'+heroImgHtml+'<span class="match-hero">'+hero.name+'</span></div>'+
