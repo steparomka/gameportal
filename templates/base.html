@@ -136,15 +136,8 @@
       border-color: var(--border);
       background: rgba(255,255,255,0.03);
     }
-    .burger-link .link-icon {
-      font-size: 1.2rem;
-      width: 28px;
-      text-align: center;
-    }
-    .burger-menu-footer {
-      padding: 1rem 1.5rem;
-      border-top: 1px solid var(--border);
-    }
+    .burger-link .link-icon { font-size: 1.2rem; width: 28px; text-align: center; }
+    .burger-menu-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); }
     .steam-btn {
       display: inline-flex;
       align-items: center;
@@ -164,11 +157,7 @@
       transition: all 0.25s;
       white-space: nowrap;
     }
-    .steam-btn:hover {
-      border-color: #66b3ff;
-      color: #fff;
-      box-shadow: 0 0 20px rgba(102,179,255,0.3);
-    }
+    .steam-btn:hover { border-color: #66b3ff; color: #fff; box-shadow: 0 0 20px rgba(102,179,255,0.3); }
     .navbar-avatar {
       width: 32px; height: 32px;
       border-radius: 50%;
@@ -190,24 +179,21 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
-    .tg-btn:hover {
-      background: rgba(41,182,246,0.22);
-      color: #29b6f6;
-      box-shadow: 0 0 12px rgba(41,182,246,0.2);
-    }
+    .tg-btn:hover { background: rgba(41,182,246,0.22); color: #29b6f6; }
   </style>
+  <script>
+    // Применяем тему ДО загрузки страницы — нет мигания!
+    var t = localStorage.getItem('gp-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  </script>
 </head>
 <body>
 
 <nav class="navbar">
   <a href="/" class="navbar-brand">DOTA<span>CLUTCH</span></a>
-
-  <a href="https://t.me/DotaClutch0" target="_blank" class="tg-btn">
-    ✈️ @DotaClutch0
-  </a>
+  <a href="https://t.me/DotaClutch0" target="_blank" class="tg-btn">✈️ @DotaClutch0</a>
 
   <div style="display:flex;align-items:center;gap:0.75rem;margin-left:auto">
-
     <button class="theme-toggle" id="theme-toggle" title="Переключить тему">
       <span class="theme-icon-light">
         <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
@@ -256,7 +242,6 @@
     <span class="burger-menu-title">⚔️ Меню</span>
     <button class="burger-close" id="burger-close">✕</button>
   </div>
-
   <div class="burger-profile" id="burger-profile" style="display:none">
     <img class="burger-avatar" id="burger-avatar" src="" alt="avatar" />
     <div>
@@ -264,29 +249,23 @@
       <div class="burger-steam-id" id="burger-steamid"></div>
     </div>
   </div>
-
   <div class="burger-nav">
     <a href="/" class="burger-link"><span class="link-icon">🏠</span> Главная</a>
     <a href="/replays" class="burger-link"><span class="link-icon">📹</span> Реплеи</a>
     <a href="/tournaments" class="burger-link"><span class="link-icon">🏆</span> Турниры</a>
     <a href="/find-teammates" class="burger-link"><span class="link-icon">🔍</span> Тиммейты</a>
-    <a href="https://t.me/DotaClutch0" target="_blank" class="burger-link">
-      <span class="link-icon">✈️</span> Telegram
-    </a>
+    <a href="https://t.me/DotaClutch0" target="_blank" class="burger-link"><span class="link-icon">✈️</span> Telegram</a>
   </div>
-
   <div class="burger-menu-footer">
-    <a href="/auth/steam" class="steam-btn" id="steam-login-btn"
-       style="justify-content:center;width:100%">
+    <a href="/auth/steam" class="steam-btn" id="steam-login-btn" style="justify-content:center;width:100%">
       <svg width="20" height="20" viewBox="0 0 233 233" fill="white">
         <path d="M116.5 0C52.1 0 0 52.1 0 116.5c0 55.8 39.3 102.4 91.7 113.7l30.5-73.4c-2.3.3-4.6.5-7 .5-28.5 0-51.6-23.1-51.6-51.6s23.1-51.6 51.6-51.6 51.6 23.1 51.6 51.6c0 24.7-17.4 45.4-40.6 50.5l-28.9 69.5c3.7.3 7.4.5 11.2.5 64.4 0 116.5-52.1 116.5-116.5S180.9 0 116.5 0z"/>
       </svg>
       Войти через Steam
     </a>
     <a href="/auth/logout" class="steam-btn" id="steam-logout-btn"
-       style="justify-content:center;width:100%;display:none;
-              background:linear-gradient(135deg,#3d0a0a,#1a0505);border-color:#4a0a2e;
-              margin-top:0.5rem">
+       style="justify-content:center;width:100%;display:none;margin-top:0.5rem;
+              background:linear-gradient(135deg,#3d0a0a,#1a0505);border-color:#4a0a2e">
       🚪 Выйти
     </a>
   </div>
@@ -300,99 +279,69 @@
 
 <div style="position:fixed;bottom:1.5rem;left:1.5rem;z-index:997">
   <img src="/static/img/avatar.jpg"
-       style="width:52px;height:52px;border-radius:50%;
-              border:2px solid var(--accent);
-              box-shadow:0 0 15px rgba(0,0,0,0.5)"
-       title="Автор сайта"
-       onerror="this.style.display='none'" />
+       style="width:52px;height:52px;border-radius:50%;border:2px solid var(--accent);box-shadow:0 0 15px rgba(0,0,0,0.5)"
+       title="Автор сайта" onerror="this.style.display='none'" />
 </div>
 
-<script src="/static/js/main.js"></script>
 <script>
-(function() {
-  var saved = localStorage.getItem('gp-theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', saved);
+document.getElementById('theme-toggle').onclick = function() {
+  var c = document.documentElement.getAttribute('data-theme');
+  var n = c === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', n);
+  localStorage.setItem('gp-theme', n);
+};
 
-  document.addEventListener('DOMContentLoaded', function() {
+var burgerBtn  = document.getElementById('burger-btn');
+var burgerMenu = document.getElementById('burger-menu');
+var overlay    = document.getElementById('burger-overlay');
+var closeBtn   = document.getElementById('burger-close');
 
-    var themeBtn = document.querySelector('.theme-toggle');
-    if (themeBtn) {
-      themeBtn.onclick = function() {
-        var c = document.documentElement.getAttribute('data-theme');
-        var n = c === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', n);
-        localStorage.setItem('gp-theme', n);
-        var msg = n === 'light' ? '☀️ Сила Света!' : '🔴 Сила Тьмы!';
-        var t = document.createElement('div');
-        t.className = 'toast';
-        t.innerHTML = msg;
-        var tc = document.getElementById('toast-container');
-        if (tc) { tc.appendChild(t); setTimeout(function(){ t.remove(); }, 3000); }
-      };
+function openMenu() {
+  burgerMenu.classList.add('open');
+  overlay.classList.add('open');
+  burgerBtn.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeMenu() {
+  burgerMenu.classList.remove('open');
+  overlay.classList.remove('open');
+  burgerBtn.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+burgerBtn.onclick = openMenu;
+overlay.onclick   = closeMenu;
+closeBtn.onclick  = closeMenu;
+
+document.querySelectorAll('.burger-link').forEach(function(a) {
+  a.addEventListener('click', closeMenu);
+});
+
+fetch('/api/me').then(function(r){return r.json();}).then(function(d){
+  if (d.logged_in) {
+    var nu = document.getElementById('navbar-user');
+    var na = document.getElementById('navbar-avatar');
+    if (nu && na) { na.src = d.avatar; nu.style.display = 'block'; }
+    var p = document.getElementById('burger-profile');
+    if (p) {
+      document.getElementById('burger-avatar').src = d.avatar;
+      document.getElementById('burger-username').textContent = d.nickname;
+      document.getElementById('burger-steamid').textContent = 'Steam ID: ' + d.steam_id;
+      p.style.display = 'flex';
     }
+    document.getElementById('steam-login-btn').style.display = 'none';
+    document.getElementById('steam-logout-btn').style.display = 'flex';
+  }
+}).catch(function(){});
 
-    var burgerBtn  = document.getElementById('burger-btn');
-    var burgerMenu = document.getElementById('burger-menu');
-    var overlay    = document.getElementById('burger-overlay');
-    var closeBtn   = document.getElementById('burger-close');
-
-    function openMenu() {
-      burgerMenu.classList.add('open');
-      overlay.classList.add('open');
-      burgerBtn.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeMenu() {
-      burgerMenu.classList.remove('open');
-      overlay.classList.remove('open');
-      burgerBtn.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    if (burgerBtn) burgerBtn.onclick = openMenu;
-    if (overlay)   overlay.onclick   = closeMenu;
-    if (closeBtn)  closeBtn.onclick  = closeMenu;
-
-    document.querySelectorAll('.burger-link').forEach(function(a) {
-      a.addEventListener('click', function() {
-        if (!a.target) closeMenu();
-      });
-    });
-
-    fetch('/api/me')
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        if (d.logged_in) {
-          var navUser = document.getElementById('navbar-user');
-          var navAvatar = document.getElementById('navbar-avatar');
-          if (navUser && navAvatar) {
-            navAvatar.src = d.avatar;
-            navUser.style.display = 'block';
-          }
-          var profile = document.getElementById('burger-profile');
-          if (profile) {
-            document.getElementById('burger-avatar').src = d.avatar;
-            document.getElementById('burger-username').textContent = d.nickname;
-            document.getElementById('burger-steamid').textContent = 'Steam ID: ' + d.steam_id;
-            profile.style.display = 'flex';
-          }
-          document.getElementById('steam-login-btn').style.display = 'none';
-          document.getElementById('steam-logout-btn').style.display = 'flex';
-        }
-      }).catch(function() {});
-
-    function updateOnline() {
-      fetch('/api/online')
-        .then(function(r) { return r.json(); })
-        .then(function(d) {
-          var el = document.getElementById('online-count');
-          if (el) el.textContent = d.online;
-        }).catch(function() {});
-    }
-    updateOnline();
-    setInterval(updateOnline, 30000);
-  });
-})();
+function updateOnline() {
+  fetch('/api/online').then(function(r){return r.json();}).then(function(d){
+    var el = document.getElementById('online-count');
+    if (el) el.textContent = d.online;
+  }).catch(function(){});
+}
+updateOnline();
+setInterval(updateOnline, 30000);
 </script>
 {% block extra_js %}{% endblock %}
 </body>
