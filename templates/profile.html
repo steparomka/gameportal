@@ -96,7 +96,7 @@
 <script>
 var HEROES = {};
 var ITEMS  = {};
-var CDN = 'https://cdn.dota2.com';
+var CDN = 'https://cdn.cloudflare.steamstatic.com';
 
 Promise.all([
   fetch('https://api.opendota.com/api/heroes').then(function(r){return r.json();}).catch(function(){return[];}),
@@ -202,7 +202,7 @@ function renderMatchRow(m,list){
     '<span class="match-result '+(won?'win':'loss')+'">'+(won?'Победа':'Поражение')+'</span>'+
     '<div class="match-hero-wrap">'+heroImgHtml+'<span class="match-hero">'+hero.name+'</span></div>'+
     '<span class="match-kda"><span>'+m.kills+'</span>/<span style="color:var(--danger)">'+m.deaths+'</span>/<span>'+m.assists+'</span></span>'+
-    '<span class="match-gpm">💰 '+m.gold_per_min+'</span>'+
+    '<span class="match-gpm">💰 '+(m.gold_per_min||m.gpm||'—')+'</span>'+
     '<span class="match-duration">⏱ '+mins+':'+(secs<10?'0':'')+secs+'</span>'+
     '<div class="match-items">'+itemsHtml+'</div>';
   list.appendChild(row);
@@ -220,7 +220,7 @@ function loadRecentMatches(accountId){
           .then(function(r){return r.json();})
           .then(function(detail){
             var player=(detail.players||[]).find(function(p){return p.account_id===parseInt(accountId);});
-            if(player){m.item_0=player.item_0;m.item_1=player.item_1;m.item_2=player.item_2;m.item_3=player.item_3;m.item_4=player.item_4;m.item_5=player.item_5;}
+            if(player){m.item_0=player.item_0;m.item_1=player.item_1;m.item_2=player.item_2;m.item_3=player.item_3;m.item_4=player.item_4;m.item_5=player.item_5;m.gold_per_min=player.gold_per_min;}
             renderMatchRow(m,list);rendered++;
             if(rendered===1){document.getElementById('matches-section').style.display='block';document.getElementById('matches-divider').style.display='block';}
           }).catch(function(){renderMatchRow(m,list);rendered++;if(rendered===1){document.getElementById('matches-section').style.display='block';document.getElementById('matches-divider').style.display='block';}});
