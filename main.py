@@ -571,35 +571,28 @@ async def ai_coach_page(request: Request):
 async def ai_analyze(request: Request):
     body = await request.json()
     prompt = body.get("prompt", "")
-    api_key = os.getenv("GEMINI_API_KEY", "")
-    
-    if not api_key:
-        return {"text": "Ошибка: GEMINI_API_KEY не задан"}
-    
+    api_key = os.getenv("GROQ_API_KEY", "")
+
     try:
         async with httpx.AsyncClient() as client:
-           response = await client.post(
-    f"https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key={api_key}",
-    headers={"Content-Type": "application/json"},
-    json={"contents": [{"parts": [{"text": prompt}]}]},
-    timeout=60.0
-)
-        
+            response = await client.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "llama-3.3-70b-versatile",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": 1000
+                },
+                timeout=60.0
+            )
         data = response.json()
-        
-        # Если Gemini вернул ошибку — показываем её
         if "error" in data:
-            return {"text": f"Ошибка Gemini: {data['error'].get('message', str(data['error']))}"}
-        
-        candidates = data.get("candidates", [])
-        if not candidates:
-            return {"text": f"Gemini вернул пустой ответ. Статус: {response.status_code}"}
-        
-        text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "Пустой ответ")
+            return {"text": f"Ошибка: {data['error'].get('message', str(data['error']))}"}
+        text = data["choices"][0]["message"]["content"]
         return {"text": text}
-        
-    except httpx.TimeoutException:
-        return {"text": "Ошибка: превышено время ожидания (60 сек)"}
     except Exception as e:
         return {"text": f"Ошибка запроса: {str(e)}"}
     
