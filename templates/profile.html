@@ -120,7 +120,7 @@ var currentAccountId = '';
 
 Promise.all([
   fetch('https://api.opendota.com/api/heroes').then(function(r){return r.json();}).catch(function(){return[];}),
-  fetch('https://api.opendota.com/api/constants/items')then(function(r){return r.json();}).catch(function(){return{};}),
+  fetch('https://api.opendota.com/api/constants/items').then(function(r){return r.json();}).catch(function(){return{};}),
   fetch('/api/me').then(function(r){return r.json();}).catch(function(){return{logged_in:false};})
 ]).then(function(results){
   var heroes=results[0],items=results[1],user=results[2];
