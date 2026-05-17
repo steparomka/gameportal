@@ -231,7 +231,7 @@ function openHeroModal(heroId,hero,gamesData,accountId){
       var mkda=td>0?((tk+ta)/td).toFixed(2):(tk+ta).toFixed(2);
       var avgGpm=tgpm>0?Math.round(tgpm/n):'—';
       var statsEl=document.getElementById('modal-stats');
-      [['Матчей',n],['Винрейт',mwr+'%'],['К/Д/А',mkda],['Ср. GPM',avgGpm]].forEach(function(s){
+      [['Матчей',n],['Винрейт',mwr+'%'],['К/Д/А',mkda]].forEach(function(s){
         var b=document.createElement('div');b.className='stat-card';b.style.padding='0.75rem';
         b.innerHTML='<div class="stat-value" style="font-size:1.3rem">'+s[1]+'</div><div class="stat-label">'+s[0]+'</div>';
         statsEl.appendChild(b);
@@ -247,7 +247,6 @@ function openHeroModal(heroId,hero,gamesData,accountId){
           '<span class="match-result '+(won?'win':'loss')+'">'+(won?'Победа':'Поражение')+'</span>'+
           heroImg2+
           '<span class="match-kda"><span>'+m.kills+'</span>/<span style="color:var(--danger)">'+m.deaths+'</span>/<span>'+m.assists+'</span></span>'+
-          '<span class="match-gpm">💰 '+(m.gold_per_min||'—')+' GPM</span>'+
           '<span class="match-duration">⏱ '+mins+':'+(secs<10?'0':'')+secs+'</span>';
         list.appendChild(row);
       });
