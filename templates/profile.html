@@ -33,7 +33,7 @@
   <hr class="neon-line" />
 
   <div id="heroes-section" style="display:none">
-    <h2 class="section-title">🦸 Топ героев <span class="heroes-subtitle">≥ 20 игр</span></h2>
+    <h2 class="section-title">🦸 Топ героев <span class="heroes-subtitle">≥ 50 игр</span></h2>
     <div class="heroes-grid" id="heroes-grid"></div>
     <div id="heroes-empty" style="display:none;color:var(--text-muted);font-family:var(--font-mono);font-size:0.85rem;padding:1rem 0">Нет героев с 20+ играми</div>
   </div>
@@ -181,7 +181,7 @@ function loadTopHeroes(accountId){
   fetch('https://api.opendota.com/api/players/'+accountId+'/heroes')
     .then(function(r){return r.json();})
     .then(function(heroes){
-      var filtered=heroes.filter(function(h){return h.games>=20;}).sort(function(a,b){return b.games-a.games;});
+      var filtered=heroes.filter(function(h){return h.games>=50;}).sort(function(a,b){return b.games-a.games;});
       document.getElementById('heroes-section').style.display='block';
       if(filtered.length===0){document.getElementById('heroes-empty').style.display='block';return;}
       var grid=document.getElementById('heroes-grid');grid.innerHTML='';
