@@ -134,7 +134,7 @@ Promise.all([
   });
   Object.keys(items).forEach(function(key){
     var item=items[key];if(!item)return;
-    var entry={name:item.dname||key,img:item.img?'https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/items/'+key+'_lg.png':null};
+    var entry={name:item.dname||key,img:item.img?'https://cdn.cloudflare.steamstatic.com'+item.img:null};
     if(item.id!==undefined)ITEMS[item.id]=entry;
     ITEMS[key]=entry;
   });
