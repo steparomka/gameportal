@@ -6,6 +6,7 @@ import uuid
 import json
 import random
 import httpx
+import time
 from datetime import datetime, timezone
 from typing import Optional, List
 from pathlib import Path
@@ -78,6 +79,37 @@ class ConnectionManager:
             self.disconnect(d)
 
 manager = ConnectionManager()
+
+import time
+
+# Простой кеш в памяти
+_cache = {}
+
+def cache_get(key):
+    if key in _cache:
+        data, expires = _cache[key]
+        if time.time() < expires:
+            return data
+    return None
+
+def cache_set(key, data, ttl=600):  # 10 минут
+    _cache[key] = (data, time.time() + ttl)
+
+@app.get("/api/opendota/{path:path}")
+async def opendota_proxy(path: str, request: Request):
+    cache_key = path + str(request.query_params)
+    cached = cache_get(cache_key)
+    if cached:
+        return cached
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"https://api.opendota.com/api/{path}",
+            params=dict(request.query_params),
+            timeout=30.0
+        )
+    data = response.json()
+    cache_set(cache_key, data)
+    return data
 
 # ────────────────────────────────────────────────
 # Простой счётчик онлайна (по сессиям + времени)
