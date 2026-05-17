@@ -108,7 +108,7 @@
 .match-duration{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);white-space:nowrap}
 .match-items{display:flex;align-items:center;gap:3px;flex-wrap:wrap}
 .item-icon{width:34px;height:24px;border-radius:3px;object-fit:contain;border:1px solid rgba(255,255,255,0.08);background:var(--bg-surface)}
-.item-icon-empty{width:28px;height:20px;border-radius:3px;background:var(--bg-surface);border:1px solid var(--border);opacity:0.3}
+.item-icon-empty{width:34px;height:24px;border-radius:3px;background:var(--bg-surface);border:1px solid var(--border);opacity:0.3}
 </style>
 {% endblock %}
 
@@ -237,6 +237,8 @@ function openHeroModal(heroId,hero,gamesData,accountId){
         statsEl.appendChild(b);
       });
       var list=document.getElementById('modal-matches');list.innerHTML='';
+
+      // Сначала рендерим все строки
       matches.forEach(function(m){
         var won=(m.player_slot<128&&m.radiant_win)||(m.player_slot>=128&&!m.radiant_win);
         var mins=Math.floor(m.duration/60),secs=m.duration%60;
@@ -250,33 +252,39 @@ function openHeroModal(heroId,hero,gamesData,accountId){
           '<span class="match-duration">⏱ '+mins+':'+(secs<10?'0':'')+secs+'</span>'+
           '<div class="match-items" id="mitems-'+m.match_id+'"><span style="font-size:0.7rem;color:var(--text-muted)">⏳</span></div>';
         list.appendChild(row);
-
-        // Загружаем предметы для каждого матча
-        (function(matchId){
-          fetch('https://api.opendota.com/api/matches/'+matchId)
-            .then(function(r){return r.json();})
-            .then(function(detail){
-              var player=(detail.players||[]).find(function(p){
-                return p.account_id===parseInt(accountId);
-              });
-              var itemsEl=document.getElementById('mitems-'+matchId);
-              if(!itemsEl)return;
-              if(!player){itemsEl.innerHTML='';return;}
-              var ih='';
-              [player.item_0,player.item_1,player.item_2,player.item_3,player.item_4,player.item_5].forEach(function(id){
-                if(id&&id>0&&ITEMS[id]&&ITEMS[id].img){
-                  ih+='<img class="item-icon" src="'+ITEMS[id].img+'" title="'+(ITEMS[id].name||'')+'" onerror="this.className=\'item-icon-empty\';this.removeAttribute(\'src\')" />';
-                } else {
-                  ih+='<div class="item-icon-empty"></div>';
-                }
-              });
-              itemsEl.innerHTML=ih;
-            }).catch(function(){
-              var el=document.getElementById('mitems-'+matchId);
-              if(el)el.innerHTML='';
-            });
-        })(m.match_id);
       });
+
+      // Потом подгружаем предметы порциями по 3 с задержкой 1.5с
+      function loadItemsBatch(arr,index){
+        if(index>=arr.length)return;
+        arr.slice(index,index+3).forEach(function(m){
+          (function(matchId){
+            fetch('https://api.opendota.com/api/matches/'+matchId)
+              .then(function(r){return r.json();})
+              .then(function(detail){
+                var player=(detail.players||[]).find(function(p){return p.account_id===parseInt(accountId);});
+                var itemsEl=document.getElementById('mitems-'+matchId);
+                if(!itemsEl)return;
+                if(!player){itemsEl.innerHTML='';return;}
+                var ih='';
+                [player.item_0,player.item_1,player.item_2,player.item_3,player.item_4,player.item_5].forEach(function(id){
+                  if(id&&id>0&&ITEMS[id]&&ITEMS[id].img){
+                    ih+='<img class="item-icon" src="'+ITEMS[id].img+'" title="'+(ITEMS[id].name||'')+'" onerror="this.className=\'item-icon-empty\';this.removeAttribute(\'src\')" />';
+                  } else {
+                    ih+='<div class="item-icon-empty"></div>';
+                  }
+                });
+                itemsEl.innerHTML=ih;
+              }).catch(function(){
+                var el=document.getElementById('mitems-'+matchId);
+                if(el)el.innerHTML='';
+              });
+          })(m.match_id);
+        });
+        setTimeout(function(){loadItemsBatch(arr,index+3);},1500);
+      }
+      loadItemsBatch(matches,0);
+
     }).catch(function(){
       document.getElementById('modal-matches').innerHTML='<div style="text-align:center;padding:2rem;color:var(--danger)">Ошибка загрузки</div>';
     });
