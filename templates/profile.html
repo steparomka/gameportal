@@ -148,7 +148,15 @@ fetch('/api/me').then(function(r){return r.json();}).catch(function(){return{log
     ITEMS[key]=entry;
   });
 
- function loadDotaStats(accountId){
+  await delay(600);
+  loadDotaStats(currentAccountId);
+  await delay(1000);
+  loadTopHeroes(currentAccountId);
+  await delay(1000);
+  loadRecentMatches(currentAccountId);
+});
+
+function loadDotaStats(accountId){
   fetch('https://api.opendota.com/api/players/'+accountId+'/wl')
     .then(function(r){return r.json();})
     .then(async function(wl){
