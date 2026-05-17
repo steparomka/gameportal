@@ -578,12 +578,12 @@ async def ai_analyze(request: Request):
     
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(
-                f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}",
-                headers={"Content-Type": "application/json"},
-                json={"contents": [{"parts": [{"text": prompt}]}]},
-                timeout=60.0
-            )
+           response = await client.post(
+    f"https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key={api_key}",
+    headers={"Content-Type": "application/json"},
+    json={"contents": [{"parts": [{"text": prompt}]}]},
+    timeout=60.0
+)
         
         data = response.json()
         
