@@ -61,7 +61,7 @@
         </div>
         <button onclick="closeModal()" style="background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem">✕</button>
       </div>
-      <div id="modal-stats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;margin-bottom:1.5rem"></div>
+      <div id="modal-stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-bottom:1.5rem"></div>
       <div style="font-family:var(--font-head);font-size:0.85rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.75rem">Все матчи на герое</div>
       <div id="modal-matches" style="display:flex;flex-direction:column;gap:0.45rem;max-height:420px;overflow-y:auto">
         <div style="text-align:center;padding:2rem;color:var(--text-muted)">⏳ Загружаем...</div>
@@ -221,15 +221,14 @@ function openHeroModal(heroId,hero,gamesData,accountId){
         document.getElementById('modal-matches').innerHTML='<div style="text-align:center;padding:2rem;color:var(--text-muted)">Матчей не найдено</div>';
         return;
       }
-      var tk=0,td=0,ta=0,tgpm=0,wins=0;
+      var tk=0,td=0,ta=0,wins=0;
       matches.forEach(function(m){
-        tk+=m.kills;td+=m.deaths;ta+=m.assists;tgpm+=m.gold_per_min||0;
+        tk+=m.kills;td+=m.deaths;ta+=m.assists;
         var won=(m.player_slot<128&&m.radiant_win)||(m.player_slot>=128&&!m.radiant_win);
         if(won)wins++;
       });
       var n=matches.length,mwr=Math.round(wins/n*100);
       var mkda=td>0?((tk+ta)/td).toFixed(2):(tk+ta).toFixed(2);
-      var avgGpm=tgpm>0?Math.round(tgpm/n):'—';
       var statsEl=document.getElementById('modal-stats');
       [['Матчей',n],['Винрейт',mwr+'%'],['К/Д/А',mkda]].forEach(function(s){
         var b=document.createElement('div');b.className='stat-card';b.style.padding='0.75rem';
@@ -247,8 +246,35 @@ function openHeroModal(heroId,hero,gamesData,accountId){
           '<span class="match-result '+(won?'win':'loss')+'">'+(won?'Победа':'Поражение')+'</span>'+
           heroImg2+
           '<span class="match-kda"><span>'+m.kills+'</span>/<span style="color:var(--danger)">'+m.deaths+'</span>/<span>'+m.assists+'</span></span>'+
-          '<span class="match-duration">⏱ '+mins+':'+(secs<10?'0':'')+secs+'</span>';
+          '<span class="match-duration">⏱ '+mins+':'+(secs<10?'0':'')+secs+'</span>'+
+          '<div class="match-items" id="mitems-'+m.match_id+'"><span style="font-size:0.7rem;color:var(--text-muted)">⏳</span></div>';
         list.appendChild(row);
+
+        // Загружаем предметы для каждого матча
+        (function(matchId){
+          fetch('https://api.opendota.com/api/matches/'+matchId)
+            .then(function(r){return r.json();})
+            .then(function(detail){
+              var player=(detail.players||[]).find(function(p){
+                return p.account_id===parseInt(accountId);
+              });
+              var itemsEl=document.getElementById('mitems-'+matchId);
+              if(!itemsEl)return;
+              if(!player){itemsEl.innerHTML='';return;}
+              var ih='';
+              [player.item_0,player.item_1,player.item_2,player.item_3,player.item_4,player.item_5].forEach(function(id){
+                if(id&&id>0&&ITEMS[id]&&ITEMS[id].img){
+                  ih+='<img class="item-icon" src="'+ITEMS[id].img+'" title="'+(ITEMS[id].name||'')+'" onerror="this.className=\'item-icon-empty\';this.removeAttribute(\'src\')" />';
+                } else {
+                  ih+='<div class="item-icon-empty"></div>';
+                }
+              });
+              itemsEl.innerHTML=ih;
+            }).catch(function(){
+              var el=document.getElementById('mitems-'+matchId);
+              if(el)el.innerHTML='';
+            });
+        })(m.match_id);
       });
     }).catch(function(){
       document.getElementById('modal-matches').innerHTML='<div style="text-align:center;padding:2rem;color:var(--danger)">Ошибка загрузки</div>';
