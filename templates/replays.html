@@ -80,6 +80,14 @@
     <p>Реплеев пока нет — загрузи первый!</p>
   </div>
   {% endif %}
+  <!-- ══ МОИ МАТЧИ ИЗ DOTA ════════════════════════════ -->
+<div id="dota-matches-section" style="display:none">
+  <hr class="neon-line" />
+  <div class="page-header" style="margin-bottom:1rem">
+    <h1>⚔️ Мои <span class="accent">матчи</span></h1>
+    <p>Последние матчи из Dota 2</p>
+  </div>
+  <div id="dota-matches-list" class="matches-list"></div>
 </div>
 {% endblock %}
 
@@ -113,6 +121,53 @@ dropZone.addEventListener('drop', (e) => {
     dropText.innerHTML = `✅ <strong style="color:var(--accent)">${file.name}</strong>`;
   }
 });
+// ── Матчи из Dota 2 ──────────────────────────────────
+(async function() {
+  const res = await fetch('/api/me').then(r => r.json()).catch(() => ({logged_in: false}));
+  if (!res.logged_in) return;
+
+  const accountId = (BigInt(res.steam_id) - BigInt('76561197960265728')).toString();
+
+  const HEROES = {};
+  fetch('https://api.opendota.com/api/heroes')
+    .then(r => r.json())
+    .then(heroes => {
+      if (!Array.isArray(heroes)) return;
+      heroes.forEach(h => {
+        const short = h.name.replace('npc_dota_hero_', '');
+        HEROES[h.id] = {
+          name: h.localized_name,
+          img: 'https://cdn.akamai.steamstatic.com/apps/dota2/images/dota_react/heroes/icons/' + short + '.png'
+        };
+      });
+    });
+
+  fetch('https://api.opendota.com/api/players/' + accountId + '/matches?limit=10&significant=0')
+    .then(r => r.json())
+    .then(matches => {
+      if (!matches || !matches.length) return;
+      document.getElementById('dota-matches-section').style.display = 'block';
+      const list = document.getElementById('dota-matches-list');
+      matches.forEach(m => {
+        const won = (m.player_slot < 128 && m.radiant_win) || (m.player_slot >= 128 && !m.radiant_win);
+        const hero = HEROES[m.hero_id] || {name: 'Герой #' + m.hero_id, img: ''};
+        const mins = Math.floor(m.duration / 60);
+        const secs = m.duration % 60;
+        const row = document.createElement('div');
+        row.className = 'match-row';
+        row.style.cursor = 'pointer';
+        row.onclick = () => window.open('https://www.opendota.com/matches/' + m.match_id, '_blank');
+        row.innerHTML =
+          '<span class="match-result ' + (won ? 'win' : 'loss') + '">' + (won ? 'Победа' : 'Поражение') + '</span>' +
+          (hero.img ? '<img style="width:40px;height:40px;border-radius:4px;object-fit:cover;object-position:center top" src="' + hero.img + '" />' : '') +
+          '<span class="match-hero">' + hero.name + '</span>' +
+          '<span class="match-kda"><span>' + m.kills + '</span>/<span style="color:var(--danger)">' + m.deaths + '</span>/<span>' + m.assists + '</span></span>' +
+          '<span class="match-duration">⏱ ' + mins + ':' + (secs < 10 ? '0' : '') + secs + '</span>' +
+          '<a href="https://www.opendota.com/matches/' + m.match_id + '" target="_blank" class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">Смотреть →</a>';
+        list.appendChild(row);
+      });
+    }).catch(() => {});
+})();
 
 // ── Отправка формы загрузки ──────────────────────────────
 document.getElementById('upload-form').addEventListener('submit', async (e) => {
