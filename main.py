@@ -559,3 +559,12 @@ async def profile_page(request: Request):
         "request": request,
         "online": count_online(),
     })
+    @app.get("/ai-coach", response_class=HTMLResponse)
+    async def ai_coach_page(request: Request):
+        """Страница ИИ-тренера"""
+    return templates.TemplateResponse("ai_coach.html", {
+        "request": request,
+        "online": count_online(),
+    })
+   
+    
