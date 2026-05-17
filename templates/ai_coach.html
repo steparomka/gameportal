@@ -32,17 +32,16 @@
     <p id="loading-text">Загружаем данные матча...</p>
   </div>
 
+  <div id="error-box" style="display:none" class="alert alert-error mb-3"></div>
+
   <div id="result-section" style="display:none">
-    <!-- Заголовок матча -->
     <div class="card mb-3" id="match-header"></div>
-    <!-- Статистика игрока -->
     <div class="stats-grid mb-3" id="player-stats"></div>
-    <!-- ИИ анализ -->
     <div class="card" id="ai-analysis">
       <h2 class="text-head" style="font-size:1.1rem;letter-spacing:1px;margin-bottom:1rem;color:var(--accent)">
         🤖 Анализ ИИ-тренера
       </h2>
-      <div id="ai-text" style="font-family:var(--font-main);font-size:0.95rem;line-height:1.8;color:var(--text-primary);white-space:pre-wrap"></div>
+      <div id="ai-text" style="font-family:var(--font-main);font-size:0.95rem;line-height:1.8;color:var(--text-primary)"></div>
     </div>
   </div>
 </div>
@@ -55,41 +54,40 @@
 .stat-label { font-family: var(--font-head); font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); }
 .ai-point { padding: 0.75rem 1rem; border-left: 3px solid var(--accent); margin-bottom: 0.75rem; background: rgba(0,212,255,0.04); border-radius: 0 var(--radius) var(--radius) 0; }
 .ai-point.warning { border-color: var(--warning); background: rgba(245,158,11,0.04); }
-.ai-point.danger  { border-color: var(--danger);  background: rgba(239,68,68,0.04); }
 .ai-point.success { border-color: var(--success); background: rgba(16,185,129,0.04); }
 </style>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-// Подставляем Steam ID из профиля
 fetch('/api/me').then(r => r.json()).then(d => {
   if (d.logged_in) {
     const accountId = (BigInt(d.steam_id) - BigInt('76561197960265728')).toString();
     document.getElementById('steam-input').value = accountId;
-    document.getElementById('steam-input').placeholder = accountId;
   }
 }).catch(() => {});
 
+function showError(msg) {
+  const el = document.getElementById('error-box');
+  el.style.display = 'block';
+  el.textContent = '❌ ' + msg;
+}
+function hideError() { document.getElementById('error-box').style.display = 'none'; }
+
 function extractMatchId(input) {
   input = input.trim();
-  // Если просто число
   if (/^\d+$/.test(input)) return input;
-  // Если ссылка opendota/dotabuff
   const m = input.match(/matches\/(\d+)/);
-  if (m) return m[1];
-  return null;
+  return m ? m[1] : null;
 }
 
 async function analyzeMatch() {
+  hideError();
   const input = document.getElementById('match-input').value.trim();
   const steamInput = document.getElementById('steam-input').value.trim();
-
   const matchId = extractMatchId(input);
-  if (!matchId) {
-    showToast('Введи корректный ID матча или ссылку', 'error');
-    return;
-  }
+
+  if (!matchId) { showError('Введи корректный ID матча или ссылку'); return; }
 
   const btn = document.getElementById('analyze-btn');
   btn.disabled = true;
@@ -99,81 +97,67 @@ async function analyzeMatch() {
   document.getElementById('loading-text').textContent = 'Загружаем данные матча...';
 
   try {
-    // Загружаем данные матча
     const matchData = await fetch('https://api.opendota.com/api/matches/' + matchId)
-      .then(r => r.json());
+      .then(r => { if (!r.ok) throw new Error('Матч не найден'); return r.json(); });
 
-    if (!matchData || matchData.error) {
-      showToast('Матч не найден или ошибка OpenDota', 'error');
-      return;
-    }
+    document.getElementById('loading-text').textContent = 'Загружаем список героев...';
 
-    document.getElementById('loading-text').textContent = 'Анализируем с помощью ИИ...';
-
-    // Находим игрока
-    let player = null;
-    if (steamInput) {
-      player = (matchData.players || []).find(p => p.account_id === parseInt(steamInput));
-    }
-    if (!player) player = matchData.players?.[0];
-
-    // Загружаем героев
-    const heroes = await fetch('https://api.opendota.com/api/heroes')
-      .then(r => r.json()).catch(() => []);
+    const heroes = await fetch('https://api.opendota.com/api/heroes').then(r => r.json()).catch(() => []);
     const heroMap = {};
-    if (Array.isArray(heroes)) {
-      heroes.forEach(h => { heroMap[h.id] = h.localized_name; });
-    }
+    if (Array.isArray(heroes)) heroes.forEach(h => { heroMap[h.id] = h.localized_name; });
+
+    let player = null;
+    if (steamInput) player = (matchData.players || []).find(p => p.account_id === parseInt(steamInput));
+    if (!player && matchData.players?.length) player = matchData.players[0];
 
     const heroName = heroMap[player?.hero_id] || 'Неизвестный герой';
     const won = player ? ((player.player_slot < 128 && matchData.radiant_win) || (player.player_slot >= 128 && !matchData.radiant_win)) : null;
     const mins = Math.floor(matchData.duration / 60);
+    const secs = matchData.duration % 60;
 
-    // Рендерим заголовок матча
     document.getElementById('match-header').innerHTML = `
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
         <div>
-          <div style="font-family:var(--font-head);font-size:1.3rem;font-weight:800;color:var(--text-bright)">
-            Матч #${matchId}
-          </div>
-          <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted);margin-top:0.25rem">
-            ⏱ ${mins} минут · ${heroName}
-          </div>
+          <div style="font-family:var(--font-head);font-size:1.3rem;font-weight:800;color:var(--text-bright)">Матч #${matchId}</div>
+          <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted);margin-top:0.25rem">⏱ ${mins}:${secs<10?'0':''}${secs} · ${heroName}</div>
         </div>
-        <span style="font-family:var(--font-head);font-weight:800;font-size:1rem;padding:0.35rem 1rem;border-radius:99px;
-          ${won ? 'background:rgba(16,185,129,0.15);color:var(--success);border:1px solid rgba(16,185,129,0.3)' :
-                  'background:rgba(239,68,68,0.15);color:var(--danger);border:1px solid rgba(239,68,68,0.3)'}">
-          ${won ? '🏆 Победа' : '💀 Поражение'}
-        </span>
-      </div>
-    `;
+        ${won !== null ? `<span style="font-family:var(--font-head);font-weight:800;font-size:1rem;padding:0.35rem 1rem;border-radius:99px;${won?'background:rgba(16,185,129,0.15);color:var(--success);border:1px solid rgba(16,185,129,0.3)':'background:rgba(239,68,68,0.15);color:var(--danger);border:1px solid rgba(239,68,68,0.3)'}">
+          ${won ? '🏆 Победа' : '💀 Поражение'}</span>` : ''}
+      </div>`;
 
-    // Рендерим статистику
     if (player) {
-      const kda = player.deaths > 0 ? ((player.kills + player.assists) / player.deaths).toFixed(2) : (player.kills + player.assists).toFixed(2);
+      const kda = player.deaths > 0 ? ((player.kills+player.assists)/player.deaths).toFixed(2) : (player.kills+player.assists).toFixed(2);
       document.getElementById('player-stats').innerHTML = `
         <div class="stat-card"><span class="stat-value" style="color:var(--success)">${player.kills}</span><span class="stat-label">⚔️ Убийств</span></div>
         <div class="stat-card"><span class="stat-value" style="color:var(--danger)">${player.deaths}</span><span class="stat-label">💀 Смертей</span></div>
         <div class="stat-card"><span class="stat-value">${player.assists}</span><span class="stat-label">🤝 Помощей</span></div>
         <div class="stat-card"><span class="stat-value" style="color:var(--accent)">${kda}</span><span class="stat-label">📊 К/Д/А</span></div>
-        <div class="stat-card"><span class="stat-value" style="color:var(--warning)">${player.gold_per_min || '—'}</span><span class="stat-label">💰 GPM</span></div>
-        <div class="stat-card"><span class="stat-value">${player.xp_per_min || '—'}</span><span class="stat-label">⚡ XPM</span></div>
-        <div class="stat-card"><span class="stat-value">${player.last_hits || '—'}</span><span class="stat-label">🎯 Ласт-хиты</span></div>
-        <div class="stat-card"><span class="stat-value">${player.hero_damage ? Math.round(player.hero_damage / 1000) + 'k' : '—'}</span><span class="stat-label">💥 Урон</span></div>
-      `;
+        <div class="stat-card"><span class="stat-value" style="color:var(--warning)">${player.gold_per_min||'—'}</span><span class="stat-label">💰 GPM</span></div>
+        <div class="stat-card"><span class="stat-value">${player.xp_per_min||'—'}</span><span class="stat-label">⚡ XPM</span></div>
+        <div class="stat-card"><span class="stat-value">${player.last_hits||'—'}</span><span class="stat-label">🎯 Ласт-хиты</span></div>
+        <div class="stat-card"><span class="stat-value">${player.hero_damage?Math.round(player.hero_damage/1000)+'k':'—'}</span><span class="stat-label">💥 Урон</span></div>`;
     }
 
-    // ИИ анализ через Claude API
+    document.getElementById('loading-text').textContent = 'ИИ анализирует матч...';
+
     const prompt = buildPrompt(matchData, player, heroName, won, mins);
-    const aiText = await callClaude(prompt);
+    const aiRes = await fetch('/api/ai-analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+
+    if (!aiRes.ok) throw new Error('Ошибка сервера при анализе ИИ');
+    const aiData = await aiRes.json();
+    const aiText = aiData.text || 'Не удалось получить анализ';
 
     document.getElementById('ai-text').innerHTML = formatAIResponse(aiText);
     document.getElementById('loading').style.display = 'none';
     document.getElementById('result-section').style.display = 'block';
 
   } catch (err) {
-    showToast('Ошибка анализа: ' + err.message, 'error');
     document.getElementById('loading').style.display = 'none';
+    showError(err.message || 'Неизвестная ошибка');
   } finally {
     btn.disabled = false;
     btn.textContent = '🤖 Разобрать матч';
@@ -182,14 +166,7 @@ async function analyzeMatch() {
 
 function buildPrompt(match, player, heroName, won, mins) {
   const p = player || {};
-  const kda = p.deaths > 0 ? ((p.kills + p.assists) / p.deaths).toFixed(2) : 'N/A';
-
-  // Предметы
-  const itemNames = [];
-  for (let i = 0; i <= 5; i++) {
-    if (p['item_' + i] && p['item_' + i] > 0) itemNames.push('item_' + p['item_' + i]);
-  }
-
+  const kda = p.deaths > 0 ? ((p.kills+p.assists)/p.deaths).toFixed(2) : 'N/A';
   return `Ты профессиональный тренер по Dota 2. Проанализируй матч и дай конкретные советы игроку на русском языке.
 
 ДАННЫЕ МАТЧА:
@@ -199,59 +176,34 @@ function buildPrompt(match, player, heroName, won, mins) {
 - Длительность: ${mins} минут
 
 СТАТИСТИКА ИГРОКА:
-- Убийства/Смерти/Помощи: ${p.kills || 0}/${p.deaths || 0}/${p.assists || 0}
+- Убийства/Смерти/Помощи: ${p.kills||0}/${p.deaths||0}/${p.assists||0}
 - К/Д/А: ${kda}
-- GPM (золото в минуту): ${p.gold_per_min || 0}
-- XPM (опыт в минуту): ${p.xp_per_min || 0}
-- Ласт-хиты: ${p.last_hits || 0}
-- Дени: ${p.denies || 0}
-- Урон героям: ${p.hero_damage || 0}
-- Урон строениям: ${p.tower_damage || 0}
-- Лечение: ${p.hero_healing || 0}
-- Нанесено урона: ${p.hero_damage || 0}
+- GPM: ${p.gold_per_min||0}
+- XPM: ${p.xp_per_min||0}
+- Ласт-хиты: ${p.last_hits||0}
+- Дени: ${p.denies||0}
+- Урон героям: ${p.hero_damage||0}
+- Урон строениям: ${p.tower_damage||0}
 
-Дай развёрнутый анализ по следующим пунктам:
-1. 💪 Что сделано хорошо (2-3 конкретных момента)
-2. ⚠️ Главные ошибки (2-3 конкретных момента с объяснением)
+Дай развёрнутый анализ по пунктам:
+1. 💪 Что сделано хорошо (2-3 момента)
+2. ⚠️ Главные ошибки (2-3 момента с объяснением)
 3. 📈 Как улучшить фарм и GPM на этом герое
-4. 🎯 Советы по ластхитам и денаям
+4. 🎯 Советы по ластхитам
 5. 🏆 Главный совет для следующей игры
 
 Будь конкретным, используй цифры из статистики. Пиши на русском языке.`;
 }
 
-async function callClaude(prompt) {
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: prompt }]
-    })
-  });
-  const data = await response.json();
-  return data.content?.[0]?.text || 'Не удалось получить анализ';
-}
-
 function formatAIResponse(text) {
-  // Разбиваем на параграфы и форматируем
   return text.split('\n').map(line => {
     line = line.trim();
-    if (!line) return '';
-    if (line.startsWith('1.') || line.includes('💪')) {
-      return `<div class="ai-point success">${line}</div>`;
-    }
-    if (line.startsWith('2.') || line.includes('⚠️')) {
-      return `<div class="ai-point warning">${line}</div>`;
-    }
-    if (line.startsWith('3.') || line.startsWith('4.') || line.startsWith('5.')) {
-      return `<div class="ai-point">${line}</div>`;
-    }
-    if (line.includes('🏆')) {
-      return `<div class="ai-point success">${line}</div>`;
-    }
-    return `<p style="margin-bottom:0.5rem">${line}</p>`;
+    if (!line) return '<br>';
+    if (line.match(/^1\.|💪/)) return `<div class="ai-point success">${line}</div>`;
+    if (line.match(/^2\.|⚠️/)) return `<div class="ai-point warning">${line}</div>`;
+    if (line.match(/^[345]\./)) return `<div class="ai-point">${line}</div>`;
+    if (line.includes('🏆')) return `<div class="ai-point success">${line}</div>`;
+    return `<p style="margin-bottom:0.5rem;padding-left:0.5rem">${line}</p>`;
   }).join('');
 }
 </script>

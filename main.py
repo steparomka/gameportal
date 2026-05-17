@@ -5,6 +5,7 @@ import os
 import uuid
 import json
 import random
+import httpx
 from datetime import datetime, timezone
 from typing import Optional, List
 from pathlib import Path
@@ -559,13 +560,20 @@ async def profile_page(request: Request):
         "request": request,
         "online": count_online(),
     })
-@app.get("/ai-coach", response_class=HTMLResponse)
-async def ai_coach_page(request: Request):
-    """Страница ИИ-тренера"""
-    return templates.TemplateResponse("ai_coach.html", {
-        "request": request,
-        "online": count_online(),
-    })   
-    
+@app.post("/api/ai-analyze")
+async def ai_analyze(request: Request):
+    body = await request.json()
+    prompt = body.get("prompt", "")
+    api_key = os.getenv("GEMINI_API_KEY", "")
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}",
+            headers={"Content-Type": "application/json"},
+            json={"contents": [{"parts": [{"text": prompt}]}]},
+            timeout=60.0
+        )
+    data = response.json()
+    text = data.get("candidates",[{}])[0].get("content",{}).get("parts",[{}])[0].get("text","Ошибка анализа")
+    return {"text": text}
    
     
