@@ -156,7 +156,7 @@ document.getElementById('teammate-form').addEventListener('submit', async (e) =>
     if (r.ok) {
       showToast('Анкета опубликована! ✅', 'success');
       alertEl.innerHTML = '<div class="alert alert-success">✅ Анкета добавлена!</div>';
-      setTimeout(() => location.reload(), 1200);
+      location.reload();
     } else {
       alertEl.innerHTML = `<div class="alert alert-error">❌ ${d.detail || 'Ошибка'}</div>`;
       btn.disabled = false;
@@ -164,7 +164,7 @@ document.getElementById('teammate-form').addEventListener('submit', async (e) =>
     }
   } catch(err) {
     alertEl.innerHTML = '<div class="alert alert-warning">⚠️ Проверяем результат...</div>';
-    setTimeout(() => location.reload(), 1500);
+    location.reload();
   }
 });
 
