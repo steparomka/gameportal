@@ -42,9 +42,15 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
+    # Миграция: добавляем колонку если её нет
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            conn.execute(text("ALTER TABLE teammate_profiles ADD COLUMN delete_token VARCHAR(64)"))
+            conn.commit()
+    except Exception:
+        pass  # колонка уже есть
     yield
-app = FastAPI(title="GamePortal", lifespan=lifespan)
-
 # Подключаем папку static/ для отдачи CSS/JS/видео
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
