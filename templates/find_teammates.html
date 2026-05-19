@@ -101,11 +101,13 @@
 
           {% if p.steam_id == request.cookies.get('steam_id') %}
           <div style="margin-top:0.75rem">
-            <button onclick="deleteCard({{ p.id }})"
-                    style="background:none;border:1px solid var(--danger);color:var(--danger);border-radius:6px;padding:0.25rem 0.75rem;cursor:pointer;font-size:0.78rem">
-              🗑 Удалить мою анкету
-            </button>
-          </div>
+<button data-id="{{ p.id }}" onclick="deleteCard(this.dataset.id)"
+        style="background:none;border:1px solid var(--danger);color:var(--danger);border-radius:6px;padding:0.25rem 0.75rem;cursor:pointer;font-size:0.78rem">
+  🗑 Удалить мою анкету
+</button>           
+
+                   
+         </div>
           {% endif %}
         </div>
         {% endfor %}
