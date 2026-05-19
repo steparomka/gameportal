@@ -118,8 +118,6 @@ var HEROES = {};
 var ITEMS  = {};
 var currentAccountId = '';
 
-function delay(ms){ return new Promise(function(r){setTimeout(r,ms);}); }
-
 fetch('/api/me').then(function(r){return r.json();}).catch(function(){return{logged_in:false};})
 .then(async function(user){
   if(!user.logged_in){window.location.href='/';return;}
@@ -128,9 +126,8 @@ fetch('/api/me').then(function(r){return r.json();}).catch(function(){return{log
   document.getElementById('p-steam-link').href='https://steamcommunity.com/profiles/'+user.steam_id;
   currentAccountId=(BigInt(user.steam_id)-BigInt('76561197960265728')).toString();
 
-  var heroes=await fetch('https://api.opendota.com/api/heroes').then(function(r){return r.json();}).catch(function(){return[];});
-  await delay(600);
-  var items=await fetch('https://api.opendota.com/api/constants/items').then(function(r){return r.json();}).catch(function(){return{};});
+  var heroes=await fetch('/api/opendota/heroes').then(function(r){return r.json();}).catch(function(){return[];});
+  var items=await fetch('/api/opendota/constants/items').then(function(r){return r.json();}).catch(function(){return{};});
 
   if(!Array.isArray(heroes))heroes=[];
   heroes.forEach(function(h){
@@ -148,47 +145,41 @@ fetch('/api/me').then(function(r){return r.json();}).catch(function(){return{log
     ITEMS[key]=entry;
   });
 
-  await delay(600);
   loadDotaStats(currentAccountId);
-  await delay(1000);
   loadTopHeroes(currentAccountId);
-  await delay(1000);
   loadRecentMatches(currentAccountId);
 });
 
 function loadDotaStats(accountId){
-  fetch('https://api.opendota.com/api/players/'+accountId+'/wl')
-    .then(function(r){return r.json();})
-    .then(async function(wl){
-      await delay(600);
-      return fetch('https://api.opendota.com/api/players/'+accountId+'/totals')
-        .then(function(r){return r.json();})
-        .then(function(totals){
-          document.getElementById('loading-stats').style.display='none';
-          var wins=wl.win||0,losses=wl.lose||0,total=wins+losses,wr=total>0?Math.round(wins/total*100):0;
-          document.getElementById('s-matches').textContent=total;
-          document.getElementById('s-wins').textContent=wins;
-          document.getElementById('s-losses').textContent=losses;
-          document.getElementById('s-winrate').textContent=wr+'%';
-          document.getElementById('dota-stats').style.display='grid';
-          var kills=0,deaths=0,assists=0,gpmSum=0,gpmN=1;
-          if(Array.isArray(totals))totals.forEach(function(t){
-            if(t.field==='kills')kills=t.sum;
-            if(t.field==='deaths')deaths=t.sum;
-            if(t.field==='assists')assists=t.sum;
-            if(t.field==='gold_per_min'){gpmSum=t.sum;gpmN=t.n>0?t.n:1;}
-          });
-          document.getElementById('s-kda').textContent=deaths>0?((kills+assists)/deaths).toFixed(2):(kills+assists).toFixed(2);
-          document.getElementById('s-gpm').textContent=gpmSum>0?Math.round(gpmSum/gpmN):'—';
-        });
-    }).catch(function(){
-      document.getElementById('loading-stats').style.display='none';
-      document.getElementById('private-profile').style.display='block';
+  Promise.all([
+    fetch('/api/opendota/players/'+accountId+'/wl').then(function(r){return r.json();}),
+    fetch('/api/opendota/players/'+accountId+'/totals').then(function(r){return r.json();})
+  ]).then(function(res){
+    document.getElementById('loading-stats').style.display='none';
+    var wl=res[0],totals=res[1];
+    var wins=wl.win||0,losses=wl.lose||0,total=wins+losses,wr=total>0?Math.round(wins/total*100):0;
+    document.getElementById('s-matches').textContent=total;
+    document.getElementById('s-wins').textContent=wins;
+    document.getElementById('s-losses').textContent=losses;
+    document.getElementById('s-winrate').textContent=wr+'%';
+    document.getElementById('dota-stats').style.display='grid';
+    var kills=0,deaths=0,assists=0,gpmSum=0,gpmN=1;
+    if(Array.isArray(totals))totals.forEach(function(t){
+      if(t.field==='kills')kills=t.sum;
+      if(t.field==='deaths')deaths=t.sum;
+      if(t.field==='assists')assists=t.sum;
+      if(t.field==='gold_per_min'){gpmSum=t.sum;gpmN=t.n>0?t.n:1;}
     });
+    document.getElementById('s-kda').textContent=deaths>0?((kills+assists)/deaths).toFixed(2):(kills+assists).toFixed(2);
+    document.getElementById('s-gpm').textContent=gpmSum>0?Math.round(gpmSum/gpmN):'—';
+  }).catch(function(){
+    document.getElementById('loading-stats').style.display='none';
+    document.getElementById('private-profile').style.display='block';
+  });
 }
 
 function loadTopHeroes(accountId){
-  fetch('https://api.opendota.com/api/players/'+accountId+'/heroes')
+  fetch('/api/opendota/players/'+accountId+'/heroes')
     .then(function(r){return r.json();})
     .then(function(heroes){
       var filtered=heroes.filter(function(h){return h.games>=50;}).sort(function(a,b){return b.games-a.games;});
@@ -225,7 +216,7 @@ function openHeroModal(heroId,hero,gamesData,accountId){
   document.getElementById('modal-hero-sub').textContent=gamesData.games+' игр · '+wr+'% побед';
   document.getElementById('modal-matches').innerHTML='<div style="text-align:center;padding:2rem;color:var(--text-muted)">⏳ Загружаем матчи...</div>';
   document.getElementById('modal-stats').innerHTML='';
-  fetch('https://api.opendota.com/api/players/'+accountId+'/matches?hero_id='+heroId+'&limit=50')
+  fetch('/api/opendota/players/'+accountId+'/matches?hero_id='+heroId+'&limit=50')
     .then(function(r){return r.json();})
     .then(function(matches){
       if(!matches||matches.length===0){
@@ -265,7 +256,7 @@ function openHeroModal(heroId,hero,gamesData,accountId){
         if(index>=arr.length)return;
         arr.slice(index,index+3).forEach(function(m){
           (function(matchId){
-            fetch('https://api.opendota.com/api/matches/'+matchId)
+            fetch('/api/opendota/matches/'+matchId)
               .then(function(r){return r.json();})
               .then(function(detail){
                 var player=(detail.players||[]).find(function(p){return p.account_id===parseInt(accountId);});
@@ -299,7 +290,7 @@ function closeModal(){
 }
 
 function loadRecentMatches(accountId){
-  fetch('https://api.opendota.com/api/players/'+accountId+'/matches?limit=10&significant=0')
+  fetch('/api/opendota/players/'+accountId+'/matches?limit=10&significant=0')
     .then(function(r){return r.json();})
     .then(function(matches){
       if(!matches||matches.length===0)return;
@@ -307,7 +298,7 @@ function loadRecentMatches(accountId){
       function loadMatchDetail(index){
         if(index>=matches.length)return;
         var m=matches[index];
-        fetch('https://api.opendota.com/api/matches/'+m.match_id)
+        fetch('/api/opendota/matches/'+m.match_id)
           .then(function(r){return r.json();})
           .then(function(detail){
             var player=(detail.players||[]).find(function(p){return p.account_id===parseInt(accountId);});
