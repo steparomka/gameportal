@@ -164,9 +164,8 @@ document.getElementById('teammate-form').addEventListener('submit', async (e) =>
     }
   } catch(err) {
     alertEl.innerHTML = '<div class="alert alert-warning">⚠️ Проверяем результат...</div>';
-    location.reload();
+    setTimeout(() => location.reload(), 1000);
   }
-});
 
 async function deleteCard(id) {
   if (!confirm('Удалить свою анкету?')) return;
