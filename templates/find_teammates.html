@@ -99,12 +99,14 @@
           <div class="description">{{ p.description }}</div>
           {% endif %}
 
+          {% if p.steam_id == request.cookies.get('steam_id') %}
           <div style="margin-top:0.75rem">
             <button onclick="deleteCard({{ p.id }})"
                     style="background:none;border:1px solid var(--danger);color:var(--danger);border-radius:6px;padding:0.25rem 0.75rem;cursor:pointer;font-size:0.78rem">
-              🗑 Удалить
+              🗑 Удалить мою анкету
             </button>
           </div>
+          {% endif %}
         </div>
         {% endfor %}
       </div>
@@ -130,26 +132,18 @@
 <script>
 document.getElementById('teammate-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-
   const alertEl = document.getElementById('tm-alert');
-  const btn     = e.target.querySelector('button[type="submit"]');
-
+  const btn = e.target.querySelector('button[type="submit"]');
   const body = {
     nickname:    document.getElementById('tm-nick').value.trim(),
     game:        document.getElementById('tm-game').value.trim(),
     rank:        document.getElementById('tm-rank').value.trim(),
     description: document.getElementById('tm-desc').value.trim(),
   };
-
-  if (!body.nickname || !body.game) {
-    showToast('Заполни ник и игру!', 'warning');
-    return;
-  }
-
+  if (!body.nickname || !body.game) { showToast('Заполни ник и игру!', 'warning'); return; }
   btn.disabled = true;
   btn.textContent = 'Публикуем...';
   alertEl.innerHTML = '';
-
   try {
     const r = await fetch('/teammates', {
       method: 'POST',
@@ -157,17 +151,10 @@ document.getElementById('teammate-form').addEventListener('submit', async (e) =>
       body: JSON.stringify(body),
     });
     const d = await r.json();
-
     if (r.ok) {
-      const token = d.delete_token;
-      alertEl.innerHTML = `
-        <div class="alert alert-success">
-          ✅ Анкета добавлена!<br><br>
-          🔑 Твой токен для удаления:<br>
-          <strong style="font-family:monospace;font-size:0.9rem;word-break:break-all">${token}</strong><br><br>
-          <small>⚠️ Сохрани его — показывается только один раз!</small>
-        </div>`;
-      setTimeout(() => location.reload(), 8000);
+      showToast('Анкета опубликована! ✅', 'success');
+      alertEl.innerHTML = '<div class="alert alert-success">✅ Анкета добавлена!</div>';
+      setTimeout(() => location.reload(), 1200);
     } else {
       alertEl.innerHTML = `<div class="alert alert-error">❌ ${d.detail || 'Ошибка'}</div>`;
       btn.disabled = false;
@@ -181,18 +168,14 @@ document.getElementById('teammate-form').addEventListener('submit', async (e) =>
 });
 
 async function deleteCard(id) {
-  const token = prompt('Введи токен удаления анкеты:');
-  if (!token) return;
-  const r = await fetch('/teammates/' + id, {
-    method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ delete_token: token })
-  });
+  if (!confirm('Удалить свою анкету?')) return;
+  const r = await fetch('/teammates/' + id, { method: 'DELETE' });
   if (r.ok) {
     showToast('Анкета удалена ✅', 'success');
-    setTimeout(() => location.reload(), 1000);
+    setTimeout(() => location.reload(), 800);
   } else {
-    showToast('Неверный токен ❌', 'error');
+    const d = await r.json();
+    showToast(d.detail || 'Ошибка удаления ❌', 'error');
   }
 }
 </script>
