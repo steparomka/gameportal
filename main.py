@@ -51,6 +51,10 @@ async def lifespan(app: FastAPI):
     except Exception:
         pass  # колонка уже есть
     yield
+
+app = FastAPI(title="GamePortal", lifespan=lifespan)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 # Подключаем папку static/ для отдачи CSS/JS/видео
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
