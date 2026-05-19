@@ -46,7 +46,6 @@ async def lifespan(app: FastAPI):
         from sqlalchemy import text
         with engine.connect() as conn:
             conn.execute(text("ALTER TABLE teammate_profiles ADD COLUMN steam_id VARCHAR(50)"))
-            conn.execute(text("ALTER TABLE teammate_profiles DROP COLUMN IF EXISTS delete_token"))
             conn.commit()
     except Exception:
         pass
@@ -54,8 +53,6 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="GamePortal", lifespan=lifespan)
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-# Подключаем папку static/ для отдачи CSS/JS/видео
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Jinja2 шаблоны из папки templates/
