@@ -78,12 +78,13 @@ class TeammateProfile(Base):
     """Анкеты для поиска тиммейтов"""
     __tablename__ = "teammate_profiles"
 
-    id          = Column(Integer, primary_key=True, index=True)
-    nickname    = Column(String(100), nullable=False)
-    game        = Column(String(100), nullable=False)
-    rank        = Column(String(100), nullable=True)
-    description = Column(Text, nullable=True)
-    created_at  = Column(DateTime, nullable=False)
+    id           = Column(Integer, primary_key=True, index=True)
+    nickname     = Column(String(100), nullable=False)
+    game         = Column(String(100), nullable=False)
+    rank         = Column(String(100), nullable=True)
+    description  = Column(Text, nullable=True)
+    created_at   = Column(DateTime, nullable=False)
+    delete_token = Column(String(64), nullable=True)
 
 
 class SteamUser(Base):

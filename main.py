@@ -439,28 +439,34 @@ async def set_match_result(
 
 @app.post("/teammates", response_model=schemas.TeammateOut)
 async def create_teammate(data: schemas.TeammateCreate, db: Session = Depends(get_db)):
-    """Создать анкету тиммейта"""
+    token = uuid.uuid4().hex
     profile = models.TeammateProfile(
         nickname=data.nickname,
         game=data.game,
         rank=data.rank,
         description=data.description,
         created_at=datetime.now(timezone.utc),
+        delete_token=token,
     )
     db.add(profile)
     db.commit()
     db.refresh(profile)
+    profile.delete_token = token
     return profile
 
 
-@app.get("/teammates-api", response_model=List[schemas.TeammateOut])
-async def list_teammates(game: Optional[str] = None, db: Session = Depends(get_db)):
-    """Список анкет (JSON) с опциональным фильтром"""
-    query = db.query(models.TeammateProfile)
-    if game:
-        query = query.filter(models.TeammateProfile.game.ilike(f"%{game}%"))
-    return query.order_by(models.TeammateProfile.created_at.desc()).all()
-
+@app.delete("/teammates/{profile_id}")
+async def delete_teammate(profile_id: int, request: Request, db: Session = Depends(get_db)):
+    body = await request.json()
+    token = body.get("delete_token", "")
+    profile = db.query(models.TeammateProfile).filter(models.TeammateProfile.id == profile_id).first()
+    if not profile:
+        raise HTTPException(status_code=404, detail="Анкета не найдена")
+    if profile.delete_token != token:
+        raise HTTPException(status_code=403, detail="Неверный токен")
+    db.delete(profile)
+    db.commit()
+    return {"status": "deleted"}
 
 # ════════════════════════════════════════════════
 #  WebSocket: МИ НИ-ЧАТ

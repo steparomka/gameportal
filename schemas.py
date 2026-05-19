@@ -9,7 +9,6 @@ from datetime import datetime
 # ── Реплеи ──────────────────────────────────────
 
 class ReplayOut(BaseModel):
-    """Схема ответа: данные реплея"""
     id: int
     title: str
     file_url: str
@@ -17,21 +16,19 @@ class ReplayOut(BaseModel):
     likes: int
 
     class Config:
-        from_attributes = True   # позволяет создавать из ORM-объектов
+        from_attributes = True
 
 
 # ── Турниры ─────────────────────────────────────
 
 class TournamentCreate(BaseModel):
-    """Схема создания турнира"""
     name: str
     game: str
     max_participants: int = 16
-    admin_token: str            # токен администратора
+    admin_token: str
 
 
 class TournamentOut(BaseModel):
-    """Схема ответа: данные турнира"""
     id: int
     name: str
     game: str
@@ -44,12 +41,10 @@ class TournamentOut(BaseModel):
 
 
 class ParticipantCreate(BaseModel):
-    """Схема регистрации участника"""
     nickname: str
 
 
 class ParticipantOut(BaseModel):
-    """Схема ответа: участник"""
     id: int
     nickname: str
     tournament_id: int
@@ -60,12 +55,10 @@ class ParticipantOut(BaseModel):
 
 
 class AdminAction(BaseModel):
-    """Общая схема для admin-действий"""
     admin_token: str
 
 
 class MatchResult(BaseModel):
-    """Схема записи результата матча"""
     winner_id: int
     admin_token: str
 
@@ -73,7 +66,6 @@ class MatchResult(BaseModel):
 # ── Тиммейты ─────────────────────────────────────
 
 class TeammateCreate(BaseModel):
-    """Схема создания анкеты"""
     nickname: str
     game: str
     rank: Optional[str] = ""
@@ -81,13 +73,13 @@ class TeammateCreate(BaseModel):
 
 
 class TeammateOut(BaseModel):
-    """Схема ответа: анкета тиммейта"""
     id: int
     nickname: str
     game: str
     rank: Optional[str]
     description: Optional[str]
     created_at: datetime
+    delete_token: Optional[str] = None
 
     class Config:
         from_attributes = True
