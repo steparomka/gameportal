@@ -41,9 +41,10 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 # ────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine)   # создаёт таблицы если их нет
-    yield                                    # здесь работает приложение
-
+    # Пересоздаём таблицы (осторожно — удаляет данные!)
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
+    yield
 app = FastAPI(title="GamePortal", lifespan=lifespan)
 
 # Подключаем папку static/ для отдачи CSS/JS/видео
