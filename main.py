@@ -41,7 +41,6 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 # ────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     yield
 app = FastAPI(title="GamePortal", lifespan=lifespan)
