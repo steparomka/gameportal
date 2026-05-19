@@ -42,14 +42,14 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
-    # Миграция: добавляем колонку если её нет
     try:
         from sqlalchemy import text
         with engine.connect() as conn:
-            conn.execute(text("ALTER TABLE teammate_profiles ADD COLUMN delete_token VARCHAR(64)"))
+            conn.execute(text("ALTER TABLE teammate_profiles ADD COLUMN steam_id VARCHAR(50)"))
+            conn.execute(text("ALTER TABLE teammate_profiles DROP COLUMN IF EXISTS delete_token"))
             conn.commit()
     except Exception:
-        pass  # колонка уже есть
+        pass
     yield
 
 app = FastAPI(title="GamePortal", lifespan=lifespan)
@@ -447,32 +447,32 @@ async def set_match_result(
 # ════════════════════════════════════════════════
 
 @app.post("/teammates", response_model=schemas.TeammateOut)
-async def create_teammate(data: schemas.TeammateCreate, db: Session = Depends(get_db)):
-    token = uuid.uuid4().hex
+async def create_teammate(request: Request, data: schemas.TeammateCreate, db: Session = Depends(get_db)):
+    steam_id = request.cookies.get("steam_id")
     profile = models.TeammateProfile(
         nickname=data.nickname,
         game=data.game,
         rank=data.rank,
         description=data.description,
         created_at=datetime.now(timezone.utc),
-        delete_token=token,
+        steam_id=steam_id,
     )
     db.add(profile)
     db.commit()
     db.refresh(profile)
-    profile.delete_token = token
     return profile
 
 
 @app.delete("/teammates/{profile_id}")
 async def delete_teammate(profile_id: int, request: Request, db: Session = Depends(get_db)):
-    body = await request.json()
-    token = body.get("delete_token", "")
+    steam_id = request.cookies.get("steam_id")
+    if not steam_id:
+        raise HTTPException(status_code=401, detail="Не авторизован")
     profile = db.query(models.TeammateProfile).filter(models.TeammateProfile.id == profile_id).first()
     if not profile:
         raise HTTPException(status_code=404, detail="Анкета не найдена")
-    if profile.delete_token != token:
-        raise HTTPException(status_code=403, detail="Неверный токен")
+    if profile.steam_id != steam_id:
+        raise HTTPException(status_code=403, detail="Это не твоя анкета")
     db.delete(profile)
     db.commit()
     return {"status": "deleted"}

@@ -1,12 +1,8 @@
 # Файл: schemas.py
-# Pydantic-схемы для валидации данных запросов/ответов
-
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
-
-# ── Реплеи ──────────────────────────────────────
 
 class ReplayOut(BaseModel):
     id: int
@@ -14,12 +10,9 @@ class ReplayOut(BaseModel):
     file_url: str
     uploaded_at: datetime
     likes: int
-
     class Config:
         from_attributes = True
 
-
-# ── Турниры ─────────────────────────────────────
 
 class TournamentCreate(BaseModel):
     name: str
@@ -35,7 +28,6 @@ class TournamentOut(BaseModel):
     status: str
     max_participants: int
     created_at: datetime
-
     class Config:
         from_attributes = True
 
@@ -49,7 +41,6 @@ class ParticipantOut(BaseModel):
     nickname: str
     tournament_id: int
     registered_at: datetime
-
     class Config:
         from_attributes = True
 
@@ -62,8 +53,6 @@ class MatchResult(BaseModel):
     winner_id: int
     admin_token: str
 
-
-# ── Тиммейты ─────────────────────────────────────
 
 class TeammateCreate(BaseModel):
     nickname: str
@@ -79,7 +68,6 @@ class TeammateOut(BaseModel):
     rank: Optional[str]
     description: Optional[str]
     created_at: datetime
-    delete_token: Optional[str] = None
-
+    steam_id: Optional[str] = None
     class Config:
         from_attributes = True
