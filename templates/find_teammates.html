@@ -172,11 +172,10 @@ async function deleteCard(id) {
   if (!confirm('Удалить свою анкету?')) return;
   const r = await fetch('/teammates/' + id, { method: 'DELETE' });
   if (r.ok) {
-    showToast('Анкета удалена ✅', 'success');
-    setTimeout(() => location.reload(), 800);
+    location.reload();
   } else {
     const d = await r.json();
-    showToast(d.detail || 'Ошибка удаления ❌', 'error');
+    alert(d.detail || 'Ошибка удаления');
   }
 }
 </script>
