@@ -161,8 +161,10 @@ document.getElementById('teammate-form').addEventListener('submit', async (e) =>
       btn.textContent = '🔍 Опубликовать анкету';
     }
   } catch(err) {
-    alertEl.innerHTML = '<div class="alert alert-error">❌ Ошибка сети</div>';
-    btn.disabled = false;
+  // Даже при ошибке сети — анкета могла создаться, перезагружаем
+  alertEl.innerHTML = '<div class="alert alert-warning">⚠️ Проверяем результат...</div>';
+  setTimeout(() => location.reload(), 1500);
+}
     btn.textContent = '🔍 Опубликовать анкету';
   }
 });
