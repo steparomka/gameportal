@@ -294,29 +294,34 @@ function loadRecentMatches(accountId){
     .then(function(r){return r.json();})
     .then(function(matches){
       if(!matches||matches.length===0)return;
+      document.getElementById('matches-section').style.display='block';
+      document.getElementById('matches-divider').style.display='block';
       var list=document.getElementById('matches-list');
-      function loadMatchDetail(index){
-        if(index>=matches.length)return;
-        var m=matches[index];
+      // Резервируем места чтобы порядок сохранялся
+      var placeholders = matches.map(function(m){
+        var div=document.createElement('div');
+        list.appendChild(div);
+        return div;
+      });
+      matches.forEach(function(m, index){
         fetch('/api/opendota/matches/'+m.match_id)
           .then(function(r){return r.json();})
           .then(function(detail){
             var player=(detail.players||[]).find(function(p){return p.account_id===parseInt(accountId);});
             if(player){m.item_0=player.item_0;m.item_1=player.item_1;m.item_2=player.item_2;m.item_3=player.item_3;m.item_4=player.item_4;m.item_5=player.item_5;m.gold_per_min=player.gold_per_min;}
-            renderMatch(m,list);
-            if(index===0){document.getElementById('matches-section').style.display='block';document.getElementById('matches-divider').style.display='block';}
+            var row=document.createElement('div');
+            renderMatch(m, row);
+            placeholders[index].replaceWith(row);
           }).catch(function(){
-            renderMatch(m,list);
-            if(index===0){document.getElementById('matches-section').style.display='block';document.getElementById('matches-divider').style.display='block';}
-          }).finally(function(){
-            setTimeout(function(){loadMatchDetail(index+1);},800);
+            var row=document.createElement('div');
+            renderMatch(m, row);
+            placeholders[index].replaceWith(row);
           });
-      }
-      loadMatchDetail(0);
+      });
     }).catch(function(){});
 }
 
-function renderMatch(m,list){
+function renderMatch(m,row){
   var won=(m.player_slot<128&&m.radiant_win)||(m.player_slot>=128&&!m.radiant_win);
   var hero=HEROES[m.hero_id]||{name:'Герой #'+m.hero_id,img:'',img_wide:''};
   var mins=Math.floor(m.duration/60),secs=m.duration%60;
@@ -327,7 +332,7 @@ function renderMatch(m,list){
     } else {itemsHtml+='<div class="item-icon-empty"></div>';}
   });
   var heroImg=hero.img?'<img class="match-hero-img" src="'+hero.img+'" onerror="this.style.display=\'none\'" />':'';
-  var row=document.createElement('div');row.className='match-row';
+  row.className='match-row';
   row.onclick=function(){window.open('https://www.opendota.com/matches/'+m.match_id,'_blank');};
   row.innerHTML=
     '<span class="match-result '+(won?'win':'loss')+'">'+(won?'Победа':'Поражение')+'</span>'+
@@ -336,7 +341,6 @@ function renderMatch(m,list){
     '<span class="match-gpm">💰 '+(m.gold_per_min||'—')+' GPM</span>'+
     '<span class="match-duration">⏱ '+mins+':'+(secs<10?'0':'')+secs+'</span>'+
     '<div class="match-items">'+itemsHtml+'</div>';
-  list.appendChild(row);
 }
 </script>
 {% endblock %}
