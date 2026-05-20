@@ -369,23 +369,52 @@ function onSearchInput() {
   clearTimeout(searchTimeout);
   if (q.length < 2) { dd.style.display = 'none'; return; }
   searchTimeout = setTimeout(function() {
-    fetch('/api/users/search?q=' + encodeURIComponent(q))
-      .then(function(r) { return r.json(); })
-      .then(function(users) {
-        dd.innerHTML = '';
-        if (!users.length) {
-          dd.innerHTML = '<div class="search-empty">Никого не найдено</div>';
-        } else {
-          users.forEach(function(u) {
-            var item = document.createElement('div');
-            item.className = 'search-item';
-            item.innerHTML = '<img src="' + u.avatar + '" /><span class="search-item-name">' + u.nickname + '</span>';
-            item.onclick = function() { window.location.href = '/profile?steam_id=' + u.steam_id; };
-            dd.appendChild(item);
-          });
-        }
-        dd.style.display = 'block';
-      });
+    // Оба запроса параллельно
+    Promise.all([
+      fetch('/api/users/search?q=' + encodeURIComponent(q)).then(function(r){return r.json();}).catch(function(){return[];}),
+      fetch('/api/opendota/search?q=' + encodeURIComponent(q)).then(function(r){return r.json();}).catch(function(){return[];})
+    ]).then(function(results) {
+      var siteUsers = results[0];
+      var dotaUsers = results[1] || [];
+      dd.innerHTML = '';
+
+      // Сначала пользователи сайта
+      if (siteUsers.length) {
+        dd.innerHTML += '<div class="search-group-label">На сайте</div>';
+        siteUsers.forEach(function(u) {
+          var item = document.createElement('div');
+          item.className = 'search-item';
+          item.innerHTML = '<img src="' + u.avatar + '" /><span class="search-item-name">' + u.nickname + '</span><span class="search-item-badge">DotaClutch</span>';
+          item.onclick = function() { window.location.href = '/profile?steam_id=' + u.steam_id; };
+          dd.appendChild(item);
+        });
+      }
+
+      // Потом из OpenDota (исключаем тех кто уже есть на сайте)
+      var siteIds = siteUsers.map(function(u){ return u.steam_id; });
+      var filtered = dotaUsers.filter(function(u){
+        var sid = (BigInt(u.account_id) + BigInt('76561197960265728')).toString();
+        return !siteIds.includes(sid);
+      }).slice(0, 5);
+
+      if (filtered.length) {
+        dd.innerHTML += '<div class="search-group-label">Все игроки</div>';
+        filtered.forEach(function(u) {
+          var steamId = (BigInt(u.account_id) + BigInt('76561197960265728')).toString();
+          var item = document.createElement('div');
+          item.className = 'search-item';
+          var avatar = u.avatarfull || u.avatar || '';
+          item.innerHTML = '<img src="' + avatar + '" onerror="this.style.display=\'none\'" /><span class="search-item-name">' + u.personaname + '</span>';
+          item.onclick = function() { window.location.href = '/profile?steam_id=' + steamId; };
+          dd.appendChild(item);
+        });
+      }
+
+      if (!siteUsers.length && !filtered.length) {
+        dd.innerHTML = '<div class="search-empty">Никого не найдено</div>';
+      }
+      dd.style.display = 'block';
+    });
   }, 300);
 }
 
