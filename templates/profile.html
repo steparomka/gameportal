@@ -11,9 +11,9 @@
         <h1 id="p-nickname" class="profile-name">Загрузка...</h1>
         <div class="profile-search-wrap">
           <input id="search-input" class="profile-search-input" type="text"
-                 placeholder="Найти игрока..." oninput="onSearchInput()" />
-          <div id="search-dropdown" class="search-dropdown" style="display:none"></div>
-        </div>
+       placeholder="Ник или Steam ID..." oninput="onSearchInput()" />
+<div id="search-dropdown" class="search-dropdown" style="display:none"></div>
+<div class="search-hint">Поиск по нику или Steam ID</div>
       </div>
       <a id="p-steam-link" href="#" target="_blank" class="profile-steam-link">Открыть в Steam ↗</a>
     </div>
@@ -136,16 +136,34 @@ var HEROES = {};
 var ITEMS  = {};
 var currentAccountId = '';
 
+// Берём steam_id из URL или из своей сессии
+var urlParams = new URLSearchParams(window.location.search);
+var targetSteamId = urlParams.get('steam_id');
+
 fetch('/api/me').then(function(r){return r.json();}).catch(function(){return{logged_in:false};})
 .then(async function(user){
   if(!user.logged_in){window.location.href='/';return;}
-  document.getElementById('p-avatar').src=user.avatar;
-  document.getElementById('p-nickname').textContent=user.nickname;
-  document.getElementById('p-steam-link').href='https://steamcommunity.com/profiles/'+user.steam_id;
-  currentAccountId=(BigInt(user.steam_id)-BigInt('76561197960265728')).toString();
 
-  var heroes=await fetch('/api/opendota/heroes').then(function(r){return r.json();}).catch(function(){return[];});
-  var items=await fetch('/api/opendota/constants/items').then(function(r){return r.json();}).catch(function(){return{};});
+  var steamId = targetSteamId || user.steam_id;
+
+  // Если смотрим чужой профиль — загружаем его данные из Steam
+  if(targetSteamId && targetSteamId !== user.steam_id){
+    fetch('/api/opendota/players/'+(BigInt(targetSteamId)-BigInt('76561197960265728')).toString())
+      .then(function(r){return r.json();})
+      .then(function(p){
+        if(p && p.profile){
+          document.getElementById('p-avatar').src = p.profile.avatarfull || p.profile.avatar || '';
+          document.getElementById('p-nickname').textContent = p.profile.personaname || 'Игрок';
+          document.getElementById('p-steam-link').href = 'https://steamcommunity.com/profiles/' + targetSteamId;
+        }
+      }).catch(function(){});
+  } else {
+    document.getElementById('p-avatar').src=user.avatar;
+    document.getElementById('p-nickname').textContent=user.nickname;
+    document.getElementById('p-steam-link').href='https://steamcommunity.com/profiles/'+user.steam_id;
+  }
+
+  currentAccountId=(BigInt(steamId)-BigInt('76561197960265728')).toString();
 
   if(!Array.isArray(heroes))heroes=[];
   heroes.forEach(function(h){
@@ -415,7 +433,7 @@ function onSearchInput() {
       }
       dd.style.display = 'block';
     });
-  }, 300);
+  }, 150);
 }
 
 document.addEventListener('click', function(e) {

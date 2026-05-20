@@ -1127,3 +1127,5 @@ textarea.form-control { min-height: 100px; resize: vertical; }
 
 .search-group-label{padding:0.4rem 1rem;font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border)}
 .search-item-badge{margin-left:auto;font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);border:1px solid var(--accent);border-radius:99px;padding:0.1rem 0.4rem;white-space:nowrap}
+
+.search-hint{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted);padding:0.2rem 0.5rem;opacity:0.7}
