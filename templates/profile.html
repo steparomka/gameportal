@@ -7,7 +7,14 @@
   <div class="profile-hero">
     <img id="p-avatar" src="" alt="avatar" class="profile-avatar" />
     <div class="profile-info">
-      <h1 id="p-nickname" class="profile-name">Загрузка...</h1>
+      <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+        <h1 id="p-nickname" class="profile-name">Загрузка...</h1>
+        <div class="profile-search-wrap">
+          <input id="search-input" class="profile-search-input" type="text"
+                 placeholder="Найти игрока..." oninput="onSearchInput()" />
+          <div id="search-dropdown" class="search-dropdown" style="display:none"></div>
+        </div>
+      </div>
       <a id="p-steam-link" href="#" target="_blank" class="profile-steam-link">Открыть в Steam ↗</a>
     </div>
   </div>
@@ -109,6 +116,17 @@
 .match-items{display:flex;align-items:center;gap:3px;flex-wrap:wrap}
 .item-icon{width:34px;height:24px;border-radius:3px;object-fit:contain;border:1px solid rgba(255,255,255,0.08);background:var(--bg-surface)}
 .item-icon-empty{width:34px;height:24px;border-radius:3px;background:var(--bg-surface);border:1px solid var(--border);opacity:0.3}
+
+/* Поиск игроков */
+.profile-search-wrap{position:relative}
+.profile-search-input{background:var(--bg-surface);border:1px solid var(--border);border-radius:99px;padding:0.35rem 1rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-primary);outline:none;width:220px;transition:border-color 0.2s}
+.profile-search-input:focus{border-color:var(--accent)}
+.search-dropdown{position:absolute;top:calc(100% + 6px);left:0;width:280px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+.search-item{display:flex;align-items:center;gap:0.75rem;padding:0.6rem 1rem;cursor:pointer;transition:background 0.15s}
+.search-item:hover{background:var(--bg-surface)}
+.search-item img{width:32px;height:32px;border-radius:6px;object-fit:cover}
+.search-item-name{font-family:var(--font-head);font-size:0.85rem;color:var(--text-primary)}
+.search-empty{padding:0.75rem 1rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted);text-align:center}
 </style>
 {% endblock %}
 
@@ -297,7 +315,6 @@ function loadRecentMatches(accountId){
       document.getElementById('matches-section').style.display='block';
       document.getElementById('matches-divider').style.display='block';
       var list=document.getElementById('matches-list');
-      // Резервируем места чтобы порядок сохранялся
       var placeholders = matches.map(function(m){
         var div=document.createElement('div');
         list.appendChild(div);
@@ -342,5 +359,40 @@ function renderMatch(m,row){
     '<span class="match-duration">⏱ '+mins+':'+(secs<10?'0':'')+secs+'</span>'+
     '<div class="match-items">'+itemsHtml+'</div>';
 }
+
+/* ── Поиск игроков ── */
+var searchTimeout = null;
+
+function onSearchInput() {
+  var q = document.getElementById('search-input').value.trim();
+  var dd = document.getElementById('search-dropdown');
+  clearTimeout(searchTimeout);
+  if (q.length < 2) { dd.style.display = 'none'; return; }
+  searchTimeout = setTimeout(function() {
+    fetch('/api/users/search?q=' + encodeURIComponent(q))
+      .then(function(r) { return r.json(); })
+      .then(function(users) {
+        dd.innerHTML = '';
+        if (!users.length) {
+          dd.innerHTML = '<div class="search-empty">Никого не найдено</div>';
+        } else {
+          users.forEach(function(u) {
+            var item = document.createElement('div');
+            item.className = 'search-item';
+            item.innerHTML = '<img src="' + u.avatar + '" /><span class="search-item-name">' + u.nickname + '</span>';
+            item.onclick = function() { window.location.href = '/profile?steam_id=' + u.steam_id; };
+            dd.appendChild(item);
+          });
+        }
+        dd.style.display = 'block';
+      });
+  }, 300);
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.profile-search-wrap')) {
+    document.getElementById('search-dropdown').style.display = 'none';
+  }
+});
 </script>
 {% endblock %}

@@ -592,17 +592,26 @@ async def get_me(request: Request):
         "nickname":  request.cookies.get("steam_nickname"),
         "avatar":    request.cookies.get("steam_avatar"),
     }
+    
+@app.get("/api/users/search")
+async def search_users(q: str, db: Session = Depends(get_db)):
+    if not q or len(q) < 2:
+        return []
+    users = db.query(models.SteamUser).filter(
+        models.SteamUser.nickname.ilike(f"%{q}%")
+    ).limit(10).all()
+    return [{"steam_id": u.steam_id, "nickname": u.nickname, "avatar": u.avatar} for u in users]
 
 
 @app.get("/profile", response_class=HTMLResponse)
 async def profile_page(request: Request):
-    """Страница профиля игрока со статистикой Dota 2"""
-    steam_id = request.cookies.get("steam_id")
-    if not steam_id:
+    target_steam_id = request.query_params.get("steam_id") or request.cookies.get("steam_id")
+    if not target_steam_id:
         return RedirectResponse("/")
     return templates.TemplateResponse("profile.html", {
         "request": request,
         "online": count_online(),
+        "target_steam_id": target_steam_id,
     })
 @app.get("/ai-coach", response_class=HTMLResponse)
 async def ai_coach_page(request: Request):
