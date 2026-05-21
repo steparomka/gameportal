@@ -514,6 +514,124 @@ async def get_online(request: Request):
     return {"online": count_online()}
 
 # ════════════════════════════════════════════════
+# ДОБАВИТЬ В main.py — вставить после /api/online роута
+# Парсит официальные новости Dota 2 через Steam API
+# Кешируется на 1 час — не спамит запросами
+# ════════════════════════════════════════════════
+
+@app.get("/api/dota-news")
+async def get_dota_news():
+    """Официальные новости Dota 2 с Steam API (кеш 1 час)"""
+    cache_key = "dota_news"
+    cached = cache_get(cache_key)
+    if cached:
+        return cached
+
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(
+                "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/",
+                params={
+                    "appid": "570",
+                    "count": "10",
+                    "maxlength": "300",
+                    "format": "json",
+                    "feeds": "steam_community_announcements"
+                },
+                timeout=10.0
+            )
+        data = resp.json()
+        items = data.get("appnews", {}).get("newsitems", [])
+
+        news = []
+        for item in items:
+            # Определяем тег по заголовку
+            title = item.get("title", "")
+            tag = "Новость"
+            if any(w in title.lower() for w in ["patch", "патч", "update", "7."]):
+                tag = "Патч"
+            elif any(w in title.lower() for w in ["tournament", "турнир", "major", "international"]):
+                tag = "Турнир"
+            elif any(w in title.lower() for w in ["plus", "плюс", "battle pass", "arcana"]):
+                tag = "Обновление"
+            elif any(w in title.lower() for w in ["guide", "гайд", "tips"]):
+                tag = "Гайд"
+
+            import datetime
+            dt = datetime.datetime.fromtimestamp(item.get("date", 0))
+            months_ru = ["","Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"]
+            date_str = f"{dt.day} {months_ru[dt.month]} {dt.year}"
+
+            news.append({
+                "title": title,
+                "url": item.get("url", "https://www.dota2.com/news"),
+                "date": date_str,
+                "tag": tag,
+            })
+
+        result = {"news": news, "source": "steam"}
+        cache_set(cache_key, result, ttl=3600)  # кеш 1 час
+        return result
+
+    except Exception as e:
+        return {"news": [], "source": "error", "error": str(e)}
+
+
+@app.get("/api/cs2-news")
+async def get_cs2_news():
+    """Официальные новости CS2 с Steam API (кеш 1 час)"""
+    cache_key = "cs2_news"
+    cached = cache_get(cache_key)
+    if cached:
+        return cached
+
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(
+                "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/",
+                params={
+                    "appid": "730",
+                    "count": "8",
+                    "maxlength": "300",
+                    "format": "json",
+                    "feeds": "steam_community_announcements"
+                },
+                timeout=10.0
+            )
+        data = resp.json()
+        items = data.get("appnews", {}).get("newsitems", [])
+
+        news = []
+        for item in items:
+            title = item.get("title", "")
+            tag = "Новость"
+            if any(w in title.lower() for w in ["update", "patch", "патч"]):
+                tag = "Обновление"
+            elif any(w in title.lower() for w in ["major", "tournament", "турнир"]):
+                tag = "Major"
+            elif any(w in title.lower() for w in ["operation", "операция"]):
+                tag = "Операция"
+
+            import datetime
+            dt = datetime.datetime.fromtimestamp(item.get("date", 0))
+            months_ru = ["","Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"]
+            date_str = f"{dt.day} {months_ru[dt.month]} {dt.year}"
+
+            news.append({
+                "title": title,
+                "url": item.get("url", "https://www.counter-strike.net/news"),
+                "date": date_str,
+                "tag": tag,
+            })
+
+        result = {"news": news, "source": "steam"}
+        cache_set(cache_key, result, ttl=3600)
+        return result
+
+    except Exception as e:
+        return {"news": [], "source": "error", "error": str(e)}
+
+# ════════════════════════════════════════════════
 #  STEAM АВТОРИЗАЦИЯ
 # ════════════════════════════════════════════════
 
