@@ -48,8 +48,6 @@
           <span class="section-icon">⚡</span> Мета героев
           <span class="section-badge" id="meta-patch-badge">АКТУАЛЬНЫЙ ПАТЧ</span>
         </div>
-
-        <!-- Фильтры: роль + ранг -->
         <div class="meta-filters">
           <div class="meta-filter-row">
             <span class="meta-filter-label">Роль:</span>
@@ -64,34 +62,17 @@
             <span class="meta-filter-label">Ранг:</span>
             <div class="rank-tabs">
               <button class="rank-btn active" data-rank="all" title="Все ранги">Все</button>
-              <button class="rank-btn" data-rank="herald" title="Herald" style="color:#8B6914">
-                <span class="rank-icon">🪙</span><span class="rank-label">Herald</span>
-              </button>
-              <button class="rank-btn" data-rank="guardian" title="Guardian" style="color:#6B8E23">
-                <span class="rank-icon">🛡️</span><span class="rank-label">Guard</span>
-              </button>
-              <button class="rank-btn" data-rank="crusader" title="Crusader" style="color:#4169E1">
-                <span class="rank-icon">⚔️</span><span class="rank-label">Crus</span>
-              </button>
-              <button class="rank-btn" data-rank="archon" title="Archon" style="color:#00CED1">
-                <span class="rank-icon">🌀</span><span class="rank-label">Archon</span>
-              </button>
-              <button class="rank-btn" data-rank="legend" title="Legend" style="color:#9370DB">
-                <span class="rank-icon">⭐</span><span class="rank-label">Legend</span>
-              </button>
-              <button class="rank-btn" data-rank="ancient" title="Ancient" style="color:#FF8C00">
-                <span class="rank-icon">🔥</span><span class="rank-label">Ancient</span>
-              </button>
-              <button class="rank-btn" data-rank="divine" title="Divine" style="color:#FFD700">
-                <span class="rank-icon">✨</span><span class="rank-label">Divine</span>
-              </button>
-              <button class="rank-btn" data-rank="immortal" title="Immortal" style="color:#FF4500">
-                <span class="rank-icon">👑</span><span class="rank-label">Imm</span>
-              </button>
+              <button class="rank-btn" data-rank="herald" title="Herald" style="color:#8B6914"><span class="rank-icon">🪙</span><span class="rank-label">Herald</span></button>
+              <button class="rank-btn" data-rank="guardian" title="Guardian" style="color:#6B8E23"><span class="rank-icon">🛡️</span><span class="rank-label">Guard</span></button>
+              <button class="rank-btn" data-rank="crusader" title="Crusader" style="color:#4169E1"><span class="rank-icon">⚔️</span><span class="rank-label">Crus</span></button>
+              <button class="rank-btn" data-rank="archon" title="Archon" style="color:#00CED1"><span class="rank-icon">🌀</span><span class="rank-label">Archon</span></button>
+              <button class="rank-btn" data-rank="legend" title="Legend" style="color:#9370DB"><span class="rank-icon">⭐</span><span class="rank-label">Legend</span></button>
+              <button class="rank-btn" data-rank="ancient" title="Ancient" style="color:#FF8C00"><span class="rank-icon">🔥</span><span class="rank-label">Ancient</span></button>
+              <button class="rank-btn" data-rank="divine" title="Divine" style="color:#FFD700"><span class="rank-icon">✨</span><span class="rank-label">Divine</span></button>
+              <button class="rank-btn" data-rank="immortal" title="Immortal" style="color:#FF4500"><span class="rank-icon">👑</span><span class="rank-label">Imm</span></button>
             </div>
           </div>
         </div>
-
         <div id="dota-meta-list">
           <div class="skeleton-list"><div class="skeleton-item"></div><div class="skeleton-item"></div><div class="skeleton-item"></div><div class="skeleton-item"></div></div>
         </div>
@@ -114,7 +95,7 @@
     <div class="home-grid-2col">
       <div>
         <div class="section-title"><span class="section-icon">📰</span> Новости CS2<span class="section-badge cs2-badge">STEAM OFFICIAL</span></div>
-        <div id="cs2-news-list" class="news-grid"></div><div class="skeleton-item"></div><div class="skeleton-item"></div><div class="skeleton-item"></div></div></div>
+        <div id="cs2-news-list" class="news-grid"></div>
       </div>
       <div>
         <div class="section-title"><span class="section-icon">📊</span> Рейтинг команд CS2<span class="section-badge cs2-badge">HLTV</span></div>
@@ -161,137 +142,40 @@
 .skeleton-list{display:flex;flex-direction:column;gap:0.6rem}
 .skeleton-item{height:52px;background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:sk-wave 1.4s infinite;border-radius:var(--radius);border:1px solid var(--border)}
 @keyframes sk-wave{0%{background-position:200% 0}100%{background-position:-200% 0}}
-/* ── Новости ── */
-/* ── Сетка новостей (Dotabuff-стиль) ─────────── */
-.news-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.85rem;
-}
-.news-bigcard {
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  text-decoration: none;
-  color: inherit;
-  transition: all 0.25s;
-  cursor: pointer;
-}
-.news-bigcard.featured { grid-column: 1 / -1; }
-.news-bigcard:hover {
-  border-color: rgba(0,212,255,0.4);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(0,212,255,0.06);
-  transform: translateY(-3px);
-  color: inherit;
-}
-.news-bigcard-img-wrap { overflow: hidden; position: relative; flex-shrink: 0; }
-.news-bigcard-img-wrap::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 60px;
-  background: linear-gradient(transparent, var(--bg-card));
-  pointer-events: none;
-}
-.news-bigcard-img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  object-position: center top;
-  display: block;
-  background: var(--bg-surface);
-  transition: transform 0.4s ease;
-}
-.news-bigcard.featured .news-bigcard-img { height: 200px; }
-.news-bigcard:hover .news-bigcard-img { transform: scale(1.03); }
-.news-bigcard-body {
-  padding: 0.85rem 1rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  flex: 1;
-}
-.news-bigcard-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.news-bigcard-tag {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  padding: 0.12rem 0.5rem;
-  border-radius: 99px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  font-weight: 700;
-}
-.news-bigcard-tag.patch    { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.25); }
-.news-bigcard-tag.tournament { background: rgba(245,158,11,0.15); color: var(--warning); border: 1px solid rgba(245,158,11,0.25); }
-.news-bigcard-tag.update   { background: rgba(168,85,247,0.15); color: var(--accent3); border: 1px solid rgba(168,85,247,0.25); }
-.news-bigcard-tag.guide    { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
-.news-bigcard-tag.default  { background: rgba(0,212,255,0.08); color: var(--accent); border: 1px solid rgba(0,212,255,0.15); }
-.news-bigcard-tag.major    { background: rgba(255,107,53,0.15); color: #ff6b35; border: 1px solid rgba(255,107,53,0.3); }
-.news-bigcard-date { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); margin-left: auto; }
-.news-bigcard-title {
-  font-family: var(--font-head);
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text-bright);
-  line-height: 1.3;
-}
-.news-bigcard.featured .news-bigcard-title { font-size: 1.05rem; }
-.news-bigcard-desc {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.news-bigcard-arrow {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--accent);
-  margin-top: 0.2rem;
-  opacity: 0;
-  transform: translateX(-4px);
-  transition: all 0.2s;
-}
-.news-bigcard:hover .news-bigcard-arrow { opacity: 1; transform: translateX(0); }
-/* Компактная горизонтальная карточка */
-.news-bigcard.compact { flex-direction: row; align-items: stretch; }
-.news-bigcard.compact .news-bigcard-img-wrap { width: 100px; flex-shrink: 0; }
-.news-bigcard.compact .news-bigcard-img { height: 100%; min-height: 72px; }
-.news-bigcard.compact .news-bigcard-img-wrap::after { display: none; }
-.news-bigcard.compact .news-bigcard-body { padding: 0.65rem 0.85rem; gap: 0.25rem; }
-.news-bigcard.compact .news-bigcard-title {
-  font-size: 0.83rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-/* Скелетон */
-.news-skeleton-featured {
-  border-radius: var(--radius-lg);
-  height: 280px;
-  background: linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);
-  background-size: 200% 100%;
-  animation: sk-wave 1.4s infinite;
-  border: 1px solid var(--border);
-}
-.news-skeleton-compact {
-  border-radius: var(--radius);
-  height: 80px;
-  background: linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);
-  background-size: 200% 100%;
-  animation: sk-wave 1.4s infinite;
-  border: 1px solid var(--border);
-}
-@media(max-width:480px) {
-  .news-bigcard.compact .news-bigcard-img-wrap { width: 80px; }
-  .news-bigcard.featured .news-bigcard-img { height: 150px; }
-}
+/* ── Новости Dotabuff-стиль ── */
+.news-grid{display:grid;grid-template-columns:1fr;gap:0.85rem}
+.news-bigcard{display:flex;flex-direction:column;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;text-decoration:none;color:inherit;transition:all 0.25s;cursor:pointer}
+.news-bigcard.featured{grid-column:1/-1}
+.news-bigcard:hover{border-color:rgba(0,212,255,0.4);box-shadow:0 8px 32px rgba(0,0,0,0.4),0 0 20px rgba(0,212,255,0.06);transform:translateY(-3px);color:inherit}
+.news-bigcard-img-wrap{overflow:hidden;position:relative;flex-shrink:0}
+.news-bigcard-img-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(transparent,var(--bg-card));pointer-events:none}
+.news-bigcard-img{width:100%;height:160px;object-fit:cover;object-position:center top;display:block;background:var(--bg-surface);transition:transform 0.4s ease}
+.news-bigcard.featured .news-bigcard-img{height:200px}
+.news-bigcard:hover .news-bigcard-img{transform:scale(1.03)}
+.news-bigcard-body{padding:0.85rem 1rem 1rem;display:flex;flex-direction:column;gap:0.4rem;flex:1}
+.news-bigcard-meta{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
+.news-bigcard-tag{font-family:var(--font-mono);font-size:0.62rem;padding:0.12rem 0.5rem;border-radius:99px;letter-spacing:0.5px;text-transform:uppercase;font-weight:700}
+.news-bigcard-tag.patch{background:rgba(16,185,129,0.15);color:var(--success);border:1px solid rgba(16,185,129,0.25)}
+.news-bigcard-tag.tournament{background:rgba(245,158,11,0.15);color:var(--warning);border:1px solid rgba(245,158,11,0.25)}
+.news-bigcard-tag.update{background:rgba(168,85,247,0.15);color:var(--accent3);border:1px solid rgba(168,85,247,0.25)}
+.news-bigcard-tag.guide{background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.2)}
+.news-bigcard-tag.default{background:rgba(0,212,255,0.08);color:var(--accent);border:1px solid rgba(0,212,255,0.15)}
+.news-bigcard-tag.major{background:rgba(255,107,53,0.15);color:#ff6b35;border:1px solid rgba(255,107,53,0.3)}
+.news-bigcard-date{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-left:auto}
+.news-bigcard-title{font-family:var(--font-head);font-size:0.95rem;font-weight:700;color:var(--text-bright);line-height:1.3}
+.news-bigcard.featured .news-bigcard-title{font-size:1.05rem}
+.news-bigcard-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.news-bigcard-arrow{font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);margin-top:0.2rem;opacity:0;transform:translateX(-4px);transition:all 0.2s}
+.news-bigcard:hover .news-bigcard-arrow{opacity:1;transform:translateX(0)}
+.news-bigcard.compact{flex-direction:row;align-items:stretch}
+.news-bigcard.compact .news-bigcard-img-wrap{width:100px;flex-shrink:0}
+.news-bigcard.compact .news-bigcard-img{height:100%;min-height:72px}
+.news-bigcard.compact .news-bigcard-img-wrap::after{display:none}
+.news-bigcard.compact .news-bigcard-body{padding:0.65rem 0.85rem;gap:0.25rem}
+.news-bigcard.compact .news-bigcard-title{font-size:0.83rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.news-skeleton-featured{border-radius:var(--radius-lg);height:280px;background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:sk-wave 1.4s infinite;border:1px solid var(--border)}
+.news-skeleton-compact{border-radius:var(--radius);height:80px;background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:sk-wave 1.4s infinite;border:1px solid var(--border)}
+@media(max-width:480px){.news-bigcard.compact .news-bigcard-img-wrap{width:80px}.news-bigcard.featured .news-bigcard-img{height:150px}}
 /* ── Мета фильтры ── */
 .meta-filters{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.85rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:0.75rem}
 .meta-filter-row{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
@@ -306,7 +190,6 @@
 .rank-btn.active{background:rgba(255,255,255,0.07);border-color:currentColor;font-weight:700}
 .rank-btn.active[data-rank="all"]{color:var(--accent);border-color:var(--accent);background:rgba(0,212,255,0.1)}
 .rank-icon{font-size:0.75rem}
-.rank-label{}
 @media(max-width:480px){.rank-label{display:none}.rank-btn{padding:0.22rem 0.4rem}.rank-icon{font-size:0.9rem}}
 /* ── Герой мета строка ── */
 .hero-meta-row{display:flex;align-items:center;gap:0.65rem;padding:0.5rem 0.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:0.4rem;transition:all 0.2s}
@@ -435,33 +318,15 @@ document.querySelectorAll('.rank-btn').forEach(btn=>{
 });
 
 // ════════════════════════════════════════════════
-//  НОВОСТИ — грузим с нашего бэкенда (Steam API)
+//  НОВОСТИ
 // ════════════════════════════════════════════════
 const TAG_MAP = {
   'Патч':'patch','Обновление':'update','Турнир':'tournament',
-  'TI':'tournament','DPC':'tournament','Major':'tournament',
-  'Гайд':'default','Новость':'default','Операция':'update'
+  'TI':'tournament','DPC':'tournament','Major':'major',
+  'Гайд':'guide','Новость':'default','Операция':'update','IEM':'tournament'
 };
 
-async function loadDotaNews(){
-  const el = document.getElementById('dota-news-list');
-  try {
-    const data = await fetch('/api/dota-news').then(r=>r.json());
-    const news = data.news || [];
-    if(!news.length) throw new Error('empty');
-    el.innerHTML = news.map(n=>{
-      const tagClass = TAG_MAP[n.tag] || 'default';
-      return `<a class="news-card" href="${esc(n.url)}" target="_blank" rel="noopener">
-        <div class="news-card-title">${esc(n.title)}</div>
-        <div class="news-card-meta">
-          <span>${esc(n.date)}</span>
-          <span class="news-tag ${tagClass}">${esc(n.tag)}</span>
-        </div>
-      </a>`;
-    }).join('');
-  } catch(e){
-    // Красивый fallback если API недоступен
-   const DOTA_HERO_IMGS = [
+const DOTA_HERO_IMGS = [
   'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/invoker.png',
   'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/phantom_assassin.png',
   'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/crystal_maiden.png',
@@ -476,36 +341,30 @@ function renderNewsGrid(news, elId, heroImgs) {
   const el = document.getElementById(elId);
   if (!el) return;
   el.className = 'news-grid';
-  el.innerHTML = `
-    <div class="news-skeleton-featured"></div>
-    <div class="news-skeleton-compact"></div>
-    <div class="news-skeleton-compact"></div>
-  `;
+  el.innerHTML = '<div class="news-skeleton-featured"></div><div class="news-skeleton-compact"></div><div class="news-skeleton-compact"></div>';
   setTimeout(() => {
     el.innerHTML = news.slice(0, 7).map((n, i) => {
       const isFeatured = i === 0;
       const img = n.img || (heroImgs ? heroImgs[i % heroImgs.length] : CS2_IMG);
       const tagClass = TAG_MAP[n.tag] || 'default';
-      return `<a class="news-bigcard ${isFeatured ? 'featured' : 'compact'}"
-           href="${esc(n.url)}" target="_blank" rel="noopener">
-        <div class="news-bigcard-img-wrap">
-          <img class="news-bigcard-img" src="${esc(img)}" alt="${esc(n.title)}"
-               onerror="this.parentElement.style.display='none'" loading="lazy"/>
-        </div>
-        <div class="news-bigcard-body">
-          <div class="news-bigcard-meta">
-            <span class="news-bigcard-tag ${tagClass}">${esc(n.tag || 'Новость')}</span>
-            <span class="news-bigcard-date">${esc(n.date || '')}</span>
-          </div>
-          <div class="news-bigcard-title">${esc(n.title)}</div>
-          ${isFeatured && n.desc ? `<div class="news-bigcard-desc">${esc(n.desc)}</div>` : ''}
-          <div class="news-bigcard-arrow">Читать →</div>
-        </div>
-      </a>`;
+      return '<a class="news-bigcard ' + (isFeatured ? 'featured' : 'compact') + '" href="' + esc(n.url) + '" target="_blank" rel="noopener">' +
+        '<div class="news-bigcard-img-wrap">' +
+          '<img class="news-bigcard-img" src="' + esc(img) + '" alt="' + esc(n.title) + '" onerror="this.parentElement.style.display=\'none\'" loading="lazy"/>' +
+        '</div>' +
+        '<div class="news-bigcard-body">' +
+          '<div class="news-bigcard-meta">' +
+            '<span class="news-bigcard-tag ' + tagClass + '">' + esc(n.tag || 'Новость') + '</span>' +
+            '<span class="news-bigcard-date">' + esc(n.date || '') + '</span>' +
+          '</div>' +
+          '<div class="news-bigcard-title">' + esc(n.title) + '</div>' +
+          (isFeatured && n.desc ? '<div class="news-bigcard-desc">' + esc(n.desc) + '</div>' : '') +
+          '<div class="news-bigcard-arrow">Читать →</div>' +
+        '</div>' +
+      '</a>';
     }).join('');
     el.querySelectorAll('.news-bigcard').forEach((card, i) => {
       card.style.cssText = 'opacity:0;transform:translateY(12px);transition:opacity 0.3s ease,transform 0.3s ease';
-      setTimeout(() => { card.style.opacity='1'; card.style.transform='translateY(0)'; }, i * 60);
+      setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, i * 60);
     });
   }, 300);
 }
@@ -515,7 +374,11 @@ async function loadDotaNews() {
     const data = await fetch('/api/dota-news').then(r => r.json());
     const news = data.news || [];
     if (!news.length) throw new Error('empty');
-    renderNewsGrid(news.map((n, i) => ({...n, img: DOTA_HERO_IMGS[i % DOTA_HERO_IMGS.length], desc: i===0 ? (n.desc||'Официальные новости Dota 2 от Valve.') : undefined})), 'dota-news-list', DOTA_HERO_IMGS);
+    renderNewsGrid(news.map((n, i) => ({
+      ...n,
+      img: DOTA_HERO_IMGS[i % DOTA_HERO_IMGS.length],
+      desc: i === 0 ? (n.desc || 'Официальные новости Dota 2 от Valve.') : undefined
+    })), 'dota-news-list', DOTA_HERO_IMGS);
   } catch(e) {
     renderNewsGrid([
       {title:'Патч-ноты — изменения баланса героев и предметов', date:'Актуально', tag:'Патч', url:'https://www.dota2.com/patches', desc:'Valve выпустила очередной балансный патч с изменениями героев и предметов.'},
@@ -532,12 +395,16 @@ async function loadCS2News() {
     const data = await fetch('/api/cs2-news').then(r => r.json());
     const news = data.news || [];
     if (!news.length) throw new Error('empty');
-    renderNewsGrid(news.map((n, i) => ({...n, img: CS2_IMG, desc: i===0 ? (n.desc||'Официальные новости Counter-Strike 2.') : undefined})), 'cs2-news-list', null);
+    renderNewsGrid(news.map((n, i) => ({
+      ...n,
+      img: CS2_IMG,
+      desc: i === 0 ? (n.desc || 'Официальные новости Counter-Strike 2.') : undefined
+    })), 'cs2-news-list', null);
   } catch(e) {
     renderNewsGrid([
       {title:'PGL Major Bucharest 2025 — анонс, формат, команды', date:'Актуально', tag:'Major', url:'https://www.counter-strike.net/news', desc:'Крупнейший Major сезона. Объявлены даты квалификаций RMR и призовой фонд $1,250,000.'},
       {title:'Обновление CS2 — улучшения SubTick и новые анимации', date:'Актуально', tag:'Обновление', url:'https://www.counter-strike.net/news'},
-      {title:'IEM Dallas 2025 — MOUZ выигрывает финал против NaVi', date:'Актуально', tag:'Турнир', url:'https://www.counter-strike.net/news'},
+      {title:'IEM Dallas 2025 — MOUZ выигрывает финал против NaVi', date:'Актуально', tag:'IEM', url:'https://www.counter-strike.net/news'},
       {title:'Новый пул карт 2025 — изменения Active Duty', date:'Актуально', tag:'Патч', url:'https://www.counter-strike.net/news'},
       {title:'VAC Live — как работает новый реалтайм-античит', date:'Актуально', tag:'Обновление', url:'https://www.counter-strike.net/news'},
     ], 'cs2-news-list', null);
@@ -545,7 +412,7 @@ async function loadCS2News() {
 }
 
 // ════════════════════════════════════════════════
-//  МЕТА — все ранги, актуальные данные
+//  МЕТА
 // ════════════════════════════════════════════════
 const META = {
   carry: {
@@ -598,7 +465,7 @@ const RANK_NAMES={all:'Все ранги',herald:'Herald',guardian:'Guardian',cr
 
 function heroImg(name){
   const n=name.toLowerCase().replace(/['\s\-]/g,'_').replace(/[^a-z0-9_]/g,'');
-  return`https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${n}.png`;
+  return'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/'+n+'.png';
 }
 
 function renderDotaMeta(role, rank){
@@ -606,14 +473,14 @@ function renderDotaMeta(role, rank){
   const roleData = META[role] || META.carry;
   const heroes = roleData[rank] || roleData['all'];
   const rankName = RANK_NAMES[rank] || 'Все';
-  document.getElementById('meta-patch-badge').textContent = `АКТУАЛЬНЫЙ ПАТЧ · ${rankName.toUpperCase()}`;
-  document.getElementById('dota-meta-list').innerHTML=heroes.map((h,i)=>`<div class="hero-meta-row">
-    <span class="hero-meta-num">${i+1}</span>
-    <img class="hero-meta-img" src="${heroImg(h.name)}" alt="${esc(h.name)}" onerror="this.style.opacity='0'" loading="lazy"/>
-    <span class="hero-meta-name">${esc(h.name)}</span>
-    <div class="hero-meta-stats"><span class="meta-stat wr">${h.wr}%</span><span class="meta-stat pick">${h.picks}</span></div>
-    <span class="meta-tier tier-${h.tier}" title="Tier ${h.tier.toUpperCase()}"></span>
-  </div>`).join('');
+  document.getElementById('meta-patch-badge').textContent = 'АКТУАЛЬНЫЙ ПАТЧ · ' + rankName.toUpperCase();
+  document.getElementById('dota-meta-list').innerHTML=heroes.map((h,i)=>'<div class="hero-meta-row">' +
+    '<span class="hero-meta-num">'+(i+1)+'</span>' +
+    '<img class="hero-meta-img" src="'+heroImg(h.name)+'" alt="'+esc(h.name)+'" onerror="this.style.opacity=\'0\'" loading="lazy"/>' +
+    '<span class="hero-meta-name">'+esc(h.name)+'</span>' +
+    '<div class="hero-meta-stats"><span class="meta-stat wr">'+h.wr+'%</span><span class="meta-stat pick">'+h.picks+'</span></div>' +
+    '<span class="meta-tier tier-'+h.tier+'" title="Tier '+h.tier.toUpperCase()+'"></span>' +
+  '</div>').join('');
 }
 
 // ════════════════════════════════════════════════
@@ -672,17 +539,17 @@ const CS2_T=[
 function renderEsports(list,elId){
   const game=elId.includes('dota')?'dota':'cs2';
   document.getElementById(elId).innerHTML=list.map(t=>{
-    const topChips=t.top.map((tm,i)=>`<span class="esports-team-chip ${i===0?'gold':i===1?'silver':''}">${i===0?'🥇 ':i===1?'🥈 ':''}${esc(tm)}</span>`).join('');
-    return`<div class="esports-card" onclick="openBracket('${game}','${t.id}')">
-      <div class="esports-card-header">
-        <span class="esports-name">🏆 ${esc(t.name)}</span>
-        <span class="esports-prize">${esc(t.prize)}</span>
-        <span class="esports-tier-badge ${t.tier}">${esc(t.tierLabel)}</span>
-      </div>
-      <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);margin-bottom:0.5rem">${esc(t.date)} · ${t.location}</div>
-      <div class="esports-teams">${topChips}</div>
-      <div class="esports-click-hint">🖱️ Нажми — открыть сетку →</div>
-    </div>`;
+    const topChips=t.top.map((tm,i)=>'<span class="esports-team-chip '+(i===0?'gold':i===1?'silver':'')+'">'+( i===0?'🥇 ':i===1?'🥈 ':'')+esc(tm)+'</span>').join('');
+    return'<div class="esports-card" onclick="openBracket(\''+game+'\',\''+t.id+'\')">'+
+      '<div class="esports-card-header">'+
+        '<span class="esports-name">🏆 '+esc(t.name)+'</span>'+
+        '<span class="esports-prize">'+esc(t.prize)+'</span>'+
+        '<span class="esports-tier-badge '+t.tier+'">'+esc(t.tierLabel)+'</span>'+
+      '</div>'+
+      '<div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);margin-bottom:0.5rem">'+esc(t.date)+' · '+t.location+'</div>'+
+      '<div class="esports-teams">'+topChips+'</div>'+
+      '<div class="esports-click-hint">🖱️ Нажми — открыть сетку →</div>'+
+    '</div>';
   }).join('');
 }
 
@@ -696,12 +563,11 @@ function loadCS2Rankings(){
   ];
   document.getElementById('cs2-rankings-list').innerHTML=teams.map(t=>{
     const cc=t.change>0?'up':t.change<0?'down':'same';
-    const ct=t.change>0?`▲${t.change}`:t.change<0?`▼${Math.abs(t.change)}`:'—';
-    return`<div class="ranking-row"><span class="ranking-pos ${t.pos<=3?'top3':''}">${t.pos}</span><span class="ranking-flag">${t.flag}</span><span class="ranking-name">${t.name}</span><span class="ranking-points">${t.points} pts</span><span class="ranking-change ${cc}">${ct}</span></div>`;
+    const ct=t.change>0?'▲'+t.change:t.change<0?'▼'+Math.abs(t.change):'—';
+    return'<div class="ranking-row"><span class="ranking-pos '+(t.pos<=3?'top3':'')+'">'+t.pos+'</span><span class="ranking-flag">'+t.flag+'</span><span class="ranking-name">'+t.name+'</span><span class="ranking-points">'+t.points+' pts</span><span class="ranking-change '+cc+'">'+ct+'</span></div>';
   }).join('');
 }
 
-/* ══ МОДАЛКА ══ */
 function openBracket(game,id){
   const list=game==='dota'?DOTA_T:CS2_T;
   const t=list.find(x=>x.id===id);
@@ -709,23 +575,9 @@ function openBracket(game,id){
   document.getElementById('bracket-modal-title').textContent=t.name;
   const body=document.getElementById('bracket-modal-body');
   if(t.bracket.type==='single'){
-    body.innerHTML=`<div class="bracket-grid">${t.bracket.rounds.map(r=>`<div class="bracket-round">
-      <div class="bracket-round-label">${esc(r.label)}</div>
-      ${r.matches.map(m=>`<div class="bracket-match">
-        <div class="bracket-player ${m.winner===m.p1?'winner':''} ${m.p1==='TBD'?'tbd':''}">${esc(m.p1)}</div>
-        <div class="bracket-player ${m.winner===m.p2?'winner':''} ${m.p2==='TBD'?'tbd':''}">${esc(m.p2)}</div>
-      </div>`).join('')}
-    </div>`).join('')}</div>`;
+    body.innerHTML='<div class="bracket-grid">'+t.bracket.rounds.map(r=>'<div class="bracket-round"><div class="bracket-round-label">'+esc(r.label)+'</div>'+r.matches.map(m=>'<div class="bracket-match"><div class="bracket-player '+(m.winner===m.p1?'winner':'')+' '+(m.p1==='TBD'?'tbd':'')+'">'+esc(m.p1)+'</div><div class="bracket-player '+(m.winner===m.p2?'winner':'')+' '+(m.p2==='TBD'?'tbd':'')+'">'+esc(m.p2)+'</div></div>').join('')+'</div>').join('')+'</div>';
   }else{
-    body.innerHTML=t.bracket.groups.map(g=>`<div style="margin-bottom:1.5rem">
-      <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.5rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border)">${esc(g.label)}</div>
-      <table class="group-table"><thead><tr><th>#</th><th>Команда</th><th>В</th><th>П</th></tr></thead>
-      <tbody>${g.teams.map(tm=>`<tr class="${tm.qualified?'qualified':''} ${tm.eliminated?'eliminated':''}">
-        <td class="pos-col">${tm.pos}</td>
-        <td>${esc(tm.name)} ${tm.qualified?'<span style="font-size:0.65rem;color:var(--success)">✓</span>':''}${tm.eliminated?'<span style="font-size:0.65rem;color:var(--danger)">✗</span>':''}</td>
-        <td class="win">${tm.w}</td><td class="loss">${tm.l}</td>
-      </tr>`).join('')}</tbody></table>
-    </div>`).join('');
+    body.innerHTML=t.bracket.groups.map(g=>'<div style="margin-bottom:1.5rem"><div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.5rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border)">'+esc(g.label)+'</div><table class="group-table"><thead><tr><th>#</th><th>Команда</th><th>В</th><th>П</th></tr></thead><tbody>'+g.teams.map(tm=>'<tr class="'+(tm.qualified?'qualified':'')+' '+(tm.eliminated?'eliminated':'')+'"><td class="pos-col">'+tm.pos+'</td><td>'+esc(tm.name)+(tm.qualified?'<span style="font-size:0.65rem;color:var(--success)">✓</span>':'')+(tm.eliminated?'<span style="font-size:0.65rem;color:var(--danger)">✗</span>':'')+'</td><td class="win">'+tm.w+'</td><td class="loss">'+tm.l+'</td></tr>').join('')+'</tbody></table></div>').join('');
   }
   document.getElementById('bracket-modal').style.display='flex';
   document.body.style.overflow='hidden';
