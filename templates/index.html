@@ -39,9 +39,7 @@
           <span class="section-live-dot"></span>
           <span class="section-badge">STEAM OFFICIAL</span>
         </div>
-        <div id="dota-news-list">
-          <div class="skeleton-list"><div class="skeleton-item"></div><div class="skeleton-item"></div><div class="skeleton-item"></div><div class="skeleton-item"></div></div>
-        </div>
+        <div id="dota-news-list" class="news-grid"></div>
       </div>
 
       <!-- МЕТА -->
@@ -116,7 +114,7 @@
     <div class="home-grid-2col">
       <div>
         <div class="section-title"><span class="section-icon">📰</span> Новости CS2<span class="section-badge cs2-badge">STEAM OFFICIAL</span></div>
-        <div id="cs2-news-list"><div class="skeleton-list"><div class="skeleton-item"></div><div class="skeleton-item"></div><div class="skeleton-item"></div></div></div>
+        <div id="cs2-news-list" class="news-grid"></div><div class="skeleton-item"></div><div class="skeleton-item"></div><div class="skeleton-item"></div></div></div>
       </div>
       <div>
         <div class="section-title"><span class="section-icon">📊</span> Рейтинг команд CS2<span class="section-badge cs2-badge">HLTV</span></div>
@@ -164,17 +162,136 @@
 .skeleton-item{height:52px;background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:sk-wave 1.4s infinite;border-radius:var(--radius);border:1px solid var(--border)}
 @keyframes sk-wave{0%{background-position:200% 0}100%{background-position:-200% 0}}
 /* ── Новости ── */
-.news-card{display:flex;flex-direction:column;gap:0.35rem;padding:0.85rem 1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:0.5rem;text-decoration:none;color:inherit;transition:all 0.2s;position:relative;overflow:hidden}
-.news-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--accent),var(--accent3));opacity:0;transition:opacity 0.2s}
-.news-card:hover{border-color:rgba(0,212,255,0.35);background:rgba(0,212,255,0.03);transform:translateX(4px);color:inherit}
-.news-card:hover::before{opacity:1}
-.news-card-title{font-family:var(--font-head);font-size:0.92rem;font-weight:600;color:var(--text-bright);line-height:1.3}
-.news-card-meta{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);display:flex;align-items:center;gap:0.5rem}
-.news-tag{padding:0.1rem 0.5rem;border-radius:99px;font-size:0.65rem;font-family:var(--font-mono);white-space:nowrap}
-.news-tag.patch{background:rgba(16,185,129,0.12);color:var(--success);border:1px solid rgba(16,185,129,0.2)}
-.news-tag.tournament{background:rgba(245,158,11,0.12);color:var(--warning);border:1px solid rgba(245,158,11,0.2)}
-.news-tag.update{background:rgba(168,85,247,0.12);color:var(--accent3);border:1px solid rgba(168,85,247,0.2)}
-.news-tag.default{background:rgba(0,212,255,0.08);color:var(--accent);border:1px solid rgba(0,212,255,0.2)}
+/* ── Сетка новостей (Dotabuff-стиль) ─────────── */
+.news-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+}
+.news-bigcard {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s;
+  cursor: pointer;
+}
+.news-bigcard.featured { grid-column: 1 / -1; }
+.news-bigcard:hover {
+  border-color: rgba(0,212,255,0.4);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(0,212,255,0.06);
+  transform: translateY(-3px);
+  color: inherit;
+}
+.news-bigcard-img-wrap { overflow: hidden; position: relative; flex-shrink: 0; }
+.news-bigcard-img-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: linear-gradient(transparent, var(--bg-card));
+  pointer-events: none;
+}
+.news-bigcard-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  background: var(--bg-surface);
+  transition: transform 0.4s ease;
+}
+.news-bigcard.featured .news-bigcard-img { height: 200px; }
+.news-bigcard:hover .news-bigcard-img { transform: scale(1.03); }
+.news-bigcard-body {
+  padding: 0.85rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+.news-bigcard-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.news-bigcard-tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  padding: 0.12rem 0.5rem;
+  border-radius: 99px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.news-bigcard-tag.patch    { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.25); }
+.news-bigcard-tag.tournament { background: rgba(245,158,11,0.15); color: var(--warning); border: 1px solid rgba(245,158,11,0.25); }
+.news-bigcard-tag.update   { background: rgba(168,85,247,0.15); color: var(--accent3); border: 1px solid rgba(168,85,247,0.25); }
+.news-bigcard-tag.guide    { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+.news-bigcard-tag.default  { background: rgba(0,212,255,0.08); color: var(--accent); border: 1px solid rgba(0,212,255,0.15); }
+.news-bigcard-tag.major    { background: rgba(255,107,53,0.15); color: #ff6b35; border: 1px solid rgba(255,107,53,0.3); }
+.news-bigcard-date { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); margin-left: auto; }
+.news-bigcard-title {
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  line-height: 1.3;
+}
+.news-bigcard.featured .news-bigcard-title { font-size: 1.05rem; }
+.news-bigcard-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.news-bigcard-arrow {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--accent);
+  margin-top: 0.2rem;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: all 0.2s;
+}
+.news-bigcard:hover .news-bigcard-arrow { opacity: 1; transform: translateX(0); }
+/* Компактная горизонтальная карточка */
+.news-bigcard.compact { flex-direction: row; align-items: stretch; }
+.news-bigcard.compact .news-bigcard-img-wrap { width: 100px; flex-shrink: 0; }
+.news-bigcard.compact .news-bigcard-img { height: 100%; min-height: 72px; }
+.news-bigcard.compact .news-bigcard-img-wrap::after { display: none; }
+.news-bigcard.compact .news-bigcard-body { padding: 0.65rem 0.85rem; gap: 0.25rem; }
+.news-bigcard.compact .news-bigcard-title {
+  font-size: 0.83rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* Скелетон */
+.news-skeleton-featured {
+  border-radius: var(--radius-lg);
+  height: 280px;
+  background: linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);
+  background-size: 200% 100%;
+  animation: sk-wave 1.4s infinite;
+  border: 1px solid var(--border);
+}
+.news-skeleton-compact {
+  border-radius: var(--radius);
+  height: 80px;
+  background: linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);
+  background-size: 200% 100%;
+  animation: sk-wave 1.4s infinite;
+  border: 1px solid var(--border);
+}
+@media(max-width:480px) {
+  .news-bigcard.compact .news-bigcard-img-wrap { width: 80px; }
+  .news-bigcard.featured .news-bigcard-img { height: 150px; }
+}
 /* ── Мета фильтры ── */
 .meta-filters{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.85rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:0.75rem}
 .meta-filter-row{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
@@ -344,46 +461,86 @@ async function loadDotaNews(){
     }).join('');
   } catch(e){
     // Красивый fallback если API недоступен
-    const fallback=[
-      {title:'Патч-ноты — изменения баланса героев и предметов',date:'Актуально',tag:'Патч',url:'https://www.dota2.com/patches'},
-      {title:'The International 2025 — анонс формата и квалификаций',date:'Актуально',tag:'TI',url:'https://www.dota2.com/esports'},
-      {title:'DPC Лига 2025 — результаты сезона',date:'Актуально',tag:'DPC',url:'https://www.dota2.com/esports'},
-      {title:'Новые косметики и обновление Dota Plus',date:'Актуально',tag:'Обновление',url:'https://www.dota2.com/news'},
-      {title:'ESL One 2025 — итоги и лучшие моменты',date:'Актуально',tag:'Турнир',url:'https://www.dota2.com/esports'},
-      {title:'Советы про-игроков по топ-героям текущего патча',date:'Актуально',tag:'Гайд',url:'https://www.dota2.com'},
-    ];
-    el.innerHTML=fallback.map(n=>`<a class="news-card" href="${n.url}" target="_blank" rel="noopener">
-      <div class="news-card-title">${esc(n.title)}</div>
-      <div class="news-card-meta"><span>${n.date}</span><span class="news-tag ${TAG_MAP[n.tag]||'default'}">${n.tag}</span></div>
-    </a>`).join('');
+   const DOTA_HERO_IMGS = [
+  'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/invoker.png',
+  'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/phantom_assassin.png',
+  'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/crystal_maiden.png',
+  'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/lion.png',
+  'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/juggernaut.png',
+  'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/tidehunter.png',
+  'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/windranger.png',
+];
+const CS2_IMG = 'https://cdn.cloudflare.steamstatic.com/apps/730/capsules/header.jpg';
+
+function renderNewsGrid(news, elId, heroImgs) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.className = 'news-grid';
+  el.innerHTML = `
+    <div class="news-skeleton-featured"></div>
+    <div class="news-skeleton-compact"></div>
+    <div class="news-skeleton-compact"></div>
+  `;
+  setTimeout(() => {
+    el.innerHTML = news.slice(0, 7).map((n, i) => {
+      const isFeatured = i === 0;
+      const img = n.img || (heroImgs ? heroImgs[i % heroImgs.length] : CS2_IMG);
+      const tagClass = TAG_MAP[n.tag] || 'default';
+      return `<a class="news-bigcard ${isFeatured ? 'featured' : 'compact'}"
+           href="${esc(n.url)}" target="_blank" rel="noopener">
+        <div class="news-bigcard-img-wrap">
+          <img class="news-bigcard-img" src="${esc(img)}" alt="${esc(n.title)}"
+               onerror="this.parentElement.style.display='none'" loading="lazy"/>
+        </div>
+        <div class="news-bigcard-body">
+          <div class="news-bigcard-meta">
+            <span class="news-bigcard-tag ${tagClass}">${esc(n.tag || 'Новость')}</span>
+            <span class="news-bigcard-date">${esc(n.date || '')}</span>
+          </div>
+          <div class="news-bigcard-title">${esc(n.title)}</div>
+          ${isFeatured && n.desc ? `<div class="news-bigcard-desc">${esc(n.desc)}</div>` : ''}
+          <div class="news-bigcard-arrow">Читать →</div>
+        </div>
+      </a>`;
+    }).join('');
+    el.querySelectorAll('.news-bigcard').forEach((card, i) => {
+      card.style.cssText = 'opacity:0;transform:translateY(12px);transition:opacity 0.3s ease,transform 0.3s ease';
+      setTimeout(() => { card.style.opacity='1'; card.style.transform='translateY(0)'; }, i * 60);
+    });
+  }, 300);
+}
+
+async function loadDotaNews() {
+  try {
+    const data = await fetch('/api/dota-news').then(r => r.json());
+    const news = data.news || [];
+    if (!news.length) throw new Error('empty');
+    renderNewsGrid(news.map((n, i) => ({...n, img: DOTA_HERO_IMGS[i % DOTA_HERO_IMGS.length], desc: i===0 ? (n.desc||'Официальные новости Dota 2 от Valve.') : undefined})), 'dota-news-list', DOTA_HERO_IMGS);
+  } catch(e) {
+    renderNewsGrid([
+      {title:'Патч-ноты — изменения баланса героев и предметов', date:'Актуально', tag:'Патч', url:'https://www.dota2.com/patches', desc:'Valve выпустила очередной балансный патч с изменениями героев и предметов.'},
+      {title:'The International 2025 — анонс формата и квалификаций', date:'Актуально', tag:'TI', url:'https://www.dota2.com/esports'},
+      {title:'DPC Лига 2025 — результаты сезона', date:'Актуально', tag:'DPC', url:'https://www.dota2.com/esports'},
+      {title:'Новые косметики и обновление Dota Plus', date:'Актуально', tag:'Обновление', url:'https://www.dota2.com/news'},
+      {title:'ESL One 2025 — итоги и лучшие моменты', date:'Актуально', tag:'Турнир', url:'https://www.dota2.com/esports'},
+    ], 'dota-news-list', DOTA_HERO_IMGS);
   }
 }
 
-async function loadCS2News(){
-  const el=document.getElementById('cs2-news-list');
-  try{
-    const data=await fetch('/api/cs2-news').then(r=>r.json());
-    const news=data.news||[];
-    if(!news.length) throw new Error('empty');
-    el.innerHTML=news.map(n=>{
-      const tagClass=TAG_MAP[n.tag]||'default';
-      return`<a class="news-card" href="${esc(n.url)}" target="_blank" rel="noopener">
-        <div class="news-card-title">${esc(n.title)}</div>
-        <div class="news-card-meta"><span>${esc(n.date)}</span><span class="news-tag ${tagClass}">${esc(n.tag)}</span></div>
-      </a>`;
-    }).join('');
-  }catch(e){
-    const fallback=[
-      {title:'PGL Major Bucharest 2025 — анонс и формат',date:'Актуально',tag:'Major'},
-      {title:'Новая операция CS2 — контракты и скины',date:'Актуально',tag:'Операция'},
-      {title:'IEM Dallas 2025 — итоги турнира',date:'Актуально',tag:'Турнир'},
-      {title:'Обновление VAC Live — улучшения античита',date:'Актуально',tag:'Обновление'},
-      {title:'Новый пул карт 2025 — изменения Active Duty',date:'Актуально',tag:'Патч'},
-    ];
-    el.innerHTML=fallback.map(n=>`<a class="news-card" href="https://www.counter-strike.net/news" target="_blank" rel="noopener">
-      <div class="news-card-title">${n.title}</div>
-      <div class="news-card-meta"><span>${n.date}</span><span class="news-tag ${TAG_MAP[n.tag]||'default'}">${n.tag}</span></div>
-    </a>`).join('');
+async function loadCS2News() {
+  try {
+    const data = await fetch('/api/cs2-news').then(r => r.json());
+    const news = data.news || [];
+    if (!news.length) throw new Error('empty');
+    renderNewsGrid(news.map((n, i) => ({...n, img: CS2_IMG, desc: i===0 ? (n.desc||'Официальные новости Counter-Strike 2.') : undefined})), 'cs2-news-list', null);
+  } catch(e) {
+    renderNewsGrid([
+      {title:'PGL Major Bucharest 2025 — анонс, формат, команды', date:'Актуально', tag:'Major', url:'https://www.counter-strike.net/news', desc:'Крупнейший Major сезона. Объявлены даты квалификаций RMR и призовой фонд $1,250,000.'},
+      {title:'Обновление CS2 — улучшения SubTick и новые анимации', date:'Актуально', tag:'Обновление', url:'https://www.counter-strike.net/news'},
+      {title:'IEM Dallas 2025 — MOUZ выигрывает финал против NaVi', date:'Актуально', tag:'Турнир', url:'https://www.counter-strike.net/news'},
+      {title:'Новый пул карт 2025 — изменения Active Duty', date:'Актуально', tag:'Патч', url:'https://www.counter-strike.net/news'},
+      {title:'VAC Live — как работает новый реалтайм-античит', date:'Актуально', tag:'Обновление', url:'https://www.counter-strike.net/news'},
+    ], 'cs2-news-list', null);
   }
 }
 
