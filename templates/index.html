@@ -114,15 +114,6 @@
 
       </div>
 
-      <!-- Сайдбар -->
-      <div class="news-sidebar-col">
-        <div class="section-title">
-          <span class="section-icon">🏆</span> Киберспорт
-          <span class="section-badge dota-live-badge">● LIVE</span>
-        </div>
-        <p style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);margin-bottom:0.75rem">Нажми — открыть сетку</p>
-        <div id="dota-esports-list"></div>
-      </div>
     </div>
   </div>
 
@@ -204,14 +195,6 @@
 
       </div>
 
-      <div class="news-sidebar-col">
-        <div class="section-title">
-          <span class="section-icon">🏆</span> Киберспорт
-          <span class="section-badge cs2-badge">● LIVE</span>
-        </div>
-        <p style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);margin-bottom:0.75rem">Нажми — открыть сетку</p>
-        <div id="cs2-esports-list"></div>
-      </div>
     </div>
   </div>
 </div>
@@ -282,8 +265,8 @@
 @keyframes pbadge{0%,100%{box-shadow:none}50%{box-shadow:0 0 8px rgba(239,68,68,0.3)}}
 
 /* ── Лейаут ── */
-.news-page-layout{display:grid;grid-template-columns:1fr 300px;gap:2rem;align-items:start}
-@media(max-width:900px){.news-page-layout{grid-template-columns:1fr}.news-sidebar-col{display:none}}
+.news-page-layout{display:grid;grid-template-columns:1fr;gap:2rem;align-items:start}
+@media(max-width:900px){.news-page-layout{grid-template-columns:1fr}}
 
 /* ── Скелетон ── */
 .nf-skeleton{border-radius:var(--radius-lg);background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.35) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:skw 1.4s infinite;border:1px solid var(--border);margin-bottom:1rem;height:280px}
@@ -925,7 +908,5 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeNewsReader();c
 
 /* ── Старт ── */
 loadSteamNews('dota');
-renderEsports(DOTA_T,'dota-esports-list');
-renderEsports(CS2_T,'cs2-esports-list');
 </script>
 {% endblock %}
