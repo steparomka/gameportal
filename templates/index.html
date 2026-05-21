@@ -339,22 +339,37 @@ function getPostFlair(post){
   return{cls:'discussion',label:'💬 Обсуждение'};
 }
 
+// Оборачиваем URL картинки в наш прокси
+function proxyImg(url){
+  if(!url) return null;
+  return '/api/img?url=' + encodeURIComponent(url);
+}
+
 // Достаём лучшую картинку из поста
 function getPostImg(post){
-  // preview.images
+  // preview.images — лучшее качество
   if(post.preview&&post.preview.images&&post.preview.images[0]){
     const imgs=post.preview.images[0];
-    // Берём resolutions[2] или source
     const res=imgs.resolutions||[];
+    // Берём среднее разрешение (не слишком большое)
     const src=res[2]||res[1]||res[0]||imgs.source;
-    if(src&&src.url) return src.url.replace(/&amp;/g,'&');
+    if(src&&src.url){
+      const clean=src.url.replace(/&amp;/g,'&');
+      return proxyImg(clean);
+    }
   }
-  // thumbnail
-  if(post.thumbnail&&post.thumbnail.startsWith('http')&&!post.thumbnail.includes('default')&&!post.thumbnail.includes('self'))
-    return post.thumbnail;
+  // i.redd.it или i.imgur.com напрямую
+  if(post.url&&/^https?:\/\/(i\.redd\.it|i\.imgur\.com)\//i.test(post.url))
+    return proxyImg(post.url);
+  // thumbnail как запасной вариант
+  if(post.thumbnail&&post.thumbnail.startsWith('http')
+     &&!post.thumbnail.includes('default')
+     &&!post.thumbnail.includes('self')
+     &&!post.thumbnail.includes('nsfw'))
+    return proxyImg(post.thumbnail);
   // url если это картинка
   if(post.url&&/\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(post.url))
-    return post.url;
+    return proxyImg(post.url);
   return null;
 }
 

@@ -514,6 +514,69 @@ async def get_online(request: Request):
     return {"online": count_online()}
 
 # ════════════════════════════════════════════════
+# ДОБАВИТЬ В main.py после роута /api/online
+# Прокси для картинок Reddit и Steam
+# ════════════════════════════════════════════════
+
+from fastapi.responses import Response as FastAPIResponse
+from urllib.parse import unquote
+
+@app.get("/api/img")
+async def image_proxy(url: str):
+    """Прокси для картинок — обходит CORS блокировки Reddit/Steam"""
+    url = unquote(url)
+    
+    # Разрешаем только картинки с известных доменов
+    allowed = [
+        'preview.redd.it', 'i.redd.it', 'i.imgur.com',
+        'cdn.cloudflare.steamstatic.com', 'shared.akamai.steamstatic.com',
+        'cdn.akamai.steamstatic.com', 'steamstore-a.akamaihd.net',
+        'external-preview.redd.it', 'b.thumbs.redditmedia.com',
+        'a.thumbs.redditmedia.com', 'styles.redditmedia.com',
+    ]
+    
+    domain = url.split('/')[2] if url.startswith('http') else ''
+    if not any(domain.endswith(a) for a in allowed):
+        return FastAPIResponse(status_code=403, content=b'Forbidden domain')
+    
+    # Кеш 30 минут
+    cache_key = 'img:' + url[:200]
+    cached = cache_get(cache_key)
+    if cached:
+        return FastAPIResponse(
+            content=cached['data'],
+            media_type=cached['ct'],
+            headers={"Cache-Control": "public, max-age=1800"}
+        )
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(
+                url,
+                headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0",
+                    "Referer": "https://www.reddit.com/",
+                    "Accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+                },
+                timeout=8.0,
+                follow_redirects=True,
+            )
+        if resp.status_code == 200:
+            ct = resp.headers.get("content-type", "image/jpeg")
+            if 'image' in ct:
+                data = resp.content
+                cache_set(cache_key, {'data': data, 'ct': ct}, ttl=1800)
+                return FastAPIResponse(
+                    content=data,
+                    media_type=ct,
+                    headers={"Cache-Control": "public, max-age=1800"}
+                )
+    except Exception:
+        pass
+    
+    return FastAPIResponse(status_code=404, content=b'Not found')
+
+# ════════════════════════════════════════════════
 # ДОБАВИТЬ В main.py — вставить после /api/online роута
 # Парсит официальные новости Dota 2 через Steam API
 # Кешируется на 1 час — не спамит запросами
