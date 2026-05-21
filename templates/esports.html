@@ -1,0 +1,488 @@
+{% extends "base.html" %}
+{% block title %}Киберспорт — DotaClutch{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- ЗАГОЛОВОК -->
+  <div class="page-header">
+    <h1>🏆 <span class="accent">Киберспорт</span></h1>
+    <p>Ближайшие турниры · Групповые таблицы · Плей-офф сетки</p>
+  </div>
+
+  <!-- ИГРОВЫЕ ТАБЫ -->
+  <div class="esports-game-tabs">
+    <button class="egt-btn active" data-game="dota">🛡️ Dota 2</button>
+    <button class="egt-btn" data-game="cs2">🎯 CS2</button>
+  </div>
+
+  <!-- ══ DOTA 2 ══ -->
+  <div id="esports-dota" class="esports-game-content">
+
+    <!-- Фильтр статуса -->
+    <div class="esports-filters">
+      <button class="esports-filter-btn active" data-filter="all">Все</button>
+      <button class="esports-filter-btn" data-filter="live">🔴 Live</button>
+      <button class="esports-filter-btn" data-filter="upcoming">⏰ Скоро</button>
+      <button class="esports-filter-btn" data-filter="finished">✅ Завершены</button>
+    </div>
+
+    <!-- ТУРНИР 1: The International 2025 -->
+    <div class="tournament-block" data-status="upcoming">
+      <div class="tournament-header">
+        <div class="tournament-header-left">
+          <div class="tournament-game-icon">🛡️</div>
+          <div>
+            <div class="tournament-name">The International 2025</div>
+            <div class="tournament-meta">Авг–Сен 2025 · 🌍 TBA</div>
+          </div>
+        </div>
+        <div class="tournament-header-right">
+          <span class="t-prize">$40,000,000</span>
+          <span class="t-badge major">MAJOR</span>
+          <span class="t-status upcoming">⏰ Скоро</span>
+        </div>
+      </div>
+
+      <div class="tournament-body">
+        <!-- Группы -->
+        <div class="stage-label">📊 Групповой этап</div>
+        <div class="groups-grid">
+          <div class="group-table-wrap">
+            <div class="group-title">Группа A</div>
+            <table class="group-standings">
+              <thead><tr><th>#</th><th>Команда</th><th>М</th><th>В</th><th>П</th><th>О</th></tr></thead>
+              <tbody>
+                <tr class="qualified"><td>1</td><td><span class="team-flag">🇷🇺</span> Team Spirit</td><td>8</td><td>6</td><td>2</td><td class="pts">18</td></tr>
+                <tr class="qualified"><td>2</td><td><span class="team-flag">🌍</span> OG</td><td>8</td><td>5</td><td>3</td><td class="pts">15</td></tr>
+                <tr class="qualified"><td>3</td><td><span class="team-flag">🇸🇪</span> Gaimin Gladiators</td><td>8</td><td>4</td><td>4</td><td class="pts">12</td></tr>
+                <tr><td>4</td><td><span class="team-flag">🇺🇸</span> nouns</td><td>8</td><td>3</td><td>5</td><td class="pts">9</td></tr>
+                <tr class="eliminated"><td>5</td><td><span class="team-flag">🇦🇺</span> Tundra</td><td>8</td><td>0</td><td>8</td><td class="pts">0</td></tr>
+              </tbody>
+            </table>
+            <div class="group-legend">
+              <span class="legend-qualified">■ В плей-офф</span>
+              <span class="legend-eliminated">■ Выбывает</span>
+            </div>
+          </div>
+          <div class="group-table-wrap">
+            <div class="group-title">Группа B</div>
+            <table class="group-standings">
+              <thead><tr><th>#</th><th>Команда</th><th>М</th><th>В</th><th>П</th><th>О</th></tr></thead>
+              <tbody>
+                <tr class="qualified"><td>1</td><td><span class="team-flag">🇨🇳</span> PSG.LGD</td><td>8</td><td>6</td><td>2</td><td class="pts">18</td></tr>
+                <tr class="qualified"><td>2</td><td><span class="team-flag">🇩🇰</span> Team Liquid</td><td>8</td><td>5</td><td>3</td><td class="pts">15</td></tr>
+                <tr class="qualified"><td>3</td><td><span class="team-flag">🇷🇺</span> BetBoom Team</td><td>8</td><td>4</td><td>4</td><td class="pts">12</td></tr>
+                <tr><td>4</td><td><span class="team-flag">🇨🇳</span> Azure Ray</td><td>8</td><td>2</td><td>6</td><td class="pts">6</td></tr>
+                <tr class="eliminated"><td>5</td><td><span class="team-flag">🌍</span> Entity</td><td>8</td><td>1</td><td>7</td><td class="pts">3</td></tr>
+              </tbody>
+            </table>
+            <div class="group-legend">
+              <span class="legend-qualified">■ В плей-офф</span>
+              <span class="legend-eliminated">■ Выбывает</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Плей-офф -->
+        <div class="stage-label" style="margin-top:2rem">⚔️ Плей-офф</div>
+        <div class="playoff-bracket">
+          <div class="bracket-col">
+            <div class="bracket-col-label">Четвертьфинал</div>
+            <div class="bracket-match-card">
+              <div class="bmc-team winner"><span class="bmc-flag">🇷🇺</span><span class="bmc-name">Team Spirit</span><span class="bmc-score">2</span></div>
+              <div class="bmc-team"><span class="bmc-flag">🇺🇸</span><span class="bmc-name">Tundra Esports</span><span class="bmc-score">0</span></div>
+              <div class="bmc-status finished">✅ Завершён</div>
+            </div>
+            <div class="bracket-match-card">
+              <div class="bmc-team winner"><span class="bmc-flag">🇸🇪</span><span class="bmc-name">Gaimin Gladiators</span><span class="bmc-score">2</span></div>
+              <div class="bmc-team"><span class="bmc-flag">🇷🇺</span><span class="bmc-name">BetBoom Team</span><span class="bmc-score">1</span></div>
+              <div class="bmc-status finished">✅ Завершён</div>
+            </div>
+            <div class="bracket-match-card">
+              <div class="bmc-team winner"><span class="bmc-flag">🌍</span><span class="bmc-name">OG</span><span class="bmc-score">2</span></div>
+              <div class="bmc-team"><span class="bmc-flag">🇩🇰</span><span class="bmc-name">Team Liquid</span><span class="bmc-score">0</span></div>
+              <div class="bmc-status finished">✅ Завершён</div>
+            </div>
+            <div class="bracket-match-card">
+              <div class="bmc-team tbd"><span class="bmc-flag">🇺🇸</span><span class="bmc-name">nouns</span><span class="bmc-score">—</span></div>
+              <div class="bmc-team tbd"><span class="bmc-flag">🇨🇳</span><span class="bmc-name">PSG.LGD</span><span class="bmc-score">—</span></div>
+              <div class="bmc-status upcoming">⏰ 15 Авг · 19:00</div>
+            </div>
+          </div>
+          <div class="bracket-col">
+            <div class="bracket-col-label">Полуфинал</div>
+            <div class="bracket-match-card">
+              <div class="bmc-team winner"><span class="bmc-flag">🇷🇺</span><span class="bmc-name">Team Spirit</span><span class="bmc-score">2</span></div>
+              <div class="bmc-team"><span class="bmc-flag">🇸🇪</span><span class="bmc-name">Gaimin Gladiators</span><span class="bmc-score">1</span></div>
+              <div class="bmc-status finished">✅ Завершён</div>
+            </div>
+            <div class="bracket-match-card">
+              <div class="bmc-team tbd"><span class="bmc-flag">🌍</span><span class="bmc-name">OG</span><span class="bmc-score">—</span></div>
+              <div class="bmc-team tbd"><span class="bmc-flag">❓</span><span class="bmc-name">TBD</span><span class="bmc-score">—</span></div>
+              <div class="bmc-status upcoming">⏰ 17 Авг · 17:00</div>
+            </div>
+          </div>
+          <div class="bracket-col">
+            <div class="bracket-col-label">🏆 Финал</div>
+            <div class="bracket-match-card final-card">
+              <div class="bmc-team winner"><span class="bmc-flag">🇷🇺</span><span class="bmc-name">Team Spirit</span><span class="bmc-score">—</span></div>
+              <div class="bmc-team tbd"><span class="bmc-flag">❓</span><span class="bmc-name">TBD</span><span class="bmc-score">—</span></div>
+              <div class="bmc-status upcoming">⏰ 20 Авг · 18:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ТУРНИР 2: DreamLeague Season 25 -->
+    <div class="tournament-block" data-status="live">
+      <div class="tournament-header">
+        <div class="tournament-header-left">
+          <div class="tournament-game-icon">🛡️</div>
+          <div>
+            <div class="tournament-name">DreamLeague Season 25</div>
+            <div class="tournament-meta">Июн 2025 · 🇸🇪 Стокгольм</div>
+          </div>
+        </div>
+        <div class="tournament-header-right">
+          <span class="t-prize">$1,000,000</span>
+          <span class="t-badge premier">PREMIER</span>
+          <span class="t-status live">🔴 Live</span>
+        </div>
+      </div>
+      <div class="tournament-body">
+        <div class="stage-label">⚔️ Плей-офф</div>
+        <div class="playoff-bracket">
+          <div class="bracket-col">
+            <div class="bracket-col-label">Полуфинал</div>
+            <div class="bracket-match-card live-card">
+              <div class="live-indicator">🔴 LIVE</div>
+              <div class="bmc-team"><span class="bmc-flag">🇸🇪</span><span class="bmc-name">Gaimin Gladiators</span><span class="bmc-score live-score">1</span></div>
+              <div class="bmc-team"><span class="bmc-flag">🇷🇺</span><span class="bmc-name">BetBoom Team</span><span class="bmc-score">0</span></div>
+              <div class="bmc-status live">🔴 Идёт · Карта 2</div>
+            </div>
+            <div class="bracket-match-card">
+              <div class="bmc-team tbd"><span class="bmc-flag">🇺🇸</span><span class="bmc-name">nouns</span><span class="bmc-score">—</span></div>
+              <div class="bmc-team tbd"><span class="bmc-flag">🇩🇰</span><span class="bmc-name">Team Liquid</span><span class="bmc-score">—</span></div>
+              <div class="bmc-status upcoming">⏰ Сегодня · 22:30</div>
+            </div>
+          </div>
+          <div class="bracket-col">
+            <div class="bracket-col-label">🏆 Финал</div>
+            <div class="bracket-match-card final-card">
+              <div class="bmc-team tbd"><span class="bmc-flag">❓</span><span class="bmc-name">TBD</span><span class="bmc-score">—</span></div>
+              <div class="bmc-team tbd"><span class="bmc-flag">❓</span><span class="bmc-name">TBD</span><span class="bmc-score">—</span></div>
+              <div class="bmc-status upcoming">⏰ Завтра · 18:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /esports-dota -->
+
+  <!-- ══ CS2 ══ -->
+  <div id="esports-cs2" class="esports-game-content" style="display:none">
+
+    <div class="esports-filters cs2-filters">
+      <button class="esports-filter-btn cs2-filter-btn active" data-filter="all">Все</button>
+      <button class="esports-filter-btn cs2-filter-btn" data-filter="upcoming">⏰ Скоро</button>
+      <button class="esports-filter-btn cs2-filter-btn" data-filter="finished">✅ Завершены</button>
+    </div>
+
+    <!-- PGL Major Bucharest 2025 -->
+    <div class="tournament-block cs2-block" data-status="upcoming">
+      <div class="tournament-header cs2-header">
+        <div class="tournament-header-left">
+          <div class="tournament-game-icon">🎯</div>
+          <div>
+            <div class="tournament-name">PGL Major Bucharest 2025</div>
+            <div class="tournament-meta">Сен 2025 · 🇷🇴 Бухарест</div>
+          </div>
+        </div>
+        <div class="tournament-header-right">
+          <span class="t-prize">$1,250,000</span>
+          <span class="t-badge major">MAJOR</span>
+          <span class="t-status upcoming">⏰ Скоро</span>
+        </div>
+      </div>
+      <div class="tournament-body">
+        <div class="stage-label">📊 Challenger Stage</div>
+        <div class="groups-grid">
+          <div class="group-table-wrap cs2-group">
+            <div class="group-title">Группа A</div>
+            <table class="group-standings">
+              <thead><tr><th>#</th><th>Команда</th><th>М</th><th>В</th><th>П</th><th>О</th></tr></thead>
+              <tbody>
+                <tr class="qualified"><td>1</td><td><span class="team-flag">🇺🇦</span> NAVI</td><td>3</td><td>3</td><td>0</td><td class="pts">9</td></tr>
+                <tr class="qualified"><td>2</td><td><span class="team-flag">🌍</span> FaZe Clan</td><td>3</td><td>2</td><td>1</td><td class="pts">6</td></tr>
+                <tr class="qualified"><td>3</td><td><span class="team-flag">🇫🇷</span> Team Vitality</td><td>3</td><td>2</td><td>1</td><td class="pts">6</td></tr>
+                <tr><td>4</td><td><span class="team-flag">🇪🇸</span> G2 Esports</td><td>3</td><td>1</td><td>2</td><td class="pts">3</td></tr>
+                <tr class="eliminated"><td>5</td><td><span class="team-flag">🇩🇪</span> MOUZ</td><td>3</td><td>0</td><td>3</td><td class="pts">0</td></tr>
+              </tbody>
+            </table>
+            <div class="group-legend"><span class="legend-qualified">■ В плей-офф</span><span class="legend-eliminated">■ Выбывает</span></div>
+          </div>
+          <div class="group-table-wrap cs2-group">
+            <div class="group-title">Группа B</div>
+            <table class="group-standings">
+              <thead><tr><th>#</th><th>Команда</th><th>М</th><th>В</th><th>П</th><th>О</th></tr></thead>
+              <tbody>
+                <tr class="qualified"><td>1</td><td><span class="team-flag">🇷🇺</span> Team Spirit</td><td>3</td><td>3</td><td>0</td><td class="pts">9</td></tr>
+                <tr class="qualified"><td>2</td><td><span class="team-flag">🇺🇸</span> Cloud9</td><td>3</td><td>2</td><td>1</td><td class="pts">6</td></tr>
+                <tr><td>3</td><td><span class="team-flag">🇹🇷</span> Eternal Fire</td><td>3</td><td>1</td><td>2</td><td class="pts">3</td></tr>
+                <tr><td>4</td><td><span class="team-flag">🇲🇳</span> The MongolZ</td><td>3</td><td>1</td><td>2</td><td class="pts">3</td></tr>
+                <tr class="eliminated"><td>5</td><td><span class="team-flag">🇧🇷</span> paiN</td><td>3</td><td>0</td><td>3</td><td class="pts">0</td></tr>
+              </tbody>
+            </table>
+            <div class="group-legend"><span class="legend-qualified">■ В плей-офф</span><span class="legend-eliminated">■ Выбывает</span></div>
+          </div>
+        </div>
+        <div class="stage-label" style="margin-top:2rem">⚔️ Плей-офф (Champions Stage)</div>
+        <div class="playoff-bracket">
+          <div class="bracket-col">
+            <div class="bracket-col-label">Четвертьфинал</div>
+            <div class="bracket-match-card cs2-match">
+              <div class="bmc-team tbd"><span class="bmc-flag">🇺🇦</span><span class="bmc-name">NAVI</span><span class="bmc-score">—</span></div>
+              <div class="bmc-team tbd"><span class="bmc-flag">🇺🇸</span><span class="bmc-name">Cloud9</span><span class="bmc-score">—</span></div>
+              <div class="bmc-status upcoming">⏰ 5 Сен · 15:00</div>
+            </div>
+            <div class="bracket-match-card cs2-match">
+              <div class="bmc-team tbd"><span class="bmc-flag">🌍</span><span class="bmc-name">FaZe Clan</span><span class="bmc-score">—</span></div>
+              <div class="bmc-team tbd"><span class="bmc-flag">🇷🇺</span><span class="bmc-name">Team Spirit</span><span class="bmc-score">—</span></div>
+              <div class="bmc-status upcoming">⏰ 5 Сен · 18:00</div>
+            </div>
+            <div class="bracket-match-card cs2-match">
+              <div class="bmc-team tbd"><span class="bmc-flag">🇫🇷</span><span class="bmc-name">Team Vitality</span><span class="bmc-score">—</span></div>
+              <div class="bmc-team tbd"><span class="bmc-flag">❓</span><span class="bmc-name">TBD</span><span class="bmc-score">—</span></div>
+              <div class="bmc-status upcoming">⏰ 6 Сен · 15:00</div>
+            </div>
+            <div class="bracket-match-card cs2-match">
+              <div class="bmc-team tbd"><span class="bmc-flag">❓</span><span class="bmc-name">TBD</span><span class="bmc-score">—</span></div>
+              <div class="bmc-team tbd"><span class="bmc-flag">❓</span><span class="bmc-name">TBD</span><span class="bmc-score">—</span></div>
+              <div class="bmc-status upcoming">⏰ 6 Сен · 18:00</div>
+            </div>
+          </div>
+          <div class="bracket-col">
+            <div class="bracket-col-label">Полуфинал</div>
+            <div class="bracket-match-card cs2-match">
+              <div class="bmc-team tbd"><span class="bmc-flag">❓</span><span class="bmc-name">TBD</span><span class="bmc-score">—</span></div>
+              <div class="bmc-team tbd"><span class="bmc-flag">❓</span><span class="bmc-name">TBD</span><span class="bmc-score">—</span></div>
+              <div class="bmc-status upcoming">⏰ 7 Сен · 17:00</div>
+            </div>
+            <div class="bracket-match-card cs2-match">
+              <div class="bmc-team tbd"><span class="bmc-flag">❓</span><span class="bmc-name">TBD</span><span class="bmc-score">—</span></div>
+              <div class="bmc-team tbd"><span class="bmc-flag">❓</span><span class="bmc-name">TBD</span><span class="bmc-score">—</span></div>
+              <div class="bmc-status upcoming">⏰ 7 Сен · 20:00</div>
+            </div>
+          </div>
+          <div class="bracket-col">
+            <div class="bracket-col-label">🏆 Гранд-финал</div>
+            <div class="bracket-match-card cs2-match final-card">
+              <div class="bmc-team tbd"><span class="bmc-flag">❓</span><span class="bmc-name">TBD</span><span class="bmc-score">—</span></div>
+              <div class="bmc-team tbd"><span class="bmc-flag">❓</span><span class="bmc-name">TBD</span><span class="bmc-score">—</span></div>
+              <div class="bmc-status upcoming">⏰ 8 Сен · 18:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IEM Dallas -->
+    <div class="tournament-block cs2-block" data-status="finished">
+      <div class="tournament-header cs2-header">
+        <div class="tournament-header-left">
+          <div class="tournament-game-icon">🎯</div>
+          <div>
+            <div class="tournament-name">IEM Dallas 2025</div>
+            <div class="tournament-meta">Май 2025 · 🇺🇸 Даллас</div>
+          </div>
+        </div>
+        <div class="tournament-header-right">
+          <span class="t-prize">$250,000</span>
+          <span class="t-badge premier">IEM</span>
+          <span class="t-status finished">✅ Завершён</span>
+        </div>
+      </div>
+      <div class="tournament-body">
+        <div class="stage-label">⚔️ Плей-офф</div>
+        <div class="playoff-bracket">
+          <div class="bracket-col">
+            <div class="bracket-col-label">Полуфинал</div>
+            <div class="bracket-match-card cs2-match">
+              <div class="bmc-team winner"><span class="bmc-flag">🇩🇪</span><span class="bmc-name">MOUZ</span><span class="bmc-score">2</span></div>
+              <div class="bmc-team"><span class="bmc-flag">🇷🇺</span><span class="bmc-name">Team Spirit</span><span class="bmc-score">1</span></div>
+              <div class="bmc-status finished">✅ Завершён</div>
+            </div>
+            <div class="bracket-match-card cs2-match">
+              <div class="bmc-team winner"><span class="bmc-flag">🇺🇦</span><span class="bmc-name">NaVi</span><span class="bmc-score">2</span></div>
+              <div class="bmc-team"><span class="bmc-flag">🇺🇸</span><span class="bmc-name">Cloud9</span><span class="bmc-score">0</span></div>
+              <div class="bmc-status finished">✅ Завершён</div>
+            </div>
+          </div>
+          <div class="bracket-col">
+            <div class="bracket-col-label">🏆 Финал</div>
+            <div class="bracket-match-card cs2-match final-card">
+              <div class="bmc-team winner"><span class="bmc-flag">🇩🇪</span><span class="bmc-name">MOUZ</span><span class="bmc-score">2</span></div>
+              <div class="bmc-team"><span class="bmc-flag">🇺🇦</span><span class="bmc-name">NaVi</span><span class="bmc-score">1</span></div>
+              <div class="bmc-status finished">🏆 MOUZ — Чемпионы</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /esports-cs2 -->
+
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Игровые табы ── */
+.esports-game-tabs{display:flex;gap:0.5rem;border-bottom:2px solid var(--border);margin-bottom:1.75rem}
+.egt-btn{padding:0.65rem 1.5rem;font-family:var(--font-head);font-weight:700;font-size:0.95rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all 0.2s;border-radius:var(--radius) var(--radius) 0 0}
+.egt-btn:hover{color:var(--accent)}
+.egt-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(0,212,255,0.05)}
+
+/* ── Фильтры ── */
+.esports-filters{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.esports-filter-btn{padding:0.35rem 0.9rem;border-radius:99px;font-family:var(--font-mono);font-size:0.72rem;background:var(--bg-surface);border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all 0.2s}
+.esports-filter-btn.active,.esports-filter-btn:hover{background:rgba(0,212,255,0.1);border-color:var(--accent);color:var(--accent);font-weight:700}
+.cs2-filter-btn.active,.cs2-filter-btn:hover{background:rgba(245,158,11,0.1);border-color:var(--warning);color:var(--warning)}
+
+/* ══ БЛОК ТУРНИРА ══ */
+.tournament-block{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:2rem;transition:all 0.2s}
+.tournament-block:hover{border-color:rgba(0,212,255,0.25);box-shadow:0 4px 24px rgba(0,0,0,0.3)}
+.cs2-block:hover{border-color:rgba(245,158,11,0.25)}
+
+/* Шапка турнира */
+.tournament-header{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;background:var(--bg-surface);border-bottom:1px solid var(--border);flex-wrap:wrap;gap:1rem;position:relative;overflow:hidden}
+.tournament-header::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent3))}
+.cs2-header::before{background:linear-gradient(90deg,var(--warning),#ff6b35)}
+.tournament-header-left{display:flex;align-items:center;gap:1rem}
+.tournament-game-icon{font-size:2rem;flex-shrink:0}
+.tournament-name{font-family:var(--font-head);font-size:1.2rem;font-weight:800;color:var(--text-bright);letter-spacing:0.5px}
+.tournament-meta{font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);margin-top:0.2rem}
+.tournament-header-right{display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap}
+.t-prize{font-family:var(--font-mono);font-size:0.82rem;color:var(--warning);font-weight:700}
+.t-badge{font-family:var(--font-mono);font-size:0.65rem;padding:0.2rem 0.6rem;border-radius:99px;font-weight:700;letter-spacing:1px}
+.t-badge.major{background:rgba(255,107,53,0.15);color:#ff6b35;border:1px solid rgba(255,107,53,0.3)}
+.t-badge.premier{background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.25)}
+.t-status{font-family:var(--font-mono);font-size:0.7rem;padding:0.25rem 0.65rem;border-radius:99px;font-weight:700}
+.t-status.live{background:rgba(239,68,68,0.15);color:var(--danger);border:1px solid rgba(239,68,68,0.3);animation:pbadge 1.5s infinite}
+.t-status.upcoming{background:rgba(245,158,11,0.1);color:var(--warning);border:1px solid rgba(245,158,11,0.2)}
+.t-status.finished{background:rgba(100,116,139,0.12);color:var(--text-muted);border:1px solid rgba(100,116,139,0.2)}
+@keyframes pbadge{0%,100%{box-shadow:none}50%{box-shadow:0 0 10px rgba(239,68,68,0.4)}}
+
+/* Тело турнира */
+.tournament-body{padding:1.5rem}
+.stage-label{font-family:var(--font-head);font-size:0.85rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem;display:flex;align-items:center;gap:0.4rem}
+
+/* ══ ГРУППОВЫЕ ТАБЛИЦЫ ══ */
+.groups-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:768px){.groups-grid{grid-template-columns:1fr}}
+.group-table-wrap{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.cs2-group{border-color:rgba(245,158,11,0.15)}
+.group-title{font-family:var(--font-head);font-size:0.85rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);padding:0.75rem 1rem;border-bottom:1px solid var(--border);background:rgba(0,212,255,0.04)}
+.cs2-group .group-title{color:var(--warning);background:rgba(245,158,11,0.04)}
+.group-standings{width:100%;border-collapse:collapse}
+.group-standings th{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;padding:0.5rem 0.75rem;border-bottom:1px solid var(--border);text-align:left;background:var(--bg-card)}
+.group-standings th:not(:nth-child(2)){text-align:center}
+.group-standings td{font-family:var(--font-head);font-size:0.85rem;padding:0.55rem 0.75rem;border-bottom:1px solid rgba(30,58,95,0.4);color:var(--text-primary);transition:background 0.15s}
+.group-standings td:not(:nth-child(2)){text-align:center;font-family:var(--font-mono);font-size:0.8rem}
+.group-standings tr:hover td{background:rgba(0,212,255,0.03)}
+.group-standings tr:last-child td{border-bottom:none}
+.group-standings tr.qualified td{border-left:3px solid var(--success)}
+.group-standings tr.qualified:first-child td{border-left:3px solid gold}
+.group-standings tr.eliminated td{opacity:0.45}
+.group-standings .pts{font-weight:700;color:var(--accent)}
+.cs2-group .group-standings .pts{color:var(--warning)}
+.team-flag{font-size:0.9rem;margin-right:0.3rem}
+.group-legend{display:flex;gap:1rem;padding:0.5rem 0.75rem;font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);border-top:1px solid var(--border)}
+.legend-qualified{color:var(--success)}
+.legend-eliminated{color:var(--danger)}
+
+/* ══ ПЛЕЙ-ОФФ BRACKET ══ */
+.playoff-bracket{display:flex;gap:1.5rem;overflow-x:auto;padding-bottom:0.75rem;align-items:flex-start}
+.bracket-col{display:flex;flex-direction:column;gap:0.85rem;min-width:220px;flex-shrink:0}
+.bracket-col-label{font-family:var(--font-mono);font-size:0.68rem;color:var(--accent);letter-spacing:2px;text-transform:uppercase;text-align:center;padding:0.4rem;border-bottom:1px solid var(--border);margin-bottom:0.25rem}
+
+/* Матч-карточка */
+.bracket-match-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all 0.2s;position:relative}
+.bracket-match-card:hover{border-color:rgba(0,212,255,0.3);box-shadow:0 4px 16px rgba(0,0,0,0.3)}
+.cs2-match:hover{border-color:rgba(245,158,11,0.3)}
+.final-card{border-color:rgba(255,215,0,0.25)!important;background:rgba(255,215,0,0.03)!important}
+.final-card:hover{border-color:gold!important;box-shadow:0 4px 20px rgba(255,215,0,0.15)!important}
+.live-card{border-color:rgba(239,68,68,0.4)!important;animation:live-pulse 2s infinite}
+@keyframes live-pulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 15px rgba(239,68,68,0.2)}}
+
+/* Live индикатор */
+.live-indicator{font-family:var(--font-mono);font-size:0.6rem;color:var(--danger);font-weight:700;letter-spacing:1px;padding:0.3rem 0.75rem;background:rgba(239,68,68,0.1);border-bottom:1px solid rgba(239,68,68,0.2);text-align:center;animation:pbadge 1.5s infinite}
+
+/* Команда в матче */
+.bmc-team{display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.85rem;transition:background 0.15s}
+.bmc-team+.bmc-team{border-top:1px solid var(--border)}
+.bmc-team.winner{background:rgba(16,185,129,0.1)}
+.bmc-team.tbd{opacity:0.6}
+.bmc-flag{font-size:0.9rem;flex-shrink:0;width:20px}
+.bmc-name{font-family:var(--font-head);font-size:0.88rem;font-weight:600;color:var(--text-primary);flex:1}
+.bmc-team.winner .bmc-name{color:var(--success);font-weight:700}
+.bmc-score{font-family:var(--font-mono);font-size:0.9rem;font-weight:700;color:var(--text-muted);min-width:20px;text-align:center}
+.bmc-team.winner .bmc-score{color:var(--success)}
+.live-score{color:var(--danger)!important;animation:pbadge 1s infinite}
+
+/* Статус матча */
+.bmc-status{font-family:var(--font-mono);font-size:0.62rem;padding:0.3rem 0.75rem;text-align:center;border-top:1px solid var(--border)}
+.bmc-status.live{background:rgba(239,68,68,0.08);color:var(--danger)}
+.bmc-status.upcoming{background:rgba(245,158,11,0.06);color:var(--warning)}
+.bmc-status.finished{background:rgba(100,116,139,0.08);color:var(--text-muted)}
+
+/* Мобайл */
+@media(max-width:480px){
+  .tournament-header{padding:1rem}
+  .tournament-name{font-size:1rem}
+  .tournament-body{padding:1rem}
+  .bracket-col{min-width:170px}
+  .bmc-name{font-size:0.78rem}
+  .bmc-team{padding:0.5rem 0.65rem}
+  .groups-grid{gap:1rem}
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* ── Игровые табы ── */
+document.querySelectorAll('.egt-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.egt-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.esports-game-content').forEach(c=>c.style.display='none');
+    btn.classList.add('active');
+    document.getElementById('esports-'+btn.dataset.game).style.display='block';
+  });
+});
+
+/* ── Фильтры по статусу ── */
+function setupFilters(btnSelector, game){
+  document.querySelectorAll(btnSelector).forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll(btnSelector).forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter=btn.dataset.filter;
+      document.querySelectorAll(`#esports-${game} .tournament-block`).forEach(block=>{
+        if(filter==='all'||block.dataset.status===filter){
+          block.style.display='block';
+          block.style.animation='fadeIn 0.3s ease';
+        } else {
+          block.style.display='none';
+        }
+      });
+    });
+  });
+}
+setupFilters('.esports-filter-btn:not(.cs2-filter-btn)','dota');
+setupFilters('.cs2-filter-btn','cs2');
+</script>
+{% endblock %}
