@@ -366,9 +366,13 @@
 .post-flair.media{background:rgba(0,212,255,0.85);color:var(--bg-dark)}
 .post-flair.discussion{background:rgba(100,116,139,0.8);color:#fff}
 .post-flair.artwork{background:rgba(255,107,53,0.85);color:#fff}
-.post-no-img{padding:1.5rem;display:flex;align-items:center;gap:1rem;background:linear-gradient(135deg,var(--bg-surface),var(--bg-card))}
-.post-no-img-icon{font-size:2rem;flex-shrink:0;opacity:0.5}
+.post-no-img{padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.25rem;min-height:110px;transition:all 0.2s}
+.post-no-img-svg{flex-shrink:0;opacity:0.9;transition:transform 0.3s}
+.post-card:hover .post-no-img-svg{transform:scale(1.08) rotate(-3deg)}
+.post-no-img-right{display:flex;flex-direction:column;flex:1;min-width:0}
 .post-no-img-title{font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--text-bright);line-height:1.3}
+.post-no-img-desc{font-size:0.78rem;color:var(--text-muted);line-height:1.5;margin-top:0.3rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.post-body-compact{padding:0.5rem 1rem 0.75rem;border-top:1px solid var(--border)}
 .post-body{padding:0.85rem 1rem 0.9rem}
 .post-meta-row{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;flex-wrap:wrap}
 .post-author{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted)}
@@ -786,16 +790,69 @@ function renderPosts(posts,elId,isCS2,append){
     const card=document.createElement('div');
     card.className='post-card'+(isCS2?' cs2-card':'');
     card.style.animationDelay=(i*0.06)+'s';
+    // SVG иконки по типу поста
+    const NO_IMG_ICONS = {
+      meme: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+        <circle cx="40" cy="40" r="36" fill="rgba(168,85,247,0.15)" stroke="rgba(168,85,247,0.4)" stroke-width="2"/>
+        <text x="40" y="52" text-anchor="middle" font-size="32">😂</text>
+      </svg>`,
+      patch: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+        <circle cx="40" cy="40" r="36" fill="rgba(16,185,129,0.12)" stroke="rgba(16,185,129,0.35)" stroke-width="2"/>
+        <path d="M26 54 L36 44 L30 38 L44 24 L50 30 L38 44 L44 50 Z" fill="rgba(16,185,129,0.7)" stroke="rgba(16,185,129,0.9)" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="52" cy="28" r="5" fill="rgba(16,185,129,0.5)" stroke="rgba(16,185,129,0.8)" stroke-width="1.5"/>
+      </svg>`,
+      esports: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+        <circle cx="40" cy="40" r="36" fill="rgba(245,158,11,0.12)" stroke="rgba(245,158,11,0.35)" stroke-width="2"/>
+        <path d="M28 24 H52 V44 C52 52 40 58 40 58 C40 58 28 52 28 44 Z" fill="rgba(245,158,11,0.2)" stroke="rgba(245,158,11,0.7)" stroke-width="1.5"/>
+        <path d="M35 39 L38 42 L46 34" stroke="rgba(245,158,11,0.9)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>`,
+      artwork: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+        <circle cx="40" cy="40" r="36" fill="rgba(255,107,53,0.12)" stroke="rgba(255,107,53,0.35)" stroke-width="2"/>
+        <circle cx="32" cy="32" r="6" fill="rgba(255,107,53,0.4)" stroke="rgba(255,107,53,0.7)" stroke-width="1.5"/>
+        <path d="M22 56 L34 42 L42 50 L50 38 L58 56 Z" fill="rgba(255,107,53,0.25)" stroke="rgba(255,107,53,0.6)" stroke-width="1.5" stroke-linejoin="round"/>
+      </svg>`,
+      media: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+        <circle cx="40" cy="40" r="36" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.3)" stroke-width="2"/>
+        <circle cx="40" cy="40" r="16" fill="rgba(0,212,255,0.15)" stroke="rgba(0,212,255,0.5)" stroke-width="1.5"/>
+        <path d="M36 33 L50 40 L36 47 Z" fill="rgba(0,212,255,0.8)"/>
+      </svg>`,
+      discussion: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+        <circle cx="40" cy="40" r="36" fill="rgba(100,116,139,0.1)" stroke="rgba(100,116,139,0.3)" stroke-width="2"/>
+        <rect x="22" y="24" width="36" height="26" rx="6" fill="rgba(100,116,139,0.2)" stroke="rgba(100,116,139,0.5)" stroke-width="1.5"/>
+        <path d="M30 52 L26 58 L38 52" fill="rgba(100,116,139,0.3)" stroke="rgba(100,116,139,0.5)" stroke-width="1.5" stroke-linejoin="round"/>
+        <line x1="29" y1="33" x2="51" y2="33" stroke="rgba(100,116,139,0.6)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="29" y1="39" x2="47" y2="39" stroke="rgba(100,116,139,0.5)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="29" y1="45" x2="43" y2="45" stroke="rgba(100,116,139,0.4)" stroke-width="2" stroke-linecap="round"/>
+      </svg>`,
+    };
+    const noImgIcon = NO_IMG_ICONS[flair.cls] || NO_IMG_ICONS.discussion;
+    const noImgBg = {
+      meme:'linear-gradient(135deg,rgba(168,85,247,0.08),rgba(168,85,247,0.02))',
+      patch:'linear-gradient(135deg,rgba(16,185,129,0.08),rgba(16,185,129,0.02))',
+      esports:'linear-gradient(135deg,rgba(245,158,11,0.08),rgba(245,158,11,0.02))',
+      artwork:'linear-gradient(135deg,rgba(255,107,53,0.08),rgba(255,107,53,0.02))',
+      media:'linear-gradient(135deg,rgba(0,212,255,0.08),rgba(0,212,255,0.02))',
+      discussion:'linear-gradient(135deg,rgba(100,116,139,0.06),rgba(100,116,139,0.02))',
+    }[flair.cls]||'linear-gradient(135deg,var(--bg-surface),var(--bg-card))';
+
     card.innerHTML=img
       ?`<div class="post-img-wrap"><img class="post-img" src="${esc(img)}" loading="lazy" onerror="this.closest('.post-img-wrap').style.display='none'"/><div class="post-img-overlay"></div><span class="post-flair ${flair.cls}">${flair.label}</span></div>
         <div class="post-body"><div class="post-meta-row"><span class="post-author">u/<span>${esc(p.author||'?')}</span></span><span class="post-time">${timeAgo(p.created_utc)}</span></div>
         <div class="post-title">${esc(p.title)}</div>
         ${p.selftext?`<div class="post-text-preview">${esc(p.selftext.slice(0,160))}</div>`:''}
         <div class="post-stats"><span class="${isCS2?'post-stat-up cs2':'post-stat-up'}">▲ ${fmtNum(p.ups||0)}</span><span class="post-stat-cm">💬 ${fmtNum(p.num_comments||0)}</span></div></div>`
-      :`<div class="post-no-img"><span class="post-no-img-icon">${flair.cls==='meme'?'😂':flair.cls==='patch'?'🔧':flair.cls==='esports'?'🏆':'💬'}</span><div class="post-no-img-title">${esc(p.title)}</div></div>
-        <div class="post-body"><div class="post-meta-row"><span class="post-flair ${flair.cls}" style="position:relative;top:0;left:0">${flair.label}</span><span class="post-author">u/<span>${esc(p.author||'?')}</span></span><span class="post-time">${timeAgo(p.created_utc)}</span></div>
-        ${p.selftext?`<div class="post-text-preview">${esc(p.selftext.slice(0,160))}</div>`:''}
-        <div class="post-stats"><span class="${isCS2?'post-stat-up cs2':'post-stat-up'}">▲ ${fmtNum(p.ups||0)}</span><span class="post-stat-cm">💬 ${fmtNum(p.num_comments||0)}</span></div></div>`;
+      :`<div class="post-no-img" style="background:${noImgBg}">
+          <div class="post-no-img-svg">${noImgIcon}</div>
+          <div class="post-no-img-right">
+            <span class="post-flair ${flair.cls}" style="position:relative;top:0;left:0;display:inline-flex;margin-bottom:0.5rem">${flair.label}</span>
+            <div class="post-no-img-title">${esc(p.title)}</div>
+            ${p.selftext?`<div class="post-no-img-desc">${esc(p.selftext.slice(0,120))}</div>`:''}
+          </div>
+        </div>
+        <div class="post-body post-body-compact">
+          <div class="post-meta-row"><span class="post-author">u/<span>${esc(p.author||'?')}</span></span><span class="post-time">${timeAgo(p.created_utc)}</span></div>
+          <div class="post-stats"><span class="${isCS2?'post-stat-up cs2':'post-stat-up'}">▲ ${fmtNum(p.ups||0)}</span><span class="post-stat-cm">💬 ${fmtNum(p.num_comments||0)}</span></div>
+        </div>`;
     card.addEventListener('click',()=>openPost(p,isCS2));
     el.appendChild(card);
   });
