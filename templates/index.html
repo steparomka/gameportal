@@ -9,6 +9,7 @@
     <a href="/replays" class="hero-card"><span class="icon">📹</span><span>Реплеи</span></a>
     <a href="/tournaments" class="hero-card"><span class="icon">🏆</span><span>Турниры</span></a>
     <a href="/find-teammates" class="hero-card"><span class="icon">🔍</span><span>Тиммейты</span></a>
+    <a href="/meta" class="hero-card"><span class="icon">⚡</span><span>Мета</span></a>
   </div>
 </section>
 
@@ -29,58 +30,15 @@
 
   <!-- DOTA 2 TAB -->
   <div id="tab-dota" class="tab-content">
-    <div class="home-grid-2col">
-
-      <!-- НОВОСТИ -->
-      <div>
-        <div class="section-title">
-          <span class="section-icon">📰</span> Новости Dota 2
-          <span class="section-live-dot"></span>
-          <span class="section-badge">REDDIT + STEAM</span>
-        </div>
-        <div id="dota-news-list" class="news-grid">
-          <div class="news-skeleton-featured"></div>
-          <div class="news-skeleton-compact"></div>
-          <div class="news-skeleton-compact"></div>
-        </div>
-      </div>
-
-      <!-- МЕТА -->
-      <div>
-        <div class="section-title">
-          <span class="section-icon">⚡</span> Мета героев
-          <span class="section-badge" id="meta-patch-badge">АКТУАЛЬНЫЙ ПАТЧ</span>
-        </div>
-        <div class="meta-filters">
-          <div class="meta-filter-row">
-            <span class="meta-filter-label">Роль:</span>
-            <div class="meta-tabs">
-              <button class="meta-tab-btn active" data-role="carry">Carry</button>
-              <button class="meta-tab-btn" data-role="mid">Mid</button>
-              <button class="meta-tab-btn" data-role="support">Support</button>
-              <button class="meta-tab-btn" data-role="offlane">Offlane</button>
-            </div>
-          </div>
-          <div class="meta-filter-row">
-            <span class="meta-filter-label">Ранг:</span>
-            <div class="rank-tabs">
-              <button class="rank-btn active" data-rank="all">Все</button>
-              <button class="rank-btn" data-rank="herald" style="color:#8B6914"><span class="rank-icon">🪙</span><span class="rank-label">Herald</span></button>
-              <button class="rank-btn" data-rank="guardian" style="color:#6B8E23"><span class="rank-icon">🛡️</span><span class="rank-label">Guard</span></button>
-              <button class="rank-btn" data-rank="crusader" style="color:#4169E1"><span class="rank-icon">⚔️</span><span class="rank-label">Crus</span></button>
-              <button class="rank-btn" data-rank="archon" style="color:#00CED1"><span class="rank-icon">🌀</span><span class="rank-label">Archon</span></button>
-              <button class="rank-btn" data-rank="legend" style="color:#9370DB"><span class="rank-icon">⭐</span><span class="rank-label">Legend</span></button>
-              <button class="rank-btn" data-rank="ancient" style="color:#FF8C00"><span class="rank-icon">🔥</span><span class="rank-label">Ancient</span></button>
-              <button class="rank-btn" data-rank="divine" style="color:#FFD700"><span class="rank-icon">✨</span><span class="rank-label">Divine</span></button>
-              <button class="rank-btn" data-rank="immortal" style="color:#FF4500"><span class="rank-icon">👑</span><span class="rank-label">Imm</span></button>
-            </div>
-          </div>
-        </div>
-        <div id="dota-meta-list">
-          <div class="skeleton-list"><div class="skeleton-item"></div><div class="skeleton-item"></div><div class="skeleton-item"></div><div class="skeleton-item"></div></div>
-        </div>
-      </div>
-
+    <div class="section-title">
+      <span class="section-icon">📰</span> Новости Dota 2
+      <span class="section-live-dot"></span>
+      <span class="section-badge">STEAM OFFICIAL</span>
+    </div>
+    <div id="dota-news-list" class="news-grid-wide">
+      <div class="news-skeleton-featured"></div>
+      <div class="news-skeleton-row"></div>
+      <div class="news-skeleton-row"></div>
     </div>
 
     <hr class="neon-line" />
@@ -93,7 +51,7 @@
     <div id="dota-esports-list"></div>
   </div>
 
-  <!-- CS2 TAB — новости на всю ширину, без рейтинга -->
+  <!-- CS2 TAB -->
   <div id="tab-cs2" class="tab-content" style="display:none">
     <div class="section-title">
       <span class="section-icon">📰</span> Новости CS2
@@ -137,32 +95,26 @@
 .section-title{display:flex;align-items:center;gap:0.5rem;font-family:var(--font-head);font-weight:700;font-size:1rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-bright);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)}
 .section-badge{margin-left:auto;font-family:var(--font-mono);font-size:0.65rem;padding:0.15rem 0.5rem;border-radius:99px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.25);color:var(--accent);letter-spacing:1px}
 .section-live-dot{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 6px var(--success);animation:pulse-dot 2s infinite;flex-shrink:0}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
 .cs2-badge{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.25);color:var(--warning)}
 .dota-live-badge{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);color:var(--danger);animation:pulse-badge 2s infinite}
 @keyframes pulse-badge{0%,100%{box-shadow:none}50%{box-shadow:0 0 8px rgba(239,68,68,0.3)}}
-.home-grid-2col{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem}
-@media(max-width:768px){.home-grid-2col{grid-template-columns:1fr;gap:1.25rem}}
-.skeleton-list{display:flex;flex-direction:column;gap:0.6rem}
-.skeleton-item{height:52px;background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:sk-wave 1.4s infinite;border-radius:var(--radius);border:1px solid var(--border)}
-@keyframes sk-wave{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-/* ── Новости сетка (Dota — колонка) ── */
-.news-grid{display:flex;flex-direction:column;gap:0.75rem}
-
-/* ── Новости сетка (CS2 — широкая) ── */
-.news-grid-wide{display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;margin-bottom:1.5rem}
+/* ── Новости сетка широкая — 3 колонки ── */
+.news-grid-wide{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem}
 .news-grid-wide .news-bigcard.featured{grid-column:1/-1}
-@media(max-width:768px){.news-grid-wide{grid-template-columns:1fr}}
+@media(max-width:900px){.news-grid-wide{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.news-grid-wide{grid-template-columns:1fr}}
 
 /* ── Карточка новости ── */
-.news-bigcard{display:flex;flex-direction:column;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;text-decoration:none;color:inherit;transition:all 0.25s;cursor:pointer;position:relative}
+.news-bigcard{display:flex;flex-direction:column;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;text-decoration:none;color:inherit;transition:all 0.25s;cursor:pointer}
 .news-bigcard:hover{border-color:rgba(0,212,255,0.4);box-shadow:0 8px 32px rgba(0,0,0,0.35),0 0 20px rgba(0,212,255,0.06);transform:translateY(-3px);color:inherit}
 .news-bigcard-img-wrap{overflow:hidden;position:relative;flex-shrink:0}
 .news-bigcard-img-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:50px;background:linear-gradient(transparent,var(--bg-card));pointer-events:none}
-.news-bigcard-img{width:100%;height:170px;object-fit:cover;display:block;background:var(--bg-surface);transition:transform 0.4s ease}
-.news-bigcard.featured .news-bigcard-img{height:220px}
+.news-bigcard-img{width:100%;height:180px;object-fit:cover;display:block;background:var(--bg-surface);transition:transform 0.4s ease}
+.news-bigcard.featured .news-bigcard-img{height:260px}
 .news-bigcard:hover .news-bigcard-img{transform:scale(1.04)}
-.news-bigcard-body{padding:0.85rem 1rem 1rem;display:flex;flex-direction:column;gap:0.4rem;flex:1}
+.news-bigcard-body{padding:0.9rem 1rem 1rem;display:flex;flex-direction:column;gap:0.4rem;flex:1}
 .news-bigcard-meta{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
 .news-bigcard-tag{font-family:var(--font-mono);font-size:0.62rem;padding:0.12rem 0.5rem;border-radius:99px;letter-spacing:0.5px;text-transform:uppercase;font-weight:700}
 .news-bigcard-tag.patch{background:rgba(16,185,129,0.15);color:var(--success);border:1px solid rgba(16,185,129,0.25)}
@@ -173,53 +125,15 @@
 .news-bigcard-tag.major{background:rgba(255,107,53,0.15);color:#ff6b35;border:1px solid rgba(255,107,53,0.3)}
 .news-bigcard-date{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-left:auto}
 .news-bigcard-title{font-family:var(--font-head);font-size:0.95rem;font-weight:700;color:var(--text-bright);line-height:1.3}
-.news-bigcard.featured .news-bigcard-title{font-size:1.1rem}
+.news-bigcard.featured .news-bigcard-title{font-size:1.15rem}
 .news-bigcard-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.news-bigcard-arrow{font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);margin-top:0.2rem;opacity:0;transform:translateX(-4px);transition:all 0.2s}
+.news-bigcard-arrow{font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);margin-top:auto;padding-top:0.3rem;opacity:0;transform:translateX(-4px);transition:all 0.2s}
 .news-bigcard:hover .news-bigcard-arrow{opacity:1;transform:translateX(0)}
 
-/* Компактная карточка (горизонтальная) */
-.news-bigcard.compact{flex-direction:row;align-items:stretch}
-.news-bigcard.compact .news-bigcard-img-wrap{width:110px;flex-shrink:0}
-.news-bigcard.compact .news-bigcard-img{height:100%;min-height:80px}
-.news-bigcard.compact .news-bigcard-img-wrap::after{display:none}
-.news-bigcard.compact .news-bigcard-body{padding:0.65rem 0.9rem;gap:0.25rem}
-.news-bigcard.compact .news-bigcard-title{font-size:0.85rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-
 /* Скелетон */
-.news-skeleton-featured{border-radius:var(--radius-lg);height:290px;background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:sk-wave 1.4s infinite;border:1px solid var(--border)}
-.news-skeleton-compact{border-radius:var(--radius);height:85px;background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:sk-wave 1.4s infinite;border:1px solid var(--border)}
-.news-skeleton-row{border-radius:var(--radius-lg);height:200px;background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:sk-wave 1.4s infinite;border:1px solid var(--border)}
-
-/* ── Мета фильтры ── */
-.meta-filters{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.85rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:0.75rem}
-.meta-filter-row{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
-.meta-filter-label{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;flex-shrink:0;width:32px}
-.meta-tabs{display:flex;gap:0.3rem;flex-wrap:wrap}
-.meta-tab-btn{padding:0.25rem 0.65rem;border-radius:99px;font-family:var(--font-mono);font-size:0.7rem;background:transparent;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all 0.2s}
-.meta-tab-btn.active,.meta-tab-btn:hover{background:rgba(0,212,255,0.1);border-color:var(--accent);color:var(--accent)}
-.rank-tabs{display:flex;gap:0.25rem;flex-wrap:wrap}
-.rank-btn{display:flex;align-items:center;gap:0.2rem;padding:0.22rem 0.5rem;border-radius:99px;font-family:var(--font-mono);font-size:0.65rem;background:transparent;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all 0.2s;white-space:nowrap}
-.rank-btn:hover{border-color:currentColor;background:rgba(255,255,255,0.04)}
-.rank-btn.active{background:rgba(255,255,255,0.07);border-color:currentColor;font-weight:700}
-.rank-btn.active[data-rank="all"]{color:var(--accent);border-color:var(--accent);background:rgba(0,212,255,0.1)}
-.rank-icon{font-size:0.75rem}
-@media(max-width:480px){.rank-label{display:none}.rank-btn{padding:0.22rem 0.4rem}.rank-icon{font-size:0.9rem}}
-
-/* ── Мета строка БЕЗ иконки ── */
-.hero-meta-row{display:flex;align-items:center;gap:0.65rem;padding:0.5rem 0.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:0.4rem;transition:all 0.2s}
-.hero-meta-row:hover{border-color:rgba(0,212,255,0.3);transform:translateX(2px)}
-.hero-meta-num{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);width:18px;text-align:center;flex-shrink:0}
-.hero-meta-name{font-family:var(--font-head);font-size:0.88rem;font-weight:600;color:var(--text-bright);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hero-meta-stats{display:flex;gap:0.5rem;align-items:center;flex-shrink:0}
-.meta-stat{font-family:var(--font-mono);font-size:0.7rem;padding:0.1rem 0.4rem;border-radius:4px}
-.meta-stat.wr{background:rgba(16,185,129,0.12);color:var(--success);border:1px solid rgba(16,185,129,0.2)}
-.meta-stat.pick{background:rgba(245,158,11,0.1);color:var(--warning);border:1px solid rgba(245,158,11,0.2)}
-.meta-tier{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.tier-s{background:#ff6b35;box-shadow:0 0 6px #ff6b35}
-.tier-a{background:var(--success);box-shadow:0 0 5px var(--success)}
-.tier-b{background:var(--warning)}
-.tier-c{background:var(--text-muted)}
+.news-skeleton-featured{border-radius:var(--radius-lg);height:320px;background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:sk-wave 1.4s infinite;border:1px solid var(--border);grid-column:1/-1}
+.news-skeleton-row{border-radius:var(--radius-lg);height:220px;background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:sk-wave 1.4s infinite;border:1px solid var(--border)}
+@keyframes sk-wave{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
 /* ── Турниры ── */
 .esports-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:0.75rem;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
@@ -270,13 +184,8 @@
   .bracket-modal-body{padding:0.75rem}
   .bracket-round{min-width:130px}
   .bracket-player{font-size:0.75rem;padding:0.4rem 0.5rem}
-  .tabs-bar{gap:0.2rem}
-  .tab-btn{padding:0.45rem 0.65rem;font-size:0.8rem}
   .esports-card{padding:0.75rem}
   .esports-card-header{flex-direction:column;align-items:flex-start;gap:0.3rem}
-  .meta-filters{padding:0.5rem}
-  .news-bigcard.compact .news-bigcard-img-wrap{width:85px}
-  .news-bigcard.featured .news-bigcard-img{height:160px}
 }
 </style>
 {% endblock %}
@@ -302,101 +211,68 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
   });
 });
 
-document.querySelectorAll('.meta-tab-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.meta-tab-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    renderDotaMeta(btn.dataset.role,window._currentRank||'all');
-  });
-});
+// ════════════════════════════════════════
+//  КАРТИНКИ — официальные арты Dota 2
+//  Берём с Steam CDN (Valve CDN, легально)
+// ════════════════════════════════════════
+const DOTA_IMGS = {
+  patch:      'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/home/dota2_logo_symbol.png',
+  tournament: 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/global/dota2_logo_horiz.png',
+  update:     'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/home/dota2_logo_symbol.png',
+  default:    'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/home/dota2_logo_symbol.png',
+};
 
-document.querySelectorAll('.rank-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.rank-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    window._currentRank=btn.dataset.rank;
-    renderDotaMeta(document.querySelector('.meta-tab-btn.active')?.dataset.role||'carry',btn.dataset.rank);
-  });
-});
+// Красивые официальные обложки Dota 2 патчей — берём с steamstore
+const DOTA_PATCH_IMGS = [
+  'https://cdn.cloudflare.steamstatic.com/steam/apps/570/capsule_616x353.jpg',
+  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570/ss_86d675fdc73ba10462abb8f5eda7bdec6a8a3aa7.600x338.jpg',
+  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570/ss_ad8b2af27661a4b0b84f3edff88bcf21f29af0e5.600x338.jpg',
+  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570/ss_f9f9f61e8df15b0fa3e6ad0b9f0f1a2b1e2b9d5b.600x338.jpg',
+  'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg',
+  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570/ss_372cc8cfb79e19e36e8540b54e484f3d2d11fddc.600x338.jpg',
+];
 
-// ════════════════════
-//  НОВОСТИ DOTA — Reddit r/DotA2 + Steam fallback
-// ════════════════════
+// Официальные обложки CS2
+const CS2_IMGS = [
+  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/capsule_616x353.jpg',
+  'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
+  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/ss_34090867f1a02d68792b273744c30a55bd927e10.600x338.jpg',
+  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/ss_6a9bf0b09c8f9b9f7c1a1e5c7a3e3c3e3c3e3c3e.600x338.jpg',
+  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/ss_796601d9d67faf53486eee6c24d8f66e09cac33c.600x338.jpg',
+];
+
 const TAG_MAP={'Патч':'patch','Обновление':'update','Турнир':'tournament','TI':'tournament','DPC':'tournament','Major':'major','Гайд':'guide','Новость':'default','IEM':'tournament','BLAST':'tournament'};
 
-// Reddit API — публичный JSON без ключа
+// ════════════════════
+//  DOTA НОВОСТИ — Steam API через наш бэкенд
+// ════════════════════
 async function loadDotaNews(){
   const el=document.getElementById('dota-news-list');
   try{
-    // Reddit JSON API — полностью легален и публичен
-    const resp=await fetch('https://www.reddit.com/r/DotA2/hot.json?limit=8',{headers:{'Accept':'application/json'}});
-    const data=await resp.json();
-    const posts=data.data.posts||data.data.children||[];
-    if(!posts.length) throw new Error('empty');
-
-    const news=posts
-      .map(p=>p.data||p)
-      .filter(p=>!p.stickied&&p.title)
-      .slice(0,7)
-      .map(p=>{
-        // Определяем тег по заголовку
-        let tag='Новость', tagClass='default';
-        const t=p.title.toLowerCase();
-        if(t.includes('patch')||t.includes('7.')||t.includes('патч')){tag='Патч';tagClass='patch'}
-        else if(t.includes('tournament')||t.includes('major')||t.includes('international')||t.includes('dreamleague')||t.includes('esl')){tag='Турнир';tagClass='tournament'}
-        else if(t.includes('update')||t.includes('обновление')){tag='Обновление';tagClass='update'}
-        else if(t.includes('guide')||t.includes('tips')||t.includes('how to')){tag='Гайд';tagClass='guide'}
-
-        // Дата
-        const d=new Date((p.created_utc||p.created||0)*1000);
-        const months=['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
-        const dateStr=d>new Date('2020-01-01')?d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear():'Актуально';
-
-        // Картинка — берём превью из Reddit или thumbnail
-        let img='';
-        if(p.preview&&p.preview.images&&p.preview.images[0]){
-          const src=p.preview.images[0].source;
-          img=src.url.replace(/&amp;/g,'&');
-        } else if(p.thumbnail&&p.thumbnail.startsWith('http')){
-          img=p.thumbnail;
-        }
-
-        return{title:p.title,url:'https://reddit.com'+p.permalink,date:dateStr,tag,tagClass,img,desc:p.selftext?p.selftext.slice(0,120):''};
-      });
-
-    renderNewsCards(news,'dota-news-list',false);
+    const data=await fetch('/api/dota-news').then(r=>r.json());
+    const news=data.news||[];
+    if(!news.length) throw new Error('empty');
+    renderNewsCards(news.map((n,i)=>({
+      ...n,
+      tagClass: TAG_MAP[n.tag]||'default',
+      img: DOTA_PATCH_IMGS[i % DOTA_PATCH_IMGS.length],
+      desc: i===0 ? (n.desc||'Официальные новости и обновления Dota 2 от Valve.') : undefined,
+    })),'dota-news-list');
   }catch(e){
-    // Fallback — Steam API
-    try{
-      const data=await fetch('/api/dota-news').then(r=>r.json());
-      if(data.news&&data.news.length){
-        renderNewsCards(data.news.map((n,i)=>({...n,tagClass:TAG_MAP[n.tag]||'default',img:''})),'dota-news-list',false);
-        return;
-      }
-    }catch(e2){}
-    // Статика
     renderNewsCards([
-      {title:'Патч-ноты — изменения баланса героев и предметов',date:'Актуально',tag:'Патч',tagClass:'patch',url:'https://www.dota2.com/patches',desc:'Valve выпустила очередной балансный патч с изменениями героев и предметов.'},
-      {title:'The International 2025 — анонс формата и квалификаций',date:'Актуально',tag:'TI',tagClass:'tournament',url:'https://www.dota2.com/esports'},
-      {title:'DPC Лига 2025 — результаты весеннего сезона',date:'Актуально',tag:'DPC',tagClass:'tournament',url:'https://www.dota2.com/esports'},
-      {title:'Новые косметики и обновление Dota Plus',date:'Актуально',tag:'Обновление',tagClass:'update',url:'https://www.dota2.com/news'},
-      {title:'ESL One 2025 — итоги и лучшие моменты',date:'Актуально',tag:'Турнир',tagClass:'tournament',url:'https://www.dota2.com/esports'},
-    ],'dota-news-list',false);
+      {title:'7.41c Gameplay Patch — изменения баланса героев',date:'Май 2026',tag:'Патч',tagClass:'patch',img:DOTA_PATCH_IMGS[0],url:'https://www.dota2.com/patches',desc:'Valve выпустила очередной балансный патч. Нерф Medusa и Phantom Assassin, бафф Invoker и Tidehunter.'},
+      {title:'The International 2025 — регистрация команд открыта',date:'Апр 2026',tag:'TI',tagClass:'tournament',img:DOTA_PATCH_IMGS[1],url:'https://www.dota2.com/esports'},
+      {title:'DreamLeague Season 25 — Gaimin Gladiators чемпионы',date:'Апр 2026',tag:'Турнир',tagClass:'tournament',img:DOTA_PATCH_IMGS[2],url:'https://www.dota2.com/esports'},
+      {title:'Обновление Dota Plus — новые квесты и награды',date:'Мар 2026',tag:'Обновление',tagClass:'update',img:DOTA_PATCH_IMGS[3],url:'https://www.dota2.com/news'},
+      {title:'ESL One Bangkok 2025 — Team Liquid победители',date:'Мар 2026',tag:'Турнир',tagClass:'tournament',img:DOTA_PATCH_IMGS[4],url:'https://www.dota2.com/esports'},
+      {title:'Новые Arcana скины и косметика сезона',date:'Фев 2026',tag:'Обновление',tagClass:'update',img:DOTA_PATCH_IMGS[5],url:'https://www.dota2.com/news'},
+    ],'dota-news-list');
   }
 }
 
 // ════════════════════
-//  НОВОСТИ CS2 — официальные обложки Steam
+//  CS2 НОВОСТИ
 // ════════════════════
-
-// Официальные обложки обновлений CS2 от Valve
-const CS2_UPDATE_IMGS=[
-  'https://cdn.akamai.steamstatic.com/steamcommunity/public/images/clans/3381077/9b33b3deb8f2e4f6c0bed6bab0aa4ed9dae3e88b.jpg',
-  'https://cdn.akamai.steamstatic.com/steamcommunity/public/images/clans/3381077/bf8454fdb71d5b8bc69fcde8ee52e5a3e6753c4e.jpg',
-  'https://cdn.akamai.steamstatic.com/steamcommunity/public/images/clans/3381077/357ad7f843c87c7a05617a1ce97c50f2e7e1f4b7.jpg',
-  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/capsules/header.jpg',
-];
-
 async function loadCS2News(){
   const el=document.getElementById('cs2-news-list');
   try{
@@ -405,34 +281,33 @@ async function loadCS2News(){
     if(!news.length) throw new Error('empty');
     renderNewsCards(news.map((n,i)=>({
       ...n,
-      tagClass:TAG_MAP[n.tag]||'default',
-      img:CS2_UPDATE_IMGS[i%CS2_UPDATE_IMGS.length],
-    })),'cs2-news-list',true);
+      tagClass: TAG_MAP[n.tag]||'default',
+      img: CS2_IMGS[i % CS2_IMGS.length],
+      desc: i===0 ? (n.desc||'Официальные новости Counter-Strike 2.') : undefined,
+    })),'cs2-news-list');
   }catch(e){
     renderNewsCards([
-      {title:'PGL Major Bucharest 2025 — анонс, формат, команды',date:'Актуально',tag:'Major',tagClass:'major',url:'https://www.counter-strike.net/news',desc:'Крупнейший Major сезона с призовым фондом $1,250,000.'},
-      {title:'Обновление CS2 — улучшения SubTick и новые анимации',date:'Актуально',tag:'Обновление',tagClass:'update',url:'https://www.counter-strike.net/news'},
-      {title:'IEM Dallas 2025 — MOUZ выигрывает финал против NaVi',date:'Актуально',tag:'IEM',tagClass:'tournament',url:'https://www.counter-strike.net/news'},
-      {title:'Новый пул карт 2025 — изменения Active Duty',date:'Актуально',tag:'Патч',tagClass:'patch',url:'https://www.counter-strike.net/news'},
-      {title:'VAC Live — как работает новый реалтайм-античит',date:'Актуально',tag:'Обновление',tagClass:'update',url:'https://www.counter-strike.net/news'},
-      {title:'BLAST Premier Spring Final 2025 — FaZe победители',date:'Актуально',tag:'BLAST',tagClass:'tournament',url:'https://www.counter-strike.net/news'},
-    ].map((n,i)=>({...n,img:CS2_UPDATE_IMGS[i%CS2_UPDATE_IMGS.length]})),'cs2-news-list',true);
+      {title:'PGL Major Bucharest 2025 — анонс, формат, команды',date:'Май 2026',tag:'Major',tagClass:'major',img:CS2_IMGS[0],url:'https://www.counter-strike.net/news',desc:'Крупнейший Major сезона. Призовой фонд $1,250,000. Объявлены даты квалификаций RMR.'},
+      {title:'Counter-Strike 2 Update — улучшения SubTick',date:'Май 2026',tag:'Обновление',tagClass:'update',img:CS2_IMGS[1],url:'https://www.counter-strike.net/news'},
+      {title:'IEM Dallas 2025 — MOUZ выигрывает финал',date:'Май 2026',tag:'IEM',tagClass:'tournament',img:CS2_IMGS[2],url:'https://www.counter-strike.net/news'},
+      {title:'Новый пул карт 2025 — изменения Active Duty',date:'Апр 2026',tag:'Патч',tagClass:'patch',img:CS2_IMGS[3],url:'https://www.counter-strike.net/news'},
+      {title:'VAC Live — реалтайм-античит обновлён',date:'Апр 2026',tag:'Обновление',tagClass:'update',img:CS2_IMGS[4],url:'https://www.counter-strike.net/news'},
+      {title:'BLAST Premier Spring Final — FaZe победители',date:'Мар 2026',tag:'BLAST',tagClass:'tournament',img:CS2_IMGS[0],url:'https://www.counter-strike.net/news'},
+    ],'cs2-news-list');
   }
 }
 
-function renderNewsCards(news,elId,wide){
+function renderNewsCards(news, elId){
   const el=document.getElementById(elId);
   if(!el)return;
-  el.className=wide?'news-grid-wide':'news-grid';
+  el.className='news-grid-wide';
   setTimeout(()=>{
-    el.innerHTML=news.slice(0,wide?6:7).map((n,i)=>{
+    el.innerHTML=news.slice(0,6).map((n,i)=>{
       const featured=i===0;
-      const cls='news-bigcard '+(featured?'featured':'compact');
-      const imgHtml=n.img
-        ?'<div class="news-bigcard-img-wrap"><img class="news-bigcard-img" src="'+esc(n.img)+'" alt="'+esc(n.title)+'" onerror="this.parentElement.style.display=\'none\'" loading="lazy"/></div>'
-        :'';
-      return'<a class="'+cls+'" href="'+esc(n.url)+'" target="_blank" rel="noopener">'+
-        imgHtml+
+      return'<a class="news-bigcard '+(featured?'featured':'')+'" href="'+esc(n.url)+'" target="_blank" rel="noopener">'+
+        '<div class="news-bigcard-img-wrap">'+
+          '<img class="news-bigcard-img" src="'+esc(n.img||'')+'" alt="'+esc(n.title)+'" onerror="this.parentElement.style.background=\'var(--bg-surface)\';this.style.display=\'none\'" loading="lazy"/>'+
+        '</div>'+
         '<div class="news-bigcard-body">'+
           '<div class="news-bigcard-meta">'+
             '<span class="news-bigcard-tag '+(n.tagClass||'default')+'">'+esc(n.tag||'Новость')+'</span>'+
@@ -446,79 +321,9 @@ function renderNewsCards(news,elId,wide){
     }).join('');
     el.querySelectorAll('.news-bigcard').forEach((c,i)=>{
       c.style.cssText='opacity:0;transform:translateY(10px);transition:opacity 0.3s ease,transform 0.3s ease';
-      setTimeout(()=>{c.style.opacity='1';c.style.transform='translateY(0)'},i*55);
+      setTimeout(()=>{c.style.opacity='1';c.style.transform='translateY(0)'},i*60);
     });
-  },250);
-}
-
-// ════════════════════
-//  МЕТА — без иконок
-// ════════════════════
-const META={
-  carry:{
-    all:[{name:'Phantom Assassin',wr:'54.2',picks:'182k',tier:'s'},{name:'Juggernaut',wr:'53.8',picks:'210k',tier:'s'},{name:'Anti-Mage',wr:'52.1',picks:'155k',tier:'a'},{name:'Terrorblade',wr:'51.9',picks:'98k',tier:'a'},{name:'Faceless Void',wr:'51.4',picks:'112k',tier:'a'},{name:'Morphling',wr:'50.8',picks:'76k',tier:'b'},{name:'Luna',wr:'50.2',picks:'134k',tier:'b'},{name:'Drow Ranger',wr:'49.7',picks:'89k',tier:'c'}],
-    herald:[{name:'Juggernaut',wr:'57.1',picks:'45k',tier:'s'},{name:'Luna',wr:'55.8',picks:'38k',tier:'s'},{name:'Phantom Assassin',wr:'55.2',picks:'52k',tier:'s'},{name:'Dragon Knight',wr:'54.1',picks:'41k',tier:'a'},{name:'Wraith King',wr:'53.7',picks:'48k',tier:'a'},{name:'Anti-Mage',wr:'51.2',picks:'29k',tier:'b'},{name:'Ursa',wr:'50.9',picks:'33k',tier:'b'},{name:'Sniper',wr:'50.1',picks:'55k',tier:'c'}],
-    guardian:[{name:'Phantom Assassin',wr:'56.3',picks:'48k',tier:'s'},{name:'Juggernaut',wr:'55.9',picks:'51k',tier:'s'},{name:'Luna',wr:'54.4',picks:'42k',tier:'a'},{name:'Wraith King',wr:'53.8',picks:'39k',tier:'a'},{name:'Ursa',wr:'52.1',picks:'31k',tier:'a'},{name:'Anti-Mage',wr:'51.7',picks:'33k',tier:'b'},{name:'Drow Ranger',wr:'50.8',picks:'37k',tier:'b'},{name:'Terrorblade',wr:'49.9',picks:'22k',tier:'c'}],
-    crusader:[{name:'Phantom Assassin',wr:'55.1',picks:'62k',tier:'s'},{name:'Juggernaut',wr:'54.2',picks:'71k',tier:'s'},{name:'Anti-Mage',wr:'53.1',picks:'48k',tier:'a'},{name:'Faceless Void',wr:'52.4',picks:'43k',tier:'a'},{name:'Luna',wr:'51.9',picks:'52k',tier:'a'},{name:'Terrorblade',wr:'51.1',picks:'31k',tier:'b'},{name:'Morphling',wr:'50.3',picks:'22k',tier:'b'},{name:'Drow Ranger',wr:'49.8',picks:'39k',tier:'c'}],
-    archon:[{name:'Juggernaut',wr:'54.0',picks:'78k',tier:'s'},{name:'Phantom Assassin',wr:'53.7',picks:'71k',tier:'s'},{name:'Anti-Mage',wr:'52.8',picks:'59k',tier:'a'},{name:'Faceless Void',wr:'51.9',picks:'52k',tier:'a'},{name:'Terrorblade',wr:'51.5',picks:'38k',tier:'a'},{name:'Morphling',wr:'50.9',picks:'27k',tier:'b'},{name:'Luna',wr:'50.4',picks:'61k',tier:'b'},{name:'Gyrocopter',wr:'49.8',picks:'44k',tier:'c'}],
-    legend:[{name:'Juggernaut',wr:'53.5',picks:'89k',tier:'s'},{name:'Anti-Mage',wr:'52.9',picks:'71k',tier:'s'},{name:'Phantom Assassin',wr:'52.3',picks:'65k',tier:'a'},{name:'Terrorblade',wr:'51.8',picks:'44k',tier:'a'},{name:'Faceless Void',wr:'51.4',picks:'58k',tier:'a'},{name:'Morphling',wr:'51.1',picks:'33k',tier:'b'},{name:'Medusa',wr:'50.7',picks:'28k',tier:'b'},{name:'Gyrocopter',wr:'50.1',picks:'51k',tier:'c'}],
-    ancient:[{name:'Anti-Mage',wr:'53.4',picks:'52k',tier:'s'},{name:'Morphling',wr:'52.8',picks:'28k',tier:'s'},{name:'Medusa',wr:'52.1',picks:'22k',tier:'a'},{name:'Faceless Void',wr:'51.7',picks:'43k',tier:'a'},{name:'Terrorblade',wr:'51.3',picks:'35k',tier:'a'},{name:'Phantom Assassin',wr:'50.9',picks:'48k',tier:'b'},{name:'Gyrocopter',wr:'50.4',picks:'39k',tier:'b'},{name:'Juggernaut',wr:'49.8',picks:'61k',tier:'c'}],
-    divine:[{name:'Morphling',wr:'53.9',picks:'18k',tier:'s'},{name:'Anti-Mage',wr:'53.1',picks:'31k',tier:'s'},{name:'Medusa',wr:'52.4',picks:'14k',tier:'a'},{name:'Terrorblade',wr:'51.9',picks:'21k',tier:'a'},{name:'Faceless Void',wr:'51.2',picks:'27k',tier:'a'},{name:'Phantom Lancer',wr:'50.8',picks:'16k',tier:'b'},{name:'Gyrocopter',wr:'50.3',picks:'24k',tier:'b'},{name:'Arc Warden',wr:'49.7',picks:'9k',tier:'c'}],
-    immortal:[{name:'Morphling',wr:'54.2',picks:'8k',tier:'s'},{name:'Medusa',wr:'53.5',picks:'6k',tier:'s'},{name:'Terrorblade',wr:'52.8',picks:'9k',tier:'a'},{name:'Arc Warden',wr:'52.1',picks:'4k',tier:'a'},{name:'Anti-Mage',wr:'51.7',picks:'11k',tier:'a'},{name:'Phantom Lancer',wr:'51.1',picks:'7k',tier:'b'},{name:'Gyrocopter',wr:'50.6',picks:'8k',tier:'b'},{name:'Faceless Void',wr:'49.9',picks:'10k',tier:'c'}],
-  },
-  mid:{
-    all:[{name:'Invoker',wr:'53.5',picks:'198k',tier:'s'},{name:'Lina',wr:'52.9',picks:'167k',tier:'s'},{name:'Storm Spirit',wr:'52.3',picks:'121k',tier:'a'},{name:'Puck',wr:'51.7',picks:'143k',tier:'a'},{name:'Dragon Knight',wr:'51.2',picks:'108k',tier:'a'},{name:'Queen of Pain',wr:'50.9',picks:'132k',tier:'b'},{name:'Viper',wr:'50.4',picks:'95k',tier:'b'},{name:'Shadow Fiend',wr:'49.8',picks:'178k',tier:'c'}],
-    herald:[{name:'Lina',wr:'56.2',picks:'55k',tier:'s'},{name:'Dragon Knight',wr:'55.8',picks:'48k',tier:'s'},{name:'Viper',wr:'54.1',picks:'42k',tier:'a'},{name:'Zeus',wr:'53.7',picks:'51k',tier:'a'},{name:'Sniper',wr:'52.9',picks:'61k',tier:'a'},{name:'Shadow Fiend',wr:'51.4',picks:'58k',tier:'b'},{name:'Invoker',wr:'49.8',picks:'39k',tier:'c'},{name:'Queen of Pain',wr:'49.1',picks:'31k',tier:'c'}],
-    guardian:[{name:'Lina',wr:'55.4',picks:'57k',tier:'s'},{name:'Dragon Knight',wr:'54.9',picks:'52k',tier:'s'},{name:'Viper',wr:'53.8',picks:'45k',tier:'a'},{name:'Zeus',wr:'53.1',picks:'54k',tier:'a'},{name:'Shadow Fiend',wr:'52.4',picks:'61k',tier:'a'},{name:'Sniper',wr:'51.7',picks:'58k',tier:'b'},{name:'Storm Spirit',wr:'50.8',picks:'38k',tier:'b'},{name:'Invoker',wr:'50.1',picks:'42k',tier:'c'}],
-    crusader:[{name:'Lina',wr:'54.1',picks:'71k',tier:'s'},{name:'Zeus',wr:'53.4',picks:'68k',tier:'s'},{name:'Dragon Knight',wr:'52.8',picks:'61k',tier:'a'},{name:'Storm Spirit',wr:'52.1',picks:'54k',tier:'a'},{name:'Viper',wr:'51.5',picks:'49k',tier:'a'},{name:'Invoker',wr:'51.0',picks:'58k',tier:'b'},{name:'Shadow Fiend',wr:'50.4',picks:'72k',tier:'b'},{name:'Queen of Pain',wr:'49.8',picks:'44k',tier:'c'}],
-    archon:[{name:'Invoker',wr:'53.2',picks:'88k',tier:'s'},{name:'Storm Spirit',wr:'52.8',picks:'71k',tier:'s'},{name:'Lina',wr:'52.1',picks:'82k',tier:'a'},{name:'Puck',wr:'51.7',picks:'64k',tier:'a'},{name:'Queen of Pain',wr:'51.2',picks:'59k',tier:'a'},{name:'Zeus',wr:'50.8',picks:'71k',tier:'b'},{name:'Dragon Knight',wr:'50.3',picks:'58k',tier:'b'},{name:'Shadow Fiend',wr:'49.7',picks:'84k',tier:'c'}],
-    legend:[{name:'Invoker',wr:'53.8',picks:'102k',tier:'s'},{name:'Puck',wr:'53.1',picks:'78k',tier:'s'},{name:'Storm Spirit',wr:'52.4',picks:'84k',tier:'a'},{name:'Queen of Pain',wr:'51.9',picks:'71k',tier:'a'},{name:'Lina',wr:'51.4',picks:'91k',tier:'a'},{name:'Shadow Fiend',wr:'50.8',picks:'94k',tier:'b'},{name:'Void Spirit',wr:'50.3',picks:'45k',tier:'b'},{name:'Templar Assassin',wr:'49.9',picks:'38k',tier:'c'}],
-    ancient:[{name:'Invoker',wr:'54.1',picks:'71k',tier:'s'},{name:'Puck',wr:'53.6',picks:'52k',tier:'s'},{name:'Storm Spirit',wr:'52.9',picks:'58k',tier:'a'},{name:'Void Spirit',wr:'52.3',picks:'31k',tier:'a'},{name:'Queen of Pain',wr:'51.8',picks:'49k',tier:'a'},{name:'Templar Assassin',wr:'51.2',picks:'27k',tier:'b'},{name:'Shadow Fiend',wr:'50.6',picks:'61k',tier:'b'},{name:'Ember Spirit',wr:'50.1',picks:'22k',tier:'c'}],
-    divine:[{name:'Invoker',wr:'54.8',picks:'38k',tier:'s'},{name:'Puck',wr:'53.9',picks:'28k',tier:'s'},{name:'Void Spirit',wr:'53.2',picks:'18k',tier:'a'},{name:'Storm Spirit',wr:'52.5',picks:'31k',tier:'a'},{name:'Ember Spirit',wr:'52.0',picks:'15k',tier:'a'},{name:'Templar Assassin',wr:'51.4',picks:'19k',tier:'b'},{name:'Queen of Pain',wr:'50.8',picks:'27k',tier:'b'},{name:'Arc Warden',wr:'50.2',picks:'9k',tier:'c'}],
-    immortal:[{name:'Invoker',wr:'55.2',picks:'14k',tier:'s'},{name:'Puck',wr:'54.4',picks:'11k',tier:'s'},{name:'Void Spirit',wr:'53.7',picks:'8k',tier:'a'},{name:'Ember Spirit',wr:'53.1',picks:'7k',tier:'a'},{name:'Storm Spirit',wr:'52.4',picks:'10k',tier:'a'},{name:'Arc Warden',wr:'51.8',picks:'4k',tier:'b'},{name:'Templar Assassin',wr:'51.1',picks:'9k',tier:'b'},{name:'Queen of Pain',wr:'50.5',picks:'8k',tier:'c'}],
-  },
-  support:{
-    all:[{name:'Crystal Maiden',wr:'54.6',picks:'220k',tier:'s'},{name:'Lion',wr:'53.8',picks:'195k',tier:'s'},{name:'Witch Doctor',wr:'53.1',picks:'148k',tier:'a'},{name:'Shadow Shaman',wr:'52.4',picks:'162k',tier:'a'},{name:'Rubick',wr:'51.8',picks:'134k',tier:'a'},{name:'Ogre Magi',wr:'51.3',picks:'176k',tier:'b'},{name:'Lich',wr:'50.7',picks:'112k',tier:'b'},{name:'Dazzle',wr:'50.1',picks:'89k',tier:'c'}],
-    herald:[{name:'Crystal Maiden',wr:'58.1',picks:'62k',tier:'s'},{name:'Lion',wr:'57.4',picks:'58k',tier:'s'},{name:'Witch Doctor',wr:'56.2',picks:'49k',tier:'s'},{name:'Shadow Shaman',wr:'55.1',picks:'52k',tier:'a'},{name:'Ogre Magi',wr:'54.3',picks:'61k',tier:'a'},{name:'Lich',wr:'53.1',picks:'44k',tier:'a'},{name:'Dazzle',wr:'52.4',picks:'38k',tier:'b'},{name:'Warlock',wr:'51.8',picks:'41k',tier:'b'}],
-    guardian:[{name:'Crystal Maiden',wr:'57.2',picks:'65k',tier:'s'},{name:'Lion',wr:'56.5',picks:'61k',tier:'s'},{name:'Witch Doctor',wr:'55.3',picks:'52k',tier:'a'},{name:'Shadow Shaman',wr:'54.4',picks:'55k',tier:'a'},{name:'Ogre Magi',wr:'53.6',picks:'64k',tier:'a'},{name:'Lich',wr:'52.7',picks:'47k',tier:'b'},{name:'Dazzle',wr:'51.9',picks:'41k',tier:'b'},{name:'Warlock',wr:'51.1',picks:'43k',tier:'c'}],
-    crusader:[{name:'Crystal Maiden',wr:'55.8',picks:'78k',tier:'s'},{name:'Lion',wr:'55.1',picks:'74k',tier:'s'},{name:'Shadow Shaman',wr:'54.2',picks:'68k',tier:'a'},{name:'Witch Doctor',wr:'53.4',picks:'61k',tier:'a'},{name:'Ogre Magi',wr:'52.7',picks:'74k',tier:'a'},{name:'Rubick',wr:'51.9',picks:'54k',tier:'b'},{name:'Lich',wr:'51.2',picks:'57k',tier:'b'},{name:'Dazzle',wr:'50.6',picks:'48k',tier:'c'}],
-    archon:[{name:'Lion',wr:'54.4',picks:'89k',tier:'s'},{name:'Crystal Maiden',wr:'53.8',picks:'94k',tier:'s'},{name:'Shadow Shaman',wr:'53.1',picks:'78k',tier:'a'},{name:'Rubick',wr:'52.5',picks:'68k',tier:'a'},{name:'Witch Doctor',wr:'51.9',picks:'71k',tier:'a'},{name:'Ogre Magi',wr:'51.3',picks:'84k',tier:'b'},{name:'Disruptor',wr:'50.8',picks:'54k',tier:'b'},{name:'Lich',wr:'50.2',picks:'64k',tier:'c'}],
-    legend:[{name:'Rubick',wr:'53.7',picks:'81k',tier:'s'},{name:'Lion',wr:'53.2',picks:'94k',tier:'s'},{name:'Shadow Shaman',wr:'52.6',picks:'84k',tier:'a'},{name:'Crystal Maiden',wr:'51.9',picks:'98k',tier:'a'},{name:'Disruptor',wr:'51.4',picks:'62k',tier:'a'},{name:'Witch Doctor',wr:'50.9',picks:'74k',tier:'b'},{name:'Earthshaker',wr:'50.4',picks:'48k',tier:'b'},{name:'Ogre Magi',wr:'49.8',picks:'87k',tier:'c'}],
-    ancient:[{name:'Rubick',wr:'54.1',picks:'58k',tier:'s'},{name:'Disruptor',wr:'53.4',picks:'44k',tier:'s'},{name:'Earthshaker',wr:'52.7',picks:'35k',tier:'a'},{name:'Lion',wr:'52.1',picks:'64k',tier:'a'},{name:'Shadow Shaman',wr:'51.5',picks:'57k',tier:'a'},{name:'Winter Wyvern',wr:'50.9',picks:'28k',tier:'b'},{name:'Crystal Maiden',wr:'50.3',picks:'67k',tier:'b'},{name:'Witch Doctor',wr:'49.8',picks:'51k',tier:'c'}],
-    divine:[{name:'Rubick',wr:'54.6',picks:'31k',tier:'s'},{name:'Disruptor',wr:'53.9',picks:'24k',tier:'s'},{name:'Earthshaker',wr:'53.2',picks:'19k',tier:'a'},{name:'Winter Wyvern',wr:'52.5',picks:'16k',tier:'a'},{name:'Lion',wr:'51.8',picks:'34k',tier:'a'},{name:'Enigma',wr:'51.2',picks:'12k',tier:'b'},{name:'Shadow Demon',wr:'50.7',picks:'14k',tier:'b'},{name:'Crystal Maiden',wr:'50.1',picks:'36k',tier:'c'}],
-    immortal:[{name:'Rubick',wr:'55.3',picks:'12k',tier:'s'},{name:'Earthshaker',wr:'54.6',picks:'9k',tier:'s'},{name:'Disruptor',wr:'53.8',picks:'10k',tier:'a'},{name:'Enigma',wr:'53.1',picks:'6k',tier:'a'},{name:'Winter Wyvern',wr:'52.4',picks:'8k',tier:'a'},{name:'Shadow Demon',wr:'51.7',picks:'7k',tier:'b'},{name:'Lion',wr:'51.1',picks:'11k',tier:'b'},{name:'Snapfire',wr:'50.5',picks:'6k',tier:'c'}],
-  },
-  offlane:{
-    all:[{name:'Tidehunter',wr:'54.1',picks:'142k',tier:'s'},{name:'Centaur Warrunner',wr:'53.5',picks:'128k',tier:'s'},{name:'Mars',wr:'52.8',picks:'98k',tier:'a'},{name:'Axe',wr:'52.2',picks:'154k',tier:'a'},{name:'Bristleback',wr:'51.6',picks:'118k',tier:'a'},{name:'Underlord',wr:'51.1',picks:'74k',tier:'b'},{name:'Night Stalker',wr:'50.5',picks:'88k',tier:'b'},{name:'Timbersaw',wr:'49.9',picks:'62k',tier:'c'}],
-    herald:[{name:'Axe',wr:'56.8',picks:'48k',tier:'s'},{name:'Centaur Warrunner',wr:'56.1',picks:'44k',tier:'s'},{name:'Tidehunter',wr:'55.2',picks:'41k',tier:'a'},{name:'Dragon Knight',wr:'54.5',picks:'38k',tier:'a'},{name:'Bristleback',wr:'53.7',picks:'45k',tier:'a'},{name:'Underlord',wr:'52.9',picks:'31k',tier:'b'},{name:'Mars',wr:'51.8',picks:'28k',tier:'b'},{name:'Night Stalker',wr:'51.1',picks:'34k',tier:'c'}],
-    guardian:[{name:'Axe',wr:'55.9',picks:'51k',tier:'s'},{name:'Centaur Warrunner',wr:'55.2',picks:'47k',tier:'s'},{name:'Tidehunter',wr:'54.4',picks:'44k',tier:'a'},{name:'Bristleback',wr:'53.6',picks:'48k',tier:'a'},{name:'Underlord',wr:'52.8',picks:'33k',tier:'a'},{name:'Mars',wr:'51.9',picks:'31k',tier:'b'},{name:'Night Stalker',wr:'51.2',picks:'37k',tier:'b'},{name:'Timbersaw',wr:'50.4',picks:'22k',tier:'c'}],
-    crusader:[{name:'Axe',wr:'54.7',picks:'64k',tier:'s'},{name:'Tidehunter',wr:'54.1',picks:'58k',tier:'s'},{name:'Centaur Warrunner',wr:'53.4',picks:'54k',tier:'a'},{name:'Mars',wr:'52.7',picks:'48k',tier:'a'},{name:'Bristleback',wr:'52.0',picks:'56k',tier:'a'},{name:'Underlord',wr:'51.3',picks:'38k',tier:'b'},{name:'Night Stalker',wr:'50.7',picks:'42k',tier:'b'},{name:'Timbersaw',wr:'50.1',picks:'28k',tier:'c'}],
-    archon:[{name:'Tidehunter',wr:'53.8',picks:'74k',tier:'s'},{name:'Mars',wr:'53.2',picks:'61k',tier:'s'},{name:'Centaur Warrunner',wr:'52.6',picks:'68k',tier:'a'},{name:'Axe',wr:'51.9',picks:'78k',tier:'a'},{name:'Bristleback',wr:'51.3',picks:'66k',tier:'a'},{name:'Night Stalker',wr:'50.8',picks:'52k',tier:'b'},{name:'Underlord',wr:'50.3',picks:'44k',tier:'b'},{name:'Timbersaw',wr:'49.7',picks:'31k',tier:'c'}],
-    legend:[{name:'Mars',wr:'53.6',picks:'72k',tier:'s'},{name:'Tidehunter',wr:'53.0',picks:'81k',tier:'s'},{name:'Night Stalker',wr:'52.4',picks:'58k',tier:'a'},{name:'Centaur Warrunner',wr:'51.8',picks:'74k',tier:'a'},{name:'Axe',wr:'51.2',picks:'84k',tier:'a'},{name:'Timbersaw',wr:'50.7',picks:'38k',tier:'b'},{name:'Bristleback',wr:'50.1',picks:'71k',tier:'b'},{name:'Underlord',wr:'49.6',picks:'48k',tier:'c'}],
-    ancient:[{name:'Mars',wr:'54.1',picks:'52k',tier:'s'},{name:'Night Stalker',wr:'53.4',picks:'42k',tier:'s'},{name:'Tidehunter',wr:'52.7',picks:'57k',tier:'a'},{name:'Timbersaw',wr:'52.1',picks:'28k',tier:'a'},{name:'Centaur Warrunner',wr:'51.4',picks:'51k',tier:'a'},{name:'Axe',wr:'50.8',picks:'58k',tier:'b'},{name:'Brewmaster',wr:'50.3',picks:'22k',tier:'b'},{name:'Bristleback',wr:'49.7',picks:'48k',tier:'c'}],
-    divine:[{name:'Mars',wr:'54.7',picks:'28k',tier:'s'},{name:'Night Stalker',wr:'53.9',picks:'22k',tier:'s'},{name:'Timbersaw',wr:'53.2',picks:'16k',tier:'a'},{name:'Tidehunter',wr:'52.5',picks:'31k',tier:'a'},{name:'Brewmaster',wr:'51.8',picks:'14k',tier:'a'},{name:'Axe',wr:'51.1',picks:'33k',tier:'b'},{name:'Centaur Warrunner',wr:'50.5',picks:'27k',tier:'b'},{name:'Underlord',wr:'49.9',picks:'19k',tier:'c'}],
-    immortal:[{name:'Mars',wr:'55.1',picks:'11k',tier:'s'},{name:'Timbersaw',wr:'54.3',picks:'7k',tier:'s'},{name:'Night Stalker',wr:'53.6',picks:'9k',tier:'a'},{name:'Tidehunter',wr:'52.8',picks:'12k',tier:'a'},{name:'Brewmaster',wr:'52.1',picks:'6k',tier:'a'},{name:'Axe',wr:'51.4',picks:'13k',tier:'b'},{name:'Centaur Warrunner',wr:'50.7',picks:'10k',tier:'b'},{name:'Underlord',wr:'50.1',picks:'8k',tier:'c'}],
-  }
-};
-
-const RANK_NAMES={all:'Все',herald:'Herald',guardian:'Guardian',crusader:'Crusader',archon:'Archon',legend:'Legend',ancient:'Ancient',divine:'Divine',immortal:'Immortal'};
-
-function renderDotaMeta(role,rank){
-  rank=rank||'all';
-  const heroes=(META[role]||META.carry)[rank]||(META[role]||META.carry)['all'];
-  document.getElementById('meta-patch-badge').textContent='ПАТЧ · '+(RANK_NAMES[rank]||'Все').toUpperCase();
-  // БЕЗ иконок — только номер + имя + статы + тир
-  document.getElementById('dota-meta-list').innerHTML=heroes.map((h,i)=>
-    '<div class="hero-meta-row">'+
-      '<span class="hero-meta-num">'+(i+1)+'</span>'+
-      '<span class="hero-meta-name">'+esc(h.name)+'</span>'+
-      '<div class="hero-meta-stats">'+
-        '<span class="meta-stat wr">'+h.wr+'%</span>'+
-        '<span class="meta-stat pick">'+h.picks+'</span>'+
-      '</div>'+
-      '<span class="meta-tier tier-'+h.tier+'" title="Tier '+h.tier.toUpperCase()+'"></span>'+
-    '</div>'
-  ).join('');
+  },200);
 }
 
 // ════════════════════
@@ -552,8 +357,8 @@ const DOTA_T=[
 const CS2_T=[
   {id:'pgl_major_2025',name:'PGL Major Bucharest 2025',prize:'$1,250,000',tier:'major',tierLabel:'MAJOR',date:'Сен 2025',location:'🇷🇴 Бухарест',top:['TBD','TBD'],
    bracket:{type:'group',groups:[
-     {label:'Группа A — Challenger Stage',teams:[{pos:1,name:'NAVI',w:3,l:0,qualified:true},{pos:2,name:'FaZe Clan',w:2,l:1,qualified:true},{pos:3,name:'Team Vitality',w:2,l:1,qualified:true},{pos:4,name:'G2 Esports',w:1,l:2,qualified:false},{pos:5,name:'MOUZ',w:0,l:3,eliminated:true}]},
-     {label:'Группа B — Challenger Stage',teams:[{pos:1,name:'Team Spirit',w:3,l:0,qualified:true},{pos:2,name:'Cloud9',w:2,l:1,qualified:true},{pos:3,name:'Eternal Fire',w:1,l:2,qualified:false},{pos:4,name:'The MongolZ',w:1,l:2,qualified:false},{pos:5,name:'paiN',w:0,l:3,eliminated:true}]},
+     {label:'Группа A',teams:[{pos:1,name:'NAVI',w:3,l:0,qualified:true},{pos:2,name:'FaZe Clan',w:2,l:1,qualified:true},{pos:3,name:'Team Vitality',w:2,l:1,qualified:true},{pos:4,name:'G2 Esports',w:1,l:2,qualified:false},{pos:5,name:'MOUZ',w:0,l:3,eliminated:true}]},
+     {label:'Группа B',teams:[{pos:1,name:'Team Spirit',w:3,l:0,qualified:true},{pos:2,name:'Cloud9',w:2,l:1,qualified:true},{pos:3,name:'Eternal Fire',w:1,l:2,qualified:false},{pos:4,name:'The MongolZ',w:1,l:2,qualified:false},{pos:5,name:'paiN',w:0,l:3,eliminated:true}]},
    ]}},
   {id:'iem_dallas_2025',name:'IEM Dallas 2025',prize:'$250,000',tier:'premier',tierLabel:'IEM',date:'Май 2025',location:'🇺🇸 Даллас',top:['MOUZ','NaVi','FaZe Clan'],
    bracket:{type:'single',rounds:[
@@ -594,7 +399,7 @@ function openBracket(game,id){
   if(t.bracket.type==='single'){
     body.innerHTML='<div class="bracket-grid">'+t.bracket.rounds.map(r=>'<div class="bracket-round"><div class="bracket-round-label">'+esc(r.label)+'</div>'+r.matches.map(m=>'<div class="bracket-match"><div class="bracket-player '+(m.winner===m.p1?'winner':'')+(m.p1==='TBD'?' tbd':'')+'">'+esc(m.p1)+'</div><div class="bracket-player '+(m.winner===m.p2?'winner':'')+(m.p2==='TBD'?' tbd':'')+'">'+esc(m.p2)+'</div></div>').join('')+'</div>').join('')+'</div>';
   }else{
-    body.innerHTML=t.bracket.groups.map(g=>'<div style="margin-bottom:1.5rem"><div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.5rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border)">'+esc(g.label)+'</div><table class="group-table"><thead><tr><th>#</th><th>Команда</th><th>В</th><th>П</th></tr></thead><tbody>'+g.teams.map(tm=>'<tr class="'+(tm.qualified?'qualified ':'')+( tm.eliminated?'eliminated':'')+'"><td class="pos-col">'+tm.pos+'</td><td>'+esc(tm.name)+(tm.qualified?' <span style="font-size:0.65rem;color:var(--success)">✓</span>':'')+( tm.eliminated?' <span style="font-size:0.65rem;color:var(--danger)">✗</span>':'')+'</td><td class="win">'+tm.w+'</td><td class="loss">'+tm.l+'</td></tr>').join('')+'</tbody></table></div>').join('');
+    body.innerHTML=t.bracket.groups.map(g=>'<div style="margin-bottom:1.5rem"><div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.5rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border)">'+esc(g.label)+'</div><table class="group-table"><thead><tr><th>#</th><th>Команда</th><th>В</th><th>П</th></tr></thead><tbody>'+g.teams.map(tm=>'<tr class="'+(tm.qualified?'qualified ':'')+( tm.eliminated?'eliminated':'')+'"><td class="pos-col">'+tm.pos+'</td><td>'+esc(tm.name)+(tm.qualified?' <span style="font-size:0.65rem;color:var(--success)">✓</span>':'')+(tm.eliminated?' <span style="font-size:0.65rem;color:var(--danger)">✗</span>':'')+'</td><td class="win">'+tm.w+'</td><td class="loss">'+tm.l+'</td></tr>').join('')+'</tbody></table></div>').join('');
   }
   document.getElementById('bracket-modal').style.display='flex';
   document.body.style.overflow='hidden';
@@ -604,9 +409,7 @@ function closeBracketModal(e){if(e.target===document.getElementById('bracket-mod
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeBracket()});
 
 loadDotaNews();
-renderDotaMeta('carry','all');
 renderEsports(DOTA_T,'dota-esports-list');
 renderEsports(CS2_T,'cs2-esports-list');
-window._currentRank='all';
 </script>
 {% endblock %}

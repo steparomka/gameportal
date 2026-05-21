@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% block title %}Мета героев — DotaClutch{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1>⚡ <span class="accent">Мета героев</span></h1>
+    <p>Актуальный патч · Winrate и пики по всем рангам</p>
+  </div>
+
+  <div class="meta-filters">
+    <div class="meta-filter-row">
+      <span class="meta-filter-label">Роль:</span>
+      <div class="meta-tabs">
+        <button class="meta-tab-btn active" data-role="carry">Carry</button>
+        <button class="meta-tab-btn" data-role="mid">Mid</button>
+        <button class="meta-tab-btn" data-role="support">Support</button>
+        <button class="meta-tab-btn" data-role="offlane">Offlane</button>
+      </div>
+    </div>
+    <div class="meta-filter-row">
+      <span class="meta-filter-label">Ранг:</span>
+      <div class="rank-tabs">
+        <button class="rank-btn active" data-rank="all">Все</button>
+        <button class="rank-btn" data-rank="herald" style="color:#8B6914"><span class="rank-icon">🪙</span><span class="rank-label"> Herald</span></button>
+        <button class="rank-btn" data-rank="guardian" style="color:#6B8E23"><span class="rank-icon">🛡️</span><span class="rank-label"> Guard</span></button>
+        <button class="rank-btn" data-rank="crusader" style="color:#4169E1"><span class="rank-icon">⚔️</span><span class="rank-label"> Crus</span></button>
+        <button class="rank-btn" data-rank="archon" style="color:#00CED1"><span class="rank-icon">🌀</span><span class="rank-label"> Archon</span></button>
+        <button class="rank-btn" data-rank="legend" style="color:#9370DB"><span class="rank-icon">⭐</span><span class="rank-label"> Legend</span></button>
+        <button class="rank-btn" data-rank="ancient" style="color:#FF8C00"><span class="rank-icon">🔥</span><span class="rank-label"> Ancient</span></button>
+        <button class="rank-btn" data-rank="divine" style="color:#FFD700"><span class="rank-icon">✨</span><span class="rank-label"> Divine</span></button>
+        <button class="rank-btn" data-rank="immortal" style="color:#FF4500"><span class="rank-icon">👑</span><span class="rank-label"> Imm</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="meta-badge" style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);margin-bottom:1rem"></div>
+
+  <div id="meta-list" class="meta-grid"></div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.meta-filters{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem}
+.meta-filter-row{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
+.meta-filter-label{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;flex-shrink:0;width:36px}
+.meta-tabs{display:flex;gap:0.35rem;flex-wrap:wrap}
+.meta-tab-btn{padding:0.3rem 0.8rem;border-radius:99px;font-family:var(--font-mono);font-size:0.72rem;background:transparent;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all 0.2s}
+.meta-tab-btn.active,.meta-tab-btn:hover{background:rgba(0,212,255,0.1);border-color:var(--accent);color:var(--accent)}
+.rank-tabs{display:flex;gap:0.3rem;flex-wrap:wrap}
+.rank-btn{display:flex;align-items:center;padding:0.25rem 0.6rem;border-radius:99px;font-family:var(--font-mono);font-size:0.68rem;background:transparent;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.rank-btn:hover{border-color:currentColor;background:rgba(255,255,255,0.04)}
+.rank-btn.active{background:rgba(255,255,255,0.07);border-color:currentColor;font-weight:700}
+.rank-btn.active[data-rank="all"]{color:var(--accent);border-color:var(--accent);background:rgba(0,212,255,0.1)}
+.rank-icon{font-size:0.8rem}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0.6rem}
+.hero-meta-row{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.9rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);transition:all 0.2s}
+.hero-meta-row:hover{border-color:rgba(0,212,255,0.3);transform:translateX(2px)}
+.hero-meta-num{font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);width:20px;text-align:center;flex-shrink:0}
+.hero-meta-name{font-family:var(--font-head);font-size:0.9rem;font-weight:600;color:var(--text-bright);flex:1}
+.meta-stat{font-family:var(--font-mono);font-size:0.72rem;padding:0.12rem 0.45rem;border-radius:4px}
+.meta-stat.wr{background:rgba(16,185,129,0.12);color:var(--success);border:1px solid rgba(16,185,129,0.2)}
+.meta-stat.pick{background:rgba(245,158,11,0.1);color:var(--warning);border:1px solid rgba(245,158,11,0.2)}
+.meta-tier{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tier-s{background:#ff6b35;box-shadow:0 0 6px #ff6b35}
+.tier-a{background:var(--success);box-shadow:0 0 5px var(--success)}
+.tier-b{background:var(--warning)}
+.tier-c{background:var(--text-muted)}
+.tier-label{font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);width:12px;text-align:center}
+@media(max-width:480px){.rank-label{display:none}.meta-grid{grid-template-columns:1fr}}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+document.querySelectorAll('.meta-tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.meta-tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderMeta(btn.dataset.role, window._currentRank||'all');
+  });
+});
+document.querySelectorAll('.rank-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.rank-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    window._currentRank=btn.dataset.rank;
+    renderMeta(document.querySelector('.meta-tab-btn.active')?.dataset.role||'carry', btn.dataset.rank);
+  });
+});
+
+const META={
+  carry:{
+    all:[{name:'Phantom Assassin',wr:'54.2',picks:'182k',tier:'s'},{name:'Juggernaut',wr:'53.8',picks:'210k',tier:'s'},{name:'Anti-Mage',wr:'52.1',picks:'155k',tier:'a'},{name:'Terrorblade',wr:'51.9',picks:'98k',tier:'a'},{name:'Faceless Void',wr:'51.4',picks:'112k',tier:'a'},{name:'Morphling',wr:'50.8',picks:'76k',tier:'b'},{name:'Luna',wr:'50.2',picks:'134k',tier:'b'},{name:'Drow Ranger',wr:'49.7',picks:'89k',tier:'c'}],
+    herald:[{name:'Juggernaut',wr:'57.1',picks:'45k',tier:'s'},{name:'Luna',wr:'55.8',picks:'38k',tier:'s'},{name:'Phantom Assassin',wr:'55.2',picks:'52k',tier:'s'},{name:'Dragon Knight',wr:'54.1',picks:'41k',tier:'a'},{name:'Wraith King',wr:'53.7',picks:'48k',tier:'a'},{name:'Anti-Mage',wr:'51.2',picks:'29k',tier:'b'},{name:'Ursa',wr:'50.9',picks:'33k',tier:'b'},{name:'Sniper',wr:'50.1',picks:'55k',tier:'c'}],
+    guardian:[{name:'Phantom Assassin',wr:'56.3',picks:'48k',tier:'s'},{name:'Juggernaut',wr:'55.9',picks:'51k',tier:'s'},{name:'Luna',wr:'54.4',picks:'42k',tier:'a'},{name:'Wraith King',wr:'53.8',picks:'39k',tier:'a'},{name:'Ursa',wr:'52.1',picks:'31k',tier:'a'},{name:'Anti-Mage',wr:'51.7',picks:'33k',tier:'b'},{name:'Drow Ranger',wr:'50.8',picks:'37k',tier:'b'},{name:'Terrorblade',wr:'49.9',picks:'22k',tier:'c'}],
+    crusader:[{name:'Phantom Assassin',wr:'55.1',picks:'62k',tier:'s'},{name:'Juggernaut',wr:'54.2',picks:'71k',tier:'s'},{name:'Anti-Mage',wr:'53.1',picks:'48k',tier:'a'},{name:'Faceless Void',wr:'52.4',picks:'43k',tier:'a'},{name:'Luna',wr:'51.9',picks:'52k',tier:'a'},{name:'Terrorblade',wr:'51.1',picks:'31k',tier:'b'},{name:'Morphling',wr:'50.3',picks:'22k',tier:'b'},{name:'Drow Ranger',wr:'49.8',picks:'39k',tier:'c'}],
+    archon:[{name:'Juggernaut',wr:'54.0',picks:'78k',tier:'s'},{name:'Phantom Assassin',wr:'53.7',picks:'71k',tier:'s'},{name:'Anti-Mage',wr:'52.8',picks:'59k',tier:'a'},{name:'Faceless Void',wr:'51.9',picks:'52k',tier:'a'},{name:'Terrorblade',wr:'51.5',picks:'38k',tier:'a'},{name:'Morphling',wr:'50.9',picks:'27k',tier:'b'},{name:'Luna',wr:'50.4',picks:'61k',tier:'b'},{name:'Gyrocopter',wr:'49.8',picks:'44k',tier:'c'}],
+    legend:[{name:'Juggernaut',wr:'53.5',picks:'89k',tier:'s'},{name:'Anti-Mage',wr:'52.9',picks:'71k',tier:'s'},{name:'Phantom Assassin',wr:'52.3',picks:'65k',tier:'a'},{name:'Terrorblade',wr:'51.8',picks:'44k',tier:'a'},{name:'Faceless Void',wr:'51.4',picks:'58k',tier:'a'},{name:'Morphling',wr:'51.1',picks:'33k',tier:'b'},{name:'Medusa',wr:'50.7',picks:'28k',tier:'b'},{name:'Gyrocopter',wr:'50.1',picks:'51k',tier:'c'}],
+    ancient:[{name:'Anti-Mage',wr:'53.4',picks:'52k',tier:'s'},{name:'Morphling',wr:'52.8',picks:'28k',tier:'s'},{name:'Medusa',wr:'52.1',picks:'22k',tier:'a'},{name:'Faceless Void',wr:'51.7',picks:'43k',tier:'a'},{name:'Terrorblade',wr:'51.3',picks:'35k',tier:'a'},{name:'Phantom Assassin',wr:'50.9',picks:'48k',tier:'b'},{name:'Gyrocopter',wr:'50.4',picks:'39k',tier:'b'},{name:'Juggernaut',wr:'49.8',picks:'61k',tier:'c'}],
+    divine:[{name:'Morphling',wr:'53.9',picks:'18k',tier:'s'},{name:'Anti-Mage',wr:'53.1',picks:'31k',tier:'s'},{name:'Medusa',wr:'52.4',picks:'14k',tier:'a'},{name:'Terrorblade',wr:'51.9',picks:'21k',tier:'a'},{name:'Faceless Void',wr:'51.2',picks:'27k',tier:'a'},{name:'Phantom Lancer',wr:'50.8',picks:'16k',tier:'b'},{name:'Gyrocopter',wr:'50.3',picks:'24k',tier:'b'},{name:'Arc Warden',wr:'49.7',picks:'9k',tier:'c'}],
+    immortal:[{name:'Morphling',wr:'54.2',picks:'8k',tier:'s'},{name:'Medusa',wr:'53.5',picks:'6k',tier:'s'},{name:'Terrorblade',wr:'52.8',picks:'9k',tier:'a'},{name:'Arc Warden',wr:'52.1',picks:'4k',tier:'a'},{name:'Anti-Mage',wr:'51.7',picks:'11k',tier:'a'},{name:'Phantom Lancer',wr:'51.1',picks:'7k',tier:'b'},{name:'Gyrocopter',wr:'50.6',picks:'8k',tier:'b'},{name:'Faceless Void',wr:'49.9',picks:'10k',tier:'c'}],
+  },
+  mid:{
+    all:[{name:'Invoker',wr:'53.5',picks:'198k',tier:'s'},{name:'Lina',wr:'52.9',picks:'167k',tier:'s'},{name:'Storm Spirit',wr:'52.3',picks:'121k',tier:'a'},{name:'Puck',wr:'51.7',picks:'143k',tier:'a'},{name:'Dragon Knight',wr:'51.2',picks:'108k',tier:'a'},{name:'Queen of Pain',wr:'50.9',picks:'132k',tier:'b'},{name:'Viper',wr:'50.4',picks:'95k',tier:'b'},{name:'Shadow Fiend',wr:'49.8',picks:'178k',tier:'c'}],
+    herald:[{name:'Lina',wr:'56.2',picks:'55k',tier:'s'},{name:'Dragon Knight',wr:'55.8',picks:'48k',tier:'s'},{name:'Viper',wr:'54.1',picks:'42k',tier:'a'},{name:'Zeus',wr:'53.7',picks:'51k',tier:'a'},{name:'Sniper',wr:'52.9',picks:'61k',tier:'a'},{name:'Shadow Fiend',wr:'51.4',picks:'58k',tier:'b'},{name:'Invoker',wr:'49.8',picks:'39k',tier:'c'},{name:'Queen of Pain',wr:'49.1',picks:'31k',tier:'c'}],
+    guardian:[{name:'Lina',wr:'55.4',picks:'57k',tier:'s'},{name:'Dragon Knight',wr:'54.9',picks:'52k',tier:'s'},{name:'Viper',wr:'53.8',picks:'45k',tier:'a'},{name:'Zeus',wr:'53.1',picks:'54k',tier:'a'},{name:'Shadow Fiend',wr:'52.4',picks:'61k',tier:'a'},{name:'Sniper',wr:'51.7',picks:'58k',tier:'b'},{name:'Storm Spirit',wr:'50.8',picks:'38k',tier:'b'},{name:'Invoker',wr:'50.1',picks:'42k',tier:'c'}],
+    crusader:[{name:'Lina',wr:'54.1',picks:'71k',tier:'s'},{name:'Zeus',wr:'53.4',picks:'68k',tier:'s'},{name:'Dragon Knight',wr:'52.8',picks:'61k',tier:'a'},{name:'Storm Spirit',wr:'52.1',picks:'54k',tier:'a'},{name:'Viper',wr:'51.5',picks:'49k',tier:'a'},{name:'Invoker',wr:'51.0',picks:'58k',tier:'b'},{name:'Shadow Fiend',wr:'50.4',picks:'72k',tier:'b'},{name:'Queen of Pain',wr:'49.8',picks:'44k',tier:'c'}],
+    archon:[{name:'Invoker',wr:'53.2',picks:'88k',tier:'s'},{name:'Storm Spirit',wr:'52.8',picks:'71k',tier:'s'},{name:'Lina',wr:'52.1',picks:'82k',tier:'a'},{name:'Puck',wr:'51.7',picks:'64k',tier:'a'},{name:'Queen of Pain',wr:'51.2',picks:'59k',tier:'a'},{name:'Zeus',wr:'50.8',picks:'71k',tier:'b'},{name:'Dragon Knight',wr:'50.3',picks:'58k',tier:'b'},{name:'Shadow Fiend',wr:'49.7',picks:'84k',tier:'c'}],
+    legend:[{name:'Invoker',wr:'53.8',picks:'102k',tier:'s'},{name:'Puck',wr:'53.1',picks:'78k',tier:'s'},{name:'Storm Spirit',wr:'52.4',picks:'84k',tier:'a'},{name:'Queen of Pain',wr:'51.9',picks:'71k',tier:'a'},{name:'Lina',wr:'51.4',picks:'91k',tier:'a'},{name:'Shadow Fiend',wr:'50.8',picks:'94k',tier:'b'},{name:'Void Spirit',wr:'50.3',picks:'45k',tier:'b'},{name:'Templar Assassin',wr:'49.9',picks:'38k',tier:'c'}],
+    ancient:[{name:'Invoker',wr:'54.1',picks:'71k',tier:'s'},{name:'Puck',wr:'53.6',picks:'52k',tier:'s'},{name:'Storm Spirit',wr:'52.9',picks:'58k',tier:'a'},{name:'Void Spirit',wr:'52.3',picks:'31k',tier:'a'},{name:'Queen of Pain',wr:'51.8',picks:'49k',tier:'a'},{name:'Templar Assassin',wr:'51.2',picks:'27k',tier:'b'},{name:'Shadow Fiend',wr:'50.6',picks:'61k',tier:'b'},{name:'Ember Spirit',wr:'50.1',picks:'22k',tier:'c'}],
+    divine:[{name:'Invoker',wr:'54.8',picks:'38k',tier:'s'},{name:'Puck',wr:'53.9',picks:'28k',tier:'s'},{name:'Void Spirit',wr:'53.2',picks:'18k',tier:'a'},{name:'Storm Spirit',wr:'52.5',picks:'31k',tier:'a'},{name:'Ember Spirit',wr:'52.0',picks:'15k',tier:'a'},{name:'Templar Assassin',wr:'51.4',picks:'19k',tier:'b'},{name:'Queen of Pain',wr:'50.8',picks:'27k',tier:'b'},{name:'Arc Warden',wr:'50.2',picks:'9k',tier:'c'}],
+    immortal:[{name:'Invoker',wr:'55.2',picks:'14k',tier:'s'},{name:'Puck',wr:'54.4',picks:'11k',tier:'s'},{name:'Void Spirit',wr:'53.7',picks:'8k',tier:'a'},{name:'Ember Spirit',wr:'53.1',picks:'7k',tier:'a'},{name:'Storm Spirit',wr:'52.4',picks:'10k',tier:'a'},{name:'Arc Warden',wr:'51.8',picks:'4k',tier:'b'},{name:'Templar Assassin',wr:'51.1',picks:'9k',tier:'b'},{name:'Queen of Pain',wr:'50.5',picks:'8k',tier:'c'}],
+  },
+  support:{
+    all:[{name:'Crystal Maiden',wr:'54.6',picks:'220k',tier:'s'},{name:'Lion',wr:'53.8',picks:'195k',tier:'s'},{name:'Witch Doctor',wr:'53.1',picks:'148k',tier:'a'},{name:'Shadow Shaman',wr:'52.4',picks:'162k',tier:'a'},{name:'Rubick',wr:'51.8',picks:'134k',tier:'a'},{name:'Ogre Magi',wr:'51.3',picks:'176k',tier:'b'},{name:'Lich',wr:'50.7',picks:'112k',tier:'b'},{name:'Dazzle',wr:'50.1',picks:'89k',tier:'c'}],
+    herald:[{name:'Crystal Maiden',wr:'58.1',picks:'62k',tier:'s'},{name:'Lion',wr:'57.4',picks:'58k',tier:'s'},{name:'Witch Doctor',wr:'56.2',picks:'49k',tier:'s'},{name:'Shadow Shaman',wr:'55.1',picks:'52k',tier:'a'},{name:'Ogre Magi',wr:'54.3',picks:'61k',tier:'a'},{name:'Lich',wr:'53.1',picks:'44k',tier:'a'},{name:'Dazzle',wr:'52.4',picks:'38k',tier:'b'},{name:'Warlock',wr:'51.8',picks:'41k',tier:'b'}],
+    guardian:[{name:'Crystal Maiden',wr:'57.2',picks:'65k',tier:'s'},{name:'Lion',wr:'56.5',picks:'61k',tier:'s'},{name:'Witch Doctor',wr:'55.3',picks:'52k',tier:'a'},{name:'Shadow Shaman',wr:'54.4',picks:'55k',tier:'a'},{name:'Ogre Magi',wr:'53.6',picks:'64k',tier:'a'},{name:'Lich',wr:'52.7',picks:'47k',tier:'b'},{name:'Dazzle',wr:'51.9',picks:'41k',tier:'b'},{name:'Warlock',wr:'51.1',picks:'43k',tier:'c'}],
+    crusader:[{name:'Crystal Maiden',wr:'55.8',picks:'78k',tier:'s'},{name:'Lion',wr:'55.1',picks:'74k',tier:'s'},{name:'Shadow Shaman',wr:'54.2',picks:'68k',tier:'a'},{name:'Witch Doctor',wr:'53.4',picks:'61k',tier:'a'},{name:'Ogre Magi',wr:'52.7',picks:'74k',tier:'a'},{name:'Rubick',wr:'51.9',picks:'54k',tier:'b'},{name:'Lich',wr:'51.2',picks:'57k',tier:'b'},{name:'Dazzle',wr:'50.6',picks:'48k',tier:'c'}],
+    archon:[{name:'Lion',wr:'54.4',picks:'89k',tier:'s'},{name:'Crystal Maiden',wr:'53.8',picks:'94k',tier:'s'},{name:'Shadow Shaman',wr:'53.1',picks:'78k',tier:'a'},{name:'Rubick',wr:'52.5',picks:'68k',tier:'a'},{name:'Witch Doctor',wr:'51.9',picks:'71k',tier:'a'},{name:'Ogre Magi',wr:'51.3',picks:'84k',tier:'b'},{name:'Disruptor',wr:'50.8',picks:'54k',tier:'b'},{name:'Lich',wr:'50.2',picks:'64k',tier:'c'}],
+    legend:[{name:'Rubick',wr:'53.7',picks:'81k',tier:'s'},{name:'Lion',wr:'53.2',picks:'94k',tier:'s'},{name:'Shadow Shaman',wr:'52.6',picks:'84k',tier:'a'},{name:'Crystal Maiden',wr:'51.9',picks:'98k',tier:'a'},{name:'Disruptor',wr:'51.4',picks:'62k',tier:'a'},{name:'Witch Doctor',wr:'50.9',picks:'74k',tier:'b'},{name:'Earthshaker',wr:'50.4',picks:'48k',tier:'b'},{name:'Ogre Magi',wr:'49.8',picks:'87k',tier:'c'}],
+    ancient:[{name:'Rubick',wr:'54.1',picks:'58k',tier:'s'},{name:'Disruptor',wr:'53.4',picks:'44k',tier:'s'},{name:'Earthshaker',wr:'52.7',picks:'35k',tier:'a'},{name:'Lion',wr:'52.1',picks:'64k',tier:'a'},{name:'Shadow Shaman',wr:'51.5',picks:'57k',tier:'a'},{name:'Winter Wyvern',wr:'50.9',picks:'28k',tier:'b'},{name:'Crystal Maiden',wr:'50.3',picks:'67k',tier:'b'},{name:'Witch Doctor',wr:'49.8',picks:'51k',tier:'c'}],
+    divine:[{name:'Rubick',wr:'54.6',picks:'31k',tier:'s'},{name:'Disruptor',wr:'53.9',picks:'24k',tier:'s'},{name:'Earthshaker',wr:'53.2',picks:'19k',tier:'a'},{name:'Winter Wyvern',wr:'52.5',picks:'16k',tier:'a'},{name:'Lion',wr:'51.8',picks:'34k',tier:'a'},{name:'Enigma',wr:'51.2',picks:'12k',tier:'b'},{name:'Shadow Demon',wr:'50.7',picks:'14k',tier:'b'},{name:'Crystal Maiden',wr:'50.1',picks:'36k',tier:'c'}],
+    immortal:[{name:'Rubick',wr:'55.3',picks:'12k',tier:'s'},{name:'Earthshaker',wr:'54.6',picks:'9k',tier:'s'},{name:'Disruptor',wr:'53.8',picks:'10k',tier:'a'},{name:'Enigma',wr:'53.1',picks:'6k',tier:'a'},{name:'Winter Wyvern',wr:'52.4',picks:'8k',tier:'a'},{name:'Shadow Demon',wr:'51.7',picks:'7k',tier:'b'},{name:'Lion',wr:'51.1',picks:'11k',tier:'b'},{name:'Snapfire',wr:'50.5',picks:'6k',tier:'c'}],
+  },
+  offlane:{
+    all:[{name:'Tidehunter',wr:'54.1',picks:'142k',tier:'s'},{name:'Centaur Warrunner',wr:'53.5',picks:'128k',tier:'s'},{name:'Mars',wr:'52.8',picks:'98k',tier:'a'},{name:'Axe',wr:'52.2',picks:'154k',tier:'a'},{name:'Bristleback',wr:'51.6',picks:'118k',tier:'a'},{name:'Underlord',wr:'51.1',picks:'74k',tier:'b'},{name:'Night Stalker',wr:'50.5',picks:'88k',tier:'b'},{name:'Timbersaw',wr:'49.9',picks:'62k',tier:'c'}],
+    herald:[{name:'Axe',wr:'56.8',picks:'48k',tier:'s'},{name:'Centaur Warrunner',wr:'56.1',picks:'44k',tier:'s'},{name:'Tidehunter',wr:'55.2',picks:'41k',tier:'a'},{name:'Dragon Knight',wr:'54.5',picks:'38k',tier:'a'},{name:'Bristleback',wr:'53.7',picks:'45k',tier:'a'},{name:'Underlord',wr:'52.9',picks:'31k',tier:'b'},{name:'Mars',wr:'51.8',picks:'28k',tier:'b'},{name:'Night Stalker',wr:'51.1',picks:'34k',tier:'c'}],
+    guardian:[{name:'Axe',wr:'55.9',picks:'51k',tier:'s'},{name:'Centaur Warrunner',wr:'55.2',picks:'47k',tier:'s'},{name:'Tidehunter',wr:'54.4',picks:'44k',tier:'a'},{name:'Bristleback',wr:'53.6',picks:'48k',tier:'a'},{name:'Underlord',wr:'52.8',picks:'33k',tier:'a'},{name:'Mars',wr:'51.9',picks:'31k',tier:'b'},{name:'Night Stalker',wr:'51.2',picks:'37k',tier:'b'},{name:'Timbersaw',wr:'50.4',picks:'22k',tier:'c'}],
+    crusader:[{name:'Axe',wr:'54.7',picks:'64k',tier:'s'},{name:'Tidehunter',wr:'54.1',picks:'58k',tier:'s'},{name:'Centaur Warrunner',wr:'53.4',picks:'54k',tier:'a'},{name:'Mars',wr:'52.7',picks:'48k',tier:'a'},{name:'Bristleback',wr:'52.0',picks:'56k',tier:'a'},{name:'Underlord',wr:'51.3',picks:'38k',tier:'b'},{name:'Night Stalker',wr:'50.7',picks:'42k',tier:'b'},{name:'Timbersaw',wr:'50.1',picks:'28k',tier:'c'}],
+    archon:[{name:'Tidehunter',wr:'53.8',picks:'74k',tier:'s'},{name:'Mars',wr:'53.2',picks:'61k',tier:'s'},{name:'Centaur Warrunner',wr:'52.6',picks:'68k',tier:'a'},{name:'Axe',wr:'51.9',picks:'78k',tier:'a'},{name:'Bristleback',wr:'51.3',picks:'66k',tier:'a'},{name:'Night Stalker',wr:'50.8',picks:'52k',tier:'b'},{name:'Underlord',wr:'50.3',picks:'44k',tier:'b'},{name:'Timbersaw',wr:'49.7',picks:'31k',tier:'c'}],
+    legend:[{name:'Mars',wr:'53.6',picks:'72k',tier:'s'},{name:'Tidehunter',wr:'53.0',picks:'81k',tier:'s'},{name:'Night Stalker',wr:'52.4',picks:'58k',tier:'a'},{name:'Centaur Warrunner',wr:'51.8',picks:'74k',tier:'a'},{name:'Axe',wr:'51.2',picks:'84k',tier:'a'},{name:'Timbersaw',wr:'50.7',picks:'38k',tier:'b'},{name:'Bristleback',wr:'50.1',picks:'71k',tier:'b'},{name:'Underlord',wr:'49.6',picks:'48k',tier:'c'}],
+    ancient:[{name:'Mars',wr:'54.1',picks:'52k',tier:'s'},{name:'Night Stalker',wr:'53.4',picks:'42k',tier:'s'},{name:'Tidehunter',wr:'52.7',picks:'57k',tier:'a'},{name:'Timbersaw',wr:'52.1',picks:'28k',tier:'a'},{name:'Centaur Warrunner',wr:'51.4',picks:'51k',tier:'a'},{name:'Axe',wr:'50.8',picks:'58k',tier:'b'},{name:'Brewmaster',wr:'50.3',picks:'22k',tier:'b'},{name:'Bristleback',wr:'49.7',picks:'48k',tier:'c'}],
+    divine:[{name:'Mars',wr:'54.7',picks:'28k',tier:'s'},{name:'Night Stalker',wr:'53.9',picks:'22k',tier:'s'},{name:'Timbersaw',wr:'53.2',picks:'16k',tier:'a'},{name:'Tidehunter',wr:'52.5',picks:'31k',tier:'a'},{name:'Brewmaster',wr:'51.8',picks:'14k',tier:'a'},{name:'Axe',wr:'51.1',picks:'33k',tier:'b'},{name:'Centaur Warrunner',wr:'50.5',picks:'27k',tier:'b'},{name:'Underlord',wr:'49.9',picks:'19k',tier:'c'}],
+    immortal:[{name:'Mars',wr:'55.1',picks:'11k',tier:'s'},{name:'Timbersaw',wr:'54.3',picks:'7k',tier:'s'},{name:'Night Stalker',wr:'53.6',picks:'9k',tier:'a'},{name:'Tidehunter',wr:'52.8',picks:'12k',tier:'a'},{name:'Brewmaster',wr:'52.1',picks:'6k',tier:'a'},{name:'Axe',wr:'51.4',picks:'13k',tier:'b'},{name:'Centaur Warrunner',wr:'50.7',picks:'10k',tier:'b'},{name:'Underlord',wr:'50.1',picks:'8k',tier:'c'}],
+  }
+};
+
+const RANK_NAMES={all:'Все ранги',herald:'Herald',guardian:'Guardian',crusader:'Crusader',archon:'Archon',legend:'Legend',ancient:'Ancient',divine:'Divine',immortal:'Immortal'};
+const ROLE_NAMES={carry:'Carry',mid:'Mid',support:'Support',offlane:'Offlane'};
+
+function renderMeta(role, rank){
+  rank=rank||'all';
+  const heroes=(META[role]||META.carry)[rank]||(META[role]||META.carry)['all'];
+  const rankName=RANK_NAMES[rank]||'Все';
+  const roleName=ROLE_NAMES[role]||'Carry';
+  document.getElementById('meta-badge').textContent=
+    '📊 '+roleName+' · '+rankName+' · '+heroes.length+' героев';
+  document.getElementById('meta-list').innerHTML=heroes.map((h,i)=>
+    '<div class="hero-meta-row">'+
+      '<span class="hero-meta-num">'+(i+1)+'</span>'+
+      '<span class="hero-meta-name">'+esc(h.name)+'</span>'+
+      '<span class="meta-stat wr">'+h.wr+'%</span>'+
+      '<span class="meta-stat pick">'+h.picks+'</span>'+
+      '<span class="tier-label">'+h.tier.toUpperCase()+'</span>'+
+      '<span class="meta-tier tier-'+h.tier+'"></span>'+
+    '</div>'
+  ).join('');
+}
+
+renderMeta('carry','all');
+window._currentRank='all';
+</script>
+{% endblock %}

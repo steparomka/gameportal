@@ -600,7 +600,7 @@ async def get_cs2_news():
             )
         data = resp.json()
         items = data.get("appnews", {}).get("newsitems", [])
-
+        
         news = []
         for item in items:
             title = item.get("title", "")
@@ -627,9 +627,19 @@ async def get_cs2_news():
         result = {"news": news, "source": "steam"}
         cache_set(cache_key, result, ttl=3600)
         return result
-
+    
     except Exception as e:
         return {"news": [], "source": "error", "error": str(e)}
+    
+@app.get("/meta", response_class=HTMLResponse)
+async def meta_page(request: Request):
+    sid = get_session_id(request)
+    update_online(sid)
+    resp = templates.TemplateResponse("meta.html", {
+        "request": request, "online": count_online(),
+    })
+    resp.set_cookie("session_id", sid, max_age=86400)
+    return resp
 
 # ════════════════════════════════════════════════
 #  STEAM АВТОРИЗАЦИЯ
