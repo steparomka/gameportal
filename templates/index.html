@@ -6,10 +6,31 @@
   <h1>DOTA<span class="glow">CLUTCH</span></h1>
   <p>Реплеи · Турниры · Поиск тиммейтов · Новости · Мета</p>
   <div class="hero-nav">
-    <a href="/replays"        class="hero-card"><span class="icon">📹</span><span>Реплеи</span></a>
-    <a href="/tournaments"    class="hero-card"><span class="icon">🏆</span><span>Турниры</span></a>
-    <a href="/find-teammates" class="hero-card"><span class="icon">🔍</span><span>Тиммейты</span></a>
-    <a href="/meta"           class="hero-card"><span class="icon">⚡</span><span>Мета</span></a>
+    <a href="/esports" class="hero-card">
+      <span class="icon">🏆</span>
+      <span>Киберспорт</span>
+      <span class="hero-card-sub">Турниры про</span>
+    </a>
+    <a href="/tournaments" class="hero-card">
+      <span class="icon">⚔️</span>
+      <span>Турниры</span>
+      <span class="hero-card-sub">Для игроков</span>
+    </a>
+    <a href="/find-teammates" class="hero-card">
+      <span class="icon">🔍</span>
+      <span>Тиммейты</span>
+      <span class="hero-card-sub">Найди напарника</span>
+    </a>
+    <a href="/meta" class="hero-card">
+      <span class="icon">⚡</span>
+      <span>Мета</span>
+      <span class="hero-card-sub">Герои патча</span>
+    </a>
+    <a href="/replays" class="hero-card">
+      <span class="icon">📹</span>
+      <span>Реплеи</span>
+      <span class="hero-card-sub">Твои матчи</span>
+    </a>
   </div>
 </section>
 
@@ -454,6 +475,8 @@
 .group-table tr.qualified td{border-left:2px solid var(--success)}
 .group-table tr.eliminated td{opacity:0.5}
 
+.hero-card-sub{font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);letter-spacing:0.5px;text-transform:none;font-weight:400;margin-top:-0.15rem}
+.hero-card:hover .hero-card-sub{color:var(--accent)}
 @media(max-width:480px){
   .tab-btn{padding:0.45rem 0.7rem;font-size:0.82rem}
   .sub-tab-btn{font-size:0.72rem;padding:0.4rem 0.5rem}
