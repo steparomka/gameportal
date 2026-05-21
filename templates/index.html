@@ -23,7 +23,7 @@
 
   <hr class="neon-line"/>
 
-  <!-- ТАБЫ -->
+  <!-- ИГРОВЫЕ ТАБЫ -->
   <div class="tabs-bar">
     <button class="tab-btn active" data-tab="dota">🛡️ Dota 2</button>
     <button class="tab-btn" data-tab="cs2">🎯 CS2</button>
@@ -33,22 +33,85 @@
   <div id="tab-dota" class="tab-content">
     <div class="news-page-layout">
       <div class="news-feed-col">
-        <div class="section-title">
-          <span class="section-icon">🔥</span> Лента Dota 2
-          <span class="section-live-dot"></span>
-          <span class="section-badge reddit-badge">r/DotA2</span>
+
+        <!-- Под-табы: Новости / Сообщество / Написать -->
+        <div class="sub-tabs-bar">
+          <button class="sub-tab-btn active" data-subtab="dota-news">📰 Новости</button>
+          <button class="sub-tab-btn" data-subtab="dota-community">🔥 Сообщество</button>
+          <button class="sub-tab-btn write-btn" data-subtab="dota-write">✏️ Написать</button>
         </div>
-        <!-- Фильтры -->
-        <div class="feed-filters">
-          <button class="feed-filter-btn active" data-sort="hot" data-sub="DotA2">🔥 Горячее</button>
-          <button class="feed-filter-btn" data-sort="new" data-sub="DotA2">🆕 Новое</button>
-          <button class="feed-filter-btn" data-sort="top" data-sub="DotA2">⭐ Топ</button>
-          <button class="feed-filter-btn" data-sort="hot" data-sub="DotA2Memes">😂 Мемы</button>
+
+        <!-- НОВОСТИ STEAM -->
+        <div id="dota-news" class="sub-tab-content active">
+          <div id="dota-steam-news">
+            <div class="nf-skeleton"></div>
+            <div class="nf-skeleton sm"></div>
+            <div class="nf-skeleton sm"></div>
+          </div>
         </div>
-        <div id="dota-feed"></div>
-        <button class="load-more-btn" id="dota-load-more" style="display:none" onclick="loadMoreDota()">
-          Загрузить ещё ↓
-        </button>
+
+        <!-- REDDIT СООБЩЕСТВО -->
+        <div id="dota-community" class="sub-tab-content" style="display:none">
+          <div class="feed-filters">
+            <button class="feed-filter-btn active" data-sort="hot" data-sub="DotA2">🔥 Горячее</button>
+            <button class="feed-filter-btn" data-sort="new" data-sub="DotA2">🆕 Новое</button>
+            <button class="feed-filter-btn" data-sort="top" data-sub="DotA2">⭐ Топ</button>
+            <button class="feed-filter-btn" data-sort="hot" data-sub="DotA2Memes">😂 Мемы</button>
+          </div>
+          <div id="dota-feed"></div>
+          <button class="load-more-btn" id="dota-load-more" style="display:none" onclick="loadMoreDota()">Загрузить ещё ↓</button>
+        </div>
+
+        <!-- НАПИСАТЬ ПОСТ -->
+        <div id="dota-write" class="sub-tab-content" style="display:none">
+          <div class="write-post-box">
+            <div class="write-post-header">
+              <span class="write-post-icon">✏️</span>
+              <span>Написать новость / пост</span>
+            </div>
+            <div class="write-post-form" id="dota-post-form">
+              <div class="form-group">
+                <label class="form-label">Заголовок *</label>
+                <input class="form-control" type="text" id="dota-post-title" placeholder="Заголовок новости или поста..." maxlength="200"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Тег</label>
+                <div class="tag-picker" id="dota-tag-picker">
+                  <button class="tag-pick-btn active" data-tag="Новость">💬 Новость</button>
+                  <button class="tag-pick-btn" data-tag="Патч">🔧 Патч</button>
+                  <button class="tag-pick-btn" data-tag="Гайд">📖 Гайд</button>
+                  <button class="tag-pick-btn" data-tag="Турнир">🏆 Турнир</button>
+                  <button class="tag-pick-btn" data-tag="Мем">😂 Мем</button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Текст *</label>
+                <textarea class="form-control" id="dota-post-text" rows="6" placeholder="Напиши свой пост, гайд, мнение о патче..." maxlength="3000"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ссылка на картинку (необязательно)</label>
+                <input class="form-control" type="url" id="dota-post-img" placeholder="https://i.imgur.com/..."/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ваш никнейм</label>
+                <input class="form-control" type="text" id="dota-post-author" placeholder="Ваш ник" maxlength="50"/>
+              </div>
+              <div id="dota-post-alert"></div>
+              <button class="btn btn-primary w-full" onclick="submitPost('dota')">Опубликовать пост →</button>
+            </div>
+          </div>
+
+          <!-- Посты сообщества -->
+          <div style="margin-top:1.5rem">
+            <div class="section-title" style="margin-bottom:1rem">
+              <span>📝 Посты сообщества</span>
+            </div>
+            <div id="dota-community-posts">
+              <div class="nf-skeleton sm"></div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <!-- Сайдбар -->
@@ -67,21 +130,78 @@
   <div id="tab-cs2" class="tab-content" style="display:none">
     <div class="news-page-layout">
       <div class="news-feed-col">
-        <div class="section-title">
-          <span class="section-icon">🔥</span> Лента CS2
-          <span class="section-live-dot cs2-dot"></span>
-          <span class="section-badge cs2-reddit-badge">r/GlobalOffensive</span>
+
+        <div class="sub-tabs-bar cs2-sub">
+          <button class="sub-tab-btn cs2-sub-btn active" data-subtab="cs2-news">📰 Новости</button>
+          <button class="sub-tab-btn cs2-sub-btn" data-subtab="cs2-community">🔥 Сообщество</button>
+          <button class="sub-tab-btn cs2-sub-btn write-btn" data-subtab="cs2-write">✏️ Написать</button>
         </div>
-        <div class="feed-filters">
-          <button class="feed-filter-btn cs2-filter active" data-sort="hot" data-sub="GlobalOffensive">🔥 Горячее</button>
-          <button class="feed-filter-btn cs2-filter" data-sort="new" data-sub="GlobalOffensive">🆕 Новое</button>
-          <button class="feed-filter-btn cs2-filter" data-sort="top" data-sub="GlobalOffensive">⭐ Топ</button>
-          <button class="feed-filter-btn cs2-filter" data-sort="hot" data-sub="csmemes">😂 Мемы</button>
+
+        <!-- CS2 НОВОСТИ -->
+        <div id="cs2-news" class="sub-tab-content active">
+          <div id="cs2-steam-news">
+            <div class="nf-skeleton"></div>
+            <div class="nf-skeleton sm"></div>
+            <div class="nf-skeleton sm"></div>
+          </div>
         </div>
-        <div id="cs2-feed"></div>
-        <button class="load-more-btn cs2-more" id="cs2-load-more" style="display:none" onclick="loadMoreCS2()">
-          Загрузить ещё ↓
-        </button>
+
+        <!-- CS2 REDDIT -->
+        <div id="cs2-community" class="sub-tab-content" style="display:none">
+          <div class="feed-filters">
+            <button class="feed-filter-btn cs2-filter active" data-sort="hot" data-sub="GlobalOffensive">🔥 Горячее</button>
+            <button class="feed-filter-btn cs2-filter" data-sort="new" data-sub="GlobalOffensive">🆕 Новое</button>
+            <button class="feed-filter-btn cs2-filter" data-sort="top" data-sub="GlobalOffensive">⭐ Топ</button>
+            <button class="feed-filter-btn cs2-filter" data-sort="hot" data-sub="csmemes">😂 Мемы</button>
+          </div>
+          <div id="cs2-feed"></div>
+          <button class="load-more-btn cs2-more" id="cs2-load-more" style="display:none" onclick="loadMoreCS2()">Загрузить ещё ↓</button>
+        </div>
+
+        <!-- CS2 НАПИСАТЬ -->
+        <div id="cs2-write" class="sub-tab-content" style="display:none">
+          <div class="write-post-box cs2-write-box">
+            <div class="write-post-header">
+              <span class="write-post-icon">✏️</span>
+              <span>Написать новость / пост CS2</span>
+            </div>
+            <div class="write-post-form">
+              <div class="form-group">
+                <label class="form-label">Заголовок *</label>
+                <input class="form-control" type="text" id="cs2-post-title" placeholder="Заголовок..." maxlength="200"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Тег</label>
+                <div class="tag-picker" id="cs2-tag-picker">
+                  <button class="tag-pick-btn cs2-tag active" data-tag="Новость">💬 Новость</button>
+                  <button class="tag-pick-btn cs2-tag" data-tag="Обновление">🔧 Обновление</button>
+                  <button class="tag-pick-btn cs2-tag" data-tag="Гайд">📖 Гайд</button>
+                  <button class="tag-pick-btn cs2-tag" data-tag="Major">🏆 Major</button>
+                  <button class="tag-pick-btn cs2-tag" data-tag="Мем">😂 Мем</button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Текст *</label>
+                <textarea class="form-control" id="cs2-post-text" rows="6" placeholder="Твой пост о CS2..." maxlength="3000"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ссылка на картинку (необязательно)</label>
+                <input class="form-control" type="url" id="cs2-post-img" placeholder="https://i.imgur.com/..."/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ваш никнейм</label>
+                <input class="form-control" type="text" id="cs2-post-author" placeholder="Ваш ник" maxlength="50"/>
+              </div>
+              <div id="cs2-post-alert"></div>
+              <button class="btn btn-primary w-full" style="background:linear-gradient(135deg,var(--warning),#cc8800);color:#000" onclick="submitPost('cs2')">Опубликовать пост →</button>
+            </div>
+          </div>
+          <div style="margin-top:1.5rem">
+            <div class="section-title" style="margin-bottom:1rem"><span>📝 Посты сообщества CS2</span></div>
+            <div id="cs2-community-posts"><div class="nf-skeleton sm"></div></div>
+          </div>
+        </div>
+
       </div>
 
       <div class="news-sidebar-col">
@@ -96,7 +216,21 @@
   </div>
 </div>
 
-<!-- ══ МОДАЛКА ПОСТА ══ -->
+<!-- МОДАЛКА ЧИТАЛКА НОВОСТИ -->
+<div id="news-modal" class="news-modal-overlay" style="display:none" onclick="closeNewsModal(event)">
+  <div class="news-modal-box">
+    <div class="news-modal-header">
+      <div id="nm-badge"></div>
+      <button class="news-modal-close" onclick="closeNewsReader()">✕</button>
+    </div>
+    <div class="news-modal-body" id="nm-body"></div>
+    <div class="news-modal-footer">
+      <a id="nm-source-link" href="#" target="_blank" rel="noopener" class="nm-source-btn">Источник →</a>
+    </div>
+  </div>
+</div>
+
+<!-- МОДАЛКА ПОСТА -->
 <div id="post-modal" class="post-modal-overlay" style="display:none" onclick="closePostModal(event)">
   <div class="post-modal-box">
     <div class="post-modal-header">
@@ -105,15 +239,13 @@
     </div>
     <div class="post-modal-body" id="pm-body"></div>
     <div class="post-modal-footer">
-      <a id="pm-reddit-link" href="#" target="_blank" rel="noopener" class="pm-reddit-btn">
-        Открыть на Reddit →
-      </a>
+      <a id="pm-reddit-link" href="#" target="_blank" rel="noopener" class="pm-reddit-btn">Открыть на Reddit →</a>
       <span id="pm-stats" class="pm-stats"></span>
     </div>
   </div>
 </div>
 
-<!-- ══ МОДАЛКА ТУРНИРОВ ══ -->
+<!-- МОДАЛКА ТУРНИРОВ -->
 <div id="bracket-modal" class="bracket-modal-overlay" style="display:none" onclick="closeBracketModal(event)">
   <div class="bracket-modal-box">
     <div class="bracket-modal-header">
@@ -127,18 +259,24 @@
 
 {% block extra_css %}
 <style>
-/* ── Базовые табы/секции ── */
+/* ── Игровые табы ── */
 .tabs-bar{display:flex;gap:0.5rem;border-bottom:2px solid var(--border);margin-bottom:1.75rem}
 .tab-btn{display:flex;align-items:center;gap:0.4rem;padding:0.65rem 1.4rem;font-family:var(--font-head);font-weight:700;font-size:0.95rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all 0.2s;border-radius:var(--radius) var(--radius) 0 0}
 .tab-btn:hover{color:var(--accent)}
 .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(0,212,255,0.05)}
-.section-title{display:flex;align-items:center;gap:0.5rem;font-family:var(--font-head);font-weight:700;font-size:1rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-bright);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border)}
+
+/* ── Под-табы ── */
+.sub-tabs-bar{display:flex;gap:0.4rem;margin-bottom:1.25rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.35rem}
+.sub-tab-btn{flex:1;padding:0.5rem 0.75rem;border-radius:var(--radius);font-family:var(--font-head);font-weight:700;font-size:0.82rem;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-muted);background:transparent;border:none;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.sub-tab-btn:hover{color:var(--accent)}
+.sub-tab-btn.active{background:var(--bg-card);color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.sub-tab-btn.write-btn.active{background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(168,85,247,0.1));color:var(--accent)}
+.cs2-sub .sub-tab-btn.active{color:var(--warning)}
+.cs2-sub .sub-tab-btn:hover{color:var(--warning)}
+
+/* ── Section ── */
+.section-title{display:flex;align-items:center;gap:0.5rem;font-family:var(--font-head);font-weight:700;font-size:1rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-bright);padding-bottom:0.6rem;border-bottom:1px solid var(--border)}
 .section-badge{margin-left:auto;font-family:var(--font-mono);font-size:0.65rem;padding:0.15rem 0.5rem;border-radius:99px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.25);color:var(--accent);letter-spacing:1px}
-.reddit-badge{background:rgba(255,69,0,0.12);border-color:rgba(255,69,0,0.3);color:#ff6314}
-.cs2-reddit-badge{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.25);color:var(--warning)}
-.section-live-dot{width:7px;height:7px;border-radius:50%;background:#ff6314;box-shadow:0 0 6px #ff6314;animation:pdot 2s infinite;flex-shrink:0}
-.section-live-dot.cs2-dot{background:var(--warning);box-shadow:0 0 6px var(--warning)}
-@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
 .cs2-badge{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.25);color:var(--warning)}
 .dota-live-badge{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);color:var(--danger);animation:pbadge 2s infinite}
 @keyframes pbadge{0%,100%{box-shadow:none}50%{box-shadow:0 0 8px rgba(239,68,68,0.3)}}
@@ -147,93 +285,144 @@
 .news-page-layout{display:grid;grid-template-columns:1fr 300px;gap:2rem;align-items:start}
 @media(max-width:900px){.news-page-layout{grid-template-columns:1fr}.news-sidebar-col{display:none}}
 
-/* ── Фильтры ── */
-.feed-filters{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:1.25rem}
-.feed-filter-btn{padding:0.35rem 0.9rem;border-radius:99px;font-family:var(--font-mono);font-size:0.72rem;background:var(--bg-surface);border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all 0.2s;white-space:nowrap}
-.feed-filter-btn:hover{border-color:rgba(255,69,0,0.4);color:#ff6314}
-.feed-filter-btn.active{background:rgba(255,69,0,0.1);border-color:rgba(255,69,0,0.4);color:#ff6314;font-weight:700}
-.feed-filter-btn.cs2-filter:hover,.feed-filter-btn.cs2-filter.active{border-color:rgba(245,158,11,0.4);color:var(--warning);background:rgba(245,158,11,0.08)}
-
-/* ══════════════════════════════════════════
-   КАРТОЧКА ПОСТА — большая красивая
-══════════════════════════════════════════ */
-.post-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.25rem;cursor:pointer;transition:all 0.3s;position:relative;animation:card-in 0.4s ease both}
-@keyframes card-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-.post-card:hover{border-color:rgba(255,69,0,0.35);box-shadow:0 8px 32px rgba(0,0,0,0.3),0 0 20px rgba(255,69,0,0.05);transform:translateY(-2px)}
-.post-card.cs2-card:hover{border-color:rgba(245,158,11,0.35);box-shadow:0 8px 32px rgba(0,0,0,0.3),0 0 20px rgba(245,158,11,0.05)}
-
-/* Картинка поста */
-.post-img-wrap{position:relative;overflow:hidden;width:100%;padding-bottom:52%;background:var(--bg-surface)}
-.post-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease}
-.post-card:hover .post-img{transform:scale(1.04)}
-.post-img-overlay{position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(transparent,rgba(8,12,20,0.97));pointer-events:none}
-
-/* Тип поста поверх картинки */
-.post-flair{position:absolute;top:0.7rem;left:0.8rem;z-index:3;font-family:var(--font-mono);font-size:0.6rem;padding:0.15rem 0.55rem;border-radius:99px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;backdrop-filter:blur(8px)}
-.post-flair.meme{background:rgba(168,85,247,0.85);color:#fff;border:1px solid rgba(168,85,247,0.5)}
-.post-flair.patch{background:rgba(16,185,129,0.85);color:#fff;border:1px solid rgba(16,185,129,0.5)}
-.post-flair.esports{background:rgba(245,158,11,0.85);color:#fff;border:1px solid rgba(245,158,11,0.5)}
-.post-flair.media{background:rgba(0,212,255,0.85);color:var(--bg-dark);border:1px solid rgba(0,212,255,0.5)}
-.post-flair.discussion{background:rgba(100,116,139,0.8);color:#fff;border:1px solid rgba(100,116,139,0.4)}
-.post-flair.artwork{background:rgba(255,107,53,0.85);color:#fff;border:1px solid rgba(255,107,53,0.5)}
-
-/* Нет картинки — красивый плейсхолдер */
-.post-no-img{padding:2rem 1.5rem;display:flex;align-items:center;gap:1rem;background:linear-gradient(135deg,var(--bg-surface),var(--bg-card))}
-.post-no-img-icon{font-size:2.2rem;flex-shrink:0;opacity:0.6}
-.post-no-img-title{font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:var(--text-bright);line-height:1.3}
-
-/* Тело карточки */
-.post-body{padding:0.9rem 1.1rem 1rem}
-.post-meta-row{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem;flex-wrap:wrap}
-.post-author{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted)}
-.post-author span{color:var(--accent);font-weight:700}
-.post-time{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted)}
-.post-title{font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:var(--text-bright);line-height:1.3;margin-bottom:0.55rem;letter-spacing:0.2px}
-.post-card:hover .post-title{color:#ff6314}
-.post-card.cs2-card:hover .post-title{color:var(--warning)}
-.post-text-preview{font-size:0.83rem;color:var(--text-muted);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:0.6rem}
-.post-stats{display:flex;align-items:center;gap:0.85rem;margin-top:0.5rem}
-.post-stat{display:flex;align-items:center;gap:0.3rem;font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted)}
-.post-stat.upvotes{color:#ff6314}
-.post-stat.cs2-upvotes{color:var(--warning)}
-.post-stat.comments{color:var(--accent)}
-.post-read-hint{margin-left:auto;font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);opacity:0;transition:opacity 0.2s}
-.post-card:hover .post-read-hint{opacity:1}
-
-/* ── Загрузить ещё ── */
-.load-more-btn{width:100%;padding:0.85rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);font-family:var(--font-head);font-weight:700;font-size:0.9rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);cursor:pointer;transition:all 0.2s;margin-top:0.5rem}
-.load-more-btn:hover{border-color:rgba(255,69,0,0.4);color:#ff6314;background:rgba(255,69,0,0.04)}
-.load-more-btn.cs2-more:hover{border-color:rgba(245,158,11,0.4);color:var(--warning);background:rgba(245,158,11,0.04)}
-
 /* ── Скелетон ── */
-.post-skeleton{height:320px;border-radius:var(--radius-lg);background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.35) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:skw 1.4s infinite;border:1px solid var(--border);margin-bottom:1.25rem}
+.nf-skeleton{border-radius:var(--radius-lg);background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.35) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:skw 1.4s infinite;border:1px solid var(--border);margin-bottom:1rem;height:280px}
+.nf-skeleton.sm{height:100px}
 @keyframes skw{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-/* ══════════════════════════════════════════
-   МОДАЛКА ПОСТА — читаем прямо на сайте
-══════════════════════════════════════════ */
+/* ══ КАРТОЧКА НОВОСТИ STEAM ══ */
+.steam-news-card{display:flex;flex-direction:column;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1rem;cursor:pointer;transition:all 0.3s;animation:card-in 0.4s ease both}
+@keyframes card-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.steam-news-card:hover{border-color:rgba(0,212,255,0.4);box-shadow:0 8px 30px rgba(0,0,0,0.35),0 0 18px rgba(0,212,255,0.05);transform:translateY(-2px)}
+.steam-news-card.cs2-card:hover{border-color:rgba(245,158,11,0.4);box-shadow:0 8px 30px rgba(0,0,0,0.35),0 0 18px rgba(245,158,11,0.05)}
+
+/* Картинка */
+.snc-img-wrap{position:relative;overflow:hidden;padding-bottom:46%}
+.snc-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.5s}
+.steam-news-card:hover .snc-img{transform:scale(1.04)}
+.snc-overlay{position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(transparent,rgba(8,12,20,0.98));pointer-events:none}
+
+/* Плейсхолдер без картинки */
+.snc-no-img{height:140px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(0,212,255,0.05),rgba(168,85,247,0.08));position:relative;overflow:hidden}
+.snc-no-img::before{content:'';position:absolute;inset:0;background:var(--bg-surface)}
+.snc-no-img-game{position:relative;font-size:3.5rem;opacity:0.2}
+
+/* Тело */
+.snc-body{padding:0.9rem 1.1rem 1rem}
+.snc-meta{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.45rem}
+.snc-tag{font-family:var(--font-mono);font-size:0.62rem;padding:0.12rem 0.5rem;border-radius:99px;letter-spacing:0.5px;text-transform:uppercase;font-weight:700}
+.snc-tag.patch{background:rgba(16,185,129,0.15);color:var(--success);border:1px solid rgba(16,185,129,0.25)}
+.snc-tag.tournament{background:rgba(245,158,11,0.15);color:var(--warning);border:1px solid rgba(245,158,11,0.25)}
+.snc-tag.update{background:rgba(168,85,247,0.15);color:var(--accent3);border:1px solid rgba(168,85,247,0.25)}
+.snc-tag.major{background:rgba(255,107,53,0.15);color:#ff6b35;border:1px solid rgba(255,107,53,0.3)}
+.snc-tag.default{background:rgba(100,116,139,0.12);color:var(--text-muted);border:1px solid rgba(100,116,139,0.2)}
+.snc-date{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-left:auto}
+.snc-title{font-family:var(--font-head);font-size:1.05rem;font-weight:700;color:var(--text-bright);line-height:1.3;margin-bottom:0.45rem}
+.steam-news-card:hover .snc-title{color:var(--accent)}
+.steam-news-card.cs2-card:hover .snc-title{color:var(--warning)}
+.snc-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.snc-read{font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);margin-top:0.5rem;opacity:0;transform:translateX(-4px);transition:all 0.2s}
+.steam-news-card:hover .snc-read{opacity:1;transform:translateX(0)}
+.steam-news-card.cs2-card:hover .snc-read{color:var(--warning)}
+
+/* ══ ЧИТАЛКА НОВОСТИ (модалка) ══ */
+.news-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1rem}
+.news-modal-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);width:100%;max-width:760px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,0.8),0 0 30px rgba(0,212,255,0.04);animation:modal-in 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes modal-in{from{opacity:0;transform:scale(0.93) translateY(18px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.news-modal-header{padding:0.85rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-surface);flex-shrink:0}
+.news-modal-close{background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.news-modal-close:hover{color:var(--accent);border-color:var(--accent)}
+.news-modal-body{flex:1;overflow-y:auto}
+.nm-hero-img{width:100%;max-height:360px;object-fit:cover;display:block}
+.nm-content{padding:1.25rem 1.5rem 1.5rem}
+.nm-tag-row{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem}
+.nm-title{font-family:var(--font-head);font-size:1.35rem;font-weight:800;color:var(--text-bright);line-height:1.3;margin-bottom:0.5rem;letter-spacing:0.3px}
+.nm-date{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);margin-bottom:1.25rem}
+.nm-text{font-size:0.9rem;color:var(--text-primary);line-height:1.75;white-space:pre-wrap;word-break:break-word}
+.news-modal-footer{padding:0.85rem 1.25rem;border-top:1px solid var(--border);background:var(--bg-surface);flex-shrink:0}
+.nm-source-btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.45rem 1.1rem;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.25);border-radius:99px;font-family:var(--font-mono);font-size:0.72rem;color:var(--accent);text-decoration:none;transition:all 0.2s}
+.nm-source-btn:hover{background:rgba(0,212,255,0.2);color:var(--accent)}
+
+/* ══ НАПИСАТЬ ПОСТ ══ */
+.write-post-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.write-post-header{padding:1rem 1.25rem;background:var(--bg-surface);border-bottom:1px solid var(--border);font-family:var(--font-head);font-weight:700;font-size:1rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-bright);display:flex;align-items:center;gap:0.5rem}
+.write-post-icon{font-size:1.1rem}
+.write-post-form{padding:1.25rem}
+.tag-picker{display:flex;gap:0.4rem;flex-wrap:wrap}
+.tag-pick-btn{padding:0.3rem 0.75rem;border-radius:99px;font-family:var(--font-mono);font-size:0.7rem;background:var(--bg-surface);border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all 0.2s}
+.tag-pick-btn.active{background:rgba(0,212,255,0.12);border-color:var(--accent);color:var(--accent);font-weight:700}
+.tag-pick-btn.cs2-tag.active{background:rgba(245,158,11,0.1);border-color:var(--warning);color:var(--warning)}
+
+/* ══ КАРТОЧКА ПОСТА СООБЩЕСТВА ══ */
+.community-post-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1rem;cursor:pointer;transition:all 0.25s;animation:card-in 0.4s ease both}
+.community-post-card:hover{border-color:rgba(0,212,255,0.35);transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.3)}
+.cp-img{width:100%;height:180px;object-fit:cover;display:block}
+.cp-body{padding:0.85rem 1rem 1rem}
+.cp-meta{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem}
+.cp-title{font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--text-bright);line-height:1.3;margin-bottom:0.4rem}
+.cp-text{font-size:0.82rem;color:var(--text-muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cp-footer{display:flex;align-items:center;gap:0.75rem;margin-top:0.6rem;font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted)}
+.cp-author{color:var(--accent)}
+
+/* ══ REDDIT ПОСТЫ ══ */
+.feed-filters{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.feed-filter-btn{padding:0.35rem 0.9rem;border-radius:99px;font-family:var(--font-mono);font-size:0.72rem;background:var(--bg-surface);border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.feed-filter-btn:hover,.feed-filter-btn.active{background:rgba(255,69,0,0.1);border-color:rgba(255,69,0,0.4);color:#ff6314;font-weight:700}
+.feed-filter-btn.cs2-filter:hover,.feed-filter-btn.cs2-filter.active{background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.4);color:var(--warning)}
+.post-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.25rem;cursor:pointer;transition:all 0.3s;animation:card-in 0.4s ease both}
+.post-card:hover{border-color:rgba(255,69,0,0.35);box-shadow:0 8px 32px rgba(0,0,0,0.3);transform:translateY(-2px)}
+.post-card.cs2-card:hover{border-color:rgba(245,158,11,0.35)}
+.post-img-wrap{position:relative;overflow:hidden;width:100%;padding-bottom:52%;background:var(--bg-surface)}
+.post-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.5s}
+.post-card:hover .post-img{transform:scale(1.04)}
+.post-img-overlay{position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(transparent,rgba(8,12,20,0.97));pointer-events:none}
+.post-flair{position:absolute;top:0.7rem;left:0.8rem;z-index:3;font-family:var(--font-mono);font-size:0.6rem;padding:0.15rem 0.55rem;border-radius:99px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;backdrop-filter:blur(8px)}
+.post-flair.meme{background:rgba(168,85,247,0.85);color:#fff}
+.post-flair.patch{background:rgba(16,185,129,0.85);color:#fff}
+.post-flair.esports{background:rgba(245,158,11,0.85);color:#fff}
+.post-flair.media{background:rgba(0,212,255,0.85);color:var(--bg-dark)}
+.post-flair.discussion{background:rgba(100,116,139,0.8);color:#fff}
+.post-flair.artwork{background:rgba(255,107,53,0.85);color:#fff}
+.post-no-img{padding:1.5rem;display:flex;align-items:center;gap:1rem;background:linear-gradient(135deg,var(--bg-surface),var(--bg-card))}
+.post-no-img-icon{font-size:2rem;flex-shrink:0;opacity:0.5}
+.post-no-img-title{font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--text-bright);line-height:1.3}
+.post-body{padding:0.85rem 1rem 0.9rem}
+.post-meta-row{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;flex-wrap:wrap}
+.post-author{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted)}
+.post-author span{color:var(--accent)}
+.post-time{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted)}
+.post-title{font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--text-bright);line-height:1.3;margin-bottom:0.4rem}
+.post-card:hover .post-title{color:#ff6314}
+.post-card.cs2-card:hover .post-title{color:var(--warning)}
+.post-text-preview{font-size:0.82rem;color:var(--text-muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:0.5rem}
+.post-stats{display:flex;align-items:center;gap:0.75rem;font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted)}
+.post-stat-up{color:#ff6314}
+.post-stat-up.cs2{color:var(--warning)}
+.post-stat-cm{color:var(--accent)}
+.load-more-btn{width:100%;padding:0.85rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);font-family:var(--font-head);font-weight:700;font-size:0.88rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);cursor:pointer;transition:all 0.2s;margin-top:0.5rem}
+.load-more-btn:hover{border-color:rgba(255,69,0,0.4);color:#ff6314}
+.load-more-btn.cs2-more:hover{border-color:rgba(245,158,11,0.4);color:var(--warning)}
+
+/* ══ REDDIT МОДАЛКА ══ */
 .post-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1rem}
-.post-modal-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);width:100%;max-width:720px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,0.8),0 0 30px rgba(255,69,0,0.05);animation:modal-in 0.3s cubic-bezier(0.34,1.56,0.64,1)}
-@keyframes modal-in{from{opacity:0;transform:scale(0.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.post-modal-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);width:100%;max-width:720px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,0.8);animation:modal-in 0.3s cubic-bezier(0.34,1.56,0.64,1)}
 .post-modal-header{padding:0.85rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-surface);flex-shrink:0}
 .post-modal-subreddit{font-family:var(--font-mono);font-size:0.75rem;color:#ff6314;font-weight:700;letter-spacing:1px}
 .post-modal-close{background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
 .post-modal-close:hover{color:#ff6314;border-color:#ff6314}
-.post-modal-body{flex:1;overflow-y:auto;padding:0}
-.pm-post-img{width:100%;max-height:380px;object-fit:cover;display:block}
+.post-modal-body{flex:1;overflow-y:auto}
+.pm-post-img{width:100%;max-height:360px;object-fit:cover;display:block}
 .pm-content{padding:1.25rem 1.5rem}
-.pm-flair-row{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.6rem}
-.pm-title{font-family:var(--font-head);font-size:1.25rem;font-weight:700;color:var(--text-bright);line-height:1.3;margin-bottom:0.75rem}
-.pm-author{font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);margin-bottom:1rem}
+.pm-title{font-family:var(--font-head);font-size:1.2rem;font-weight:700;color:var(--text-bright);line-height:1.3;margin-bottom:0.6rem}
+.pm-author{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);margin-bottom:1rem}
 .pm-author span{color:var(--accent)}
-.pm-text{font-size:0.88rem;color:var(--text-primary);line-height:1.7;white-space:pre-wrap;word-break:break-word}
-.pm-text a{color:var(--accent);text-decoration:underline}
-.post-modal-footer{padding:0.85rem 1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-surface);flex-shrink:0;gap:1rem}
-.pm-reddit-btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.45rem 1rem;background:rgba(255,69,0,0.12);border:1px solid rgba(255,69,0,0.3);border-radius:99px;font-family:var(--font-mono);font-size:0.72rem;color:#ff6314;text-decoration:none;transition:all 0.2s;white-space:nowrap}
+.pm-text{font-size:0.87rem;color:var(--text-primary);line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.post-modal-footer{padding:0.85rem 1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-surface);flex-shrink:0}
+.pm-reddit-btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.45rem 1rem;background:rgba(255,69,0,0.12);border:1px solid rgba(255,69,0,0.3);border-radius:99px;font-family:var(--font-mono);font-size:0.72rem;color:#ff6314;text-decoration:none;transition:all 0.2s}
 .pm-reddit-btn:hover{background:rgba(255,69,0,0.22);color:#ff6314}
 .pm-stats{font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);display:flex;gap:0.75rem}
 
-/* ── Сайдбар турниры ── */
+/* ══ САЙДБАР ТУРНИРЫ ══ */
 .esports-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.9rem 1rem;margin-bottom:0.65rem;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
 .esports-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);opacity:0;transition:opacity 0.2s}
 .esports-card:hover{border-color:rgba(0,212,255,0.35);transform:translateX(3px)}
@@ -251,7 +440,7 @@
 .esports-team-chip.silver{background:rgba(192,192,192,0.08);border-color:rgba(192,192,192,0.18);color:#c0c0c0}
 .esports-click-hint{font-family:var(--font-mono);font-size:0.58rem;color:var(--text-muted);margin-top:0.35rem;opacity:0.7}
 
-/* ── Модалка турниров ── */
+/* ══ BRACKET МОДАЛКА ══ */
 .bracket-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:3000;display:flex;align-items:center;justify-content:center;padding:1rem}
 .bracket-modal-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);width:100%;max-width:780px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,0.8)}
 .bracket-modal-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-surface);flex-shrink:0}
@@ -280,12 +469,11 @@
 
 @media(max-width:480px){
   .tab-btn{padding:0.45rem 0.7rem;font-size:0.82rem}
-  .post-title{font-size:0.95rem}
-  .post-body{padding:0.75rem}
-  .pm-title{font-size:1.1rem}
-  .pm-content{padding:1rem}
+  .sub-tab-btn{font-size:0.72rem;padding:0.4rem 0.5rem}
   .bracket-modal-body{padding:0.75rem}
   .bracket-round{min-width:130px}
+  .nm-content{padding:1rem}
+  .nm-title{font-size:1.1rem}
 }
 </style>
 {% endblock %}
@@ -293,13 +481,7 @@
 {% block extra_js %}
 <script>
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function timeAgo(utc){
-  const s=Math.floor((Date.now()/1000)-utc);
-  if(s<60)return s+'с назад';
-  if(s<3600)return Math.floor(s/60)+'м назад';
-  if(s<86400)return Math.floor(s/3600)+'ч назад';
-  return Math.floor(s/86400)+'д назад';
-}
+function timeAgo(utc){const s=Math.floor((Date.now()/1000)-utc);if(s<60)return s+'с';if(s<3600)return Math.floor(s/60)+'м';if(s<86400)return Math.floor(s/3600)+'ч';return Math.floor(s/86400)+'д назад'}
 function fmtNum(n){return n>=1000?(n/1000).toFixed(1)+'k':n}
 
 async function loadStats(){
@@ -309,276 +491,403 @@ async function loadStats(){
 }
 loadStats();
 
-/* ── Табы ── */
+/* ── Игровые табы ── */
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c=>c.style.display='none');
     btn.classList.add('active');
     document.getElementById('tab-'+btn.dataset.tab).style.display='block';
-    if(btn.dataset.tab==='cs2'&&!window._cs2Loaded){window._cs2Loaded=true;loadFeed('GlobalOffensive','hot','cs2')}
+    if(btn.dataset.tab==='cs2'&&!window._cs2Init){
+      window._cs2Init=true;
+      loadSteamNews('cs2');
+    }
   });
 });
 
-/* ════════════════════════════════════════
-   REDDIT FEED
-════════════════════════════════════════ */
-let dotaAfter='', cs2After='';
-let dotaSub='DotA2', dotaSort='hot';
-let cs2Sub='GlobalOffensive', cs2Sort='hot';
+/* ── Под-табы Dota ── */
+document.querySelectorAll('.sub-tab-btn:not(.cs2-sub-btn)').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.sub-tab-btn:not(.cs2-sub-btn)').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const subtab=btn.dataset.subtab;
+    document.querySelectorAll('#tab-dota .sub-tab-content').forEach(c=>c.style.display='none');
+    document.getElementById(subtab).style.display='block';
+    if(subtab==='dota-community'&&!window._dotaCommunityLoaded){
+      window._dotaCommunityLoaded=true;
+      loadFeed('DotA2','hot','dota',false);
+    }
+    if(subtab==='dota-write'&&!window._dotaPostsLoaded){
+      window._dotaPostsLoaded=true;
+      loadCommunityPosts('dota');
+    }
+  });
+});
 
-// Определяем тип/flair поста
+/* ── Под-табы CS2 ── */
+document.querySelectorAll('.cs2-sub-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.cs2-sub-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const subtab=btn.dataset.subtab;
+    document.querySelectorAll('#tab-cs2 .sub-tab-content').forEach(c=>c.style.display='none');
+    document.getElementById(subtab).style.display='block';
+    if(subtab==='cs2-community'&&!window._cs2CommunityLoaded){
+      window._cs2CommunityLoaded=true;
+      loadFeed('GlobalOffensive','hot','cs2',false);
+    }
+    if(subtab==='cs2-write'&&!window._cs2PostsLoaded){
+      window._cs2PostsLoaded=true;
+      loadCommunityPosts('cs2');
+    }
+  });
+});
+
+/* ── Тег-пикеры ── */
+document.querySelectorAll('.tag-pick-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const picker=btn.closest('.tag-picker');
+    picker.querySelectorAll('.tag-pick-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+/* ── Reddit фильтры ── */
+document.querySelectorAll('.feed-filter-btn:not(.cs2-filter)').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.feed-filter-btn:not(.cs2-filter)').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    dotaSub=btn.dataset.sub; dotaSort=btn.dataset.sort; dotaAfter='';
+    loadFeed(dotaSub,dotaSort,'dota',false);
+  });
+});
+document.querySelectorAll('.feed-filter-btn.cs2-filter').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.feed-filter-btn.cs2-filter').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    cs2Sub=btn.dataset.sub; cs2Sort=btn.dataset.sort; cs2After='';
+    loadFeed(cs2Sub,cs2Sort,'cs2',false);
+  });
+});
+
+/* ════════════════════════════════
+   STEAM НОВОСТИ — читаем на сайте
+════════════════════════════════ */
+const TAG_MAP={'Патч':'patch','Обновление':'update','Турнир':'tournament','TI':'tournament','DPC':'tournament','Major':'major','Гайд':'default','Новость':'default','IEM':'tournament','BLAST':'tournament','Косметика':'update','Major':'major'};
+
+const DOTA_FALLBACK_IMGS=[
+  'https://cdn.cloudflare.steamstatic.com/steam/apps/570/ss_86d675fdc73ba10462abb8f5eda7bdec6a8a3aa7.600x338.jpg',
+  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570/ss_ad8b2af27661a4b0b84f3edff88bcf21f29af0e5.600x338.jpg',
+  'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg',
+  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570/ss_372cc8cfb79e19e36e8540b54e484f3d2d11fddc.600x338.jpg',
+  'https://cdn.cloudflare.steamstatic.com/steam/apps/570/capsule_616x353.jpg',
+];
+const CS2_FALLBACK_IMGS=[
+  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/capsule_616x353.jpg',
+  'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
+  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/ss_34090867f1a02d68792b273744c30a55bd927e10.600x338.jpg',
+  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/ss_796601d9d67faf53486eee6c24d8f66e09cac33c.600x338.jpg',
+];
+
+// Хранилище новостей для читалки
+window._steamNewsCache={dota:[],cs2:[]};
+
+async function loadSteamNews(game){
+  const el=document.getElementById(game===`dota`?'dota-steam-news':'cs2-steam-news');
+  const isCS2=game==='cs2';
+  const fallbacks=isCS2?CS2_FALLBACK_IMGS:DOTA_FALLBACK_IMGS;
+  try{
+    const api=isCS2?'/api/cs2-news':'/api/dota-news';
+    const data=await fetch(api).then(r=>r.json());
+    const news=data.news||[];
+    if(!news.length) throw new Error('empty');
+    window._steamNewsCache[game]=news;
+    renderSteamNews(news,el,isCS2,fallbacks);
+  }catch(e){
+    // Статичный фоллбек
+    const fallbackNews=isCS2?[
+      {title:'Counter-Strike 2 Update',date:'20 Май 2026',tag:'Обновление',img:fallbacks[0],desc:'Исправления и улучшения игрового процесса Counter-Strike 2.',url:'https://www.counter-strike.net/news'},
+      {title:'PGL Major Bucharest 2025 — анонс',date:'18 Май 2026',tag:'Major',img:fallbacks[1],desc:'Крупнейший Major сезона. Призовой фонд $1,250,000.',url:'https://www.counter-strike.net/news'},
+      {title:'NIGHTMODE II Music Kits',date:'7 Май 2026',tag:'Обновление',img:fallbacks[2],desc:'Новые музыкальные наборы доступны в CS2.',url:'https://www.counter-strike.net/news'},
+      {title:'IEM Dallas 2025 — MOUZ чемпионы',date:'Май 2026',tag:'IEM',img:fallbacks[3],desc:'MOUZ выиграли IEM Dallas 2025.',url:'https://www.counter-strike.net/news'},
+    ]:[
+      {title:'7.41c Gameplay Patch',date:'6 Май 2026',tag:'Патч',img:fallbacks[0],desc:'Valve выпустила очередной балансный патч с изменениями героев и предметов.',url:'https://www.dota2.com/patches'},
+      {title:'The International 2025 — регистрация команд',date:'4 Май 2026',tag:'TI',img:fallbacks[1],desc:'Открыта регистрация участников на главный турнир года.',url:'https://www.dota2.com/esports'},
+      {title:'7.41b Gameplay Patch',date:'7 Апр 2026',tag:'Патч',img:fallbacks[2],desc:'Малый балансный патч с исправлениями.',url:'https://www.dota2.com/patches'},
+      {title:'Обновление Dota Plus',date:'Мар 2026',tag:'Обновление',img:fallbacks[3],desc:'Новые квесты и награды в Dota Plus.',url:'https://www.dota2.com/news'},
+    ];
+    window._steamNewsCache[game]=fallbackNews;
+    renderSteamNews(fallbackNews,el,isCS2,fallbacks);
+  }
+}
+
+function renderSteamNews(news,el,isCS2,fallbacks){
+  el.innerHTML=news.slice(0,6).map((n,i)=>{
+    const tagClass=TAG_MAP[n.tag]||'default';
+    const img=n.img||(fallbacks[i%fallbacks.length]);
+    return`<div class="steam-news-card${isCS2?' cs2-card':''}" onclick="openNewsReader(${JSON.stringify(n).replace(/"/g,'&quot;')},'${isCS2?'cs2':'dota'}')" style="animation-delay:${i*0.07}s">
+      ${img
+        ?`<div class="snc-img-wrap"><img class="snc-img" src="${esc(img)}" loading="lazy" onerror="this.closest('.snc-img-wrap').style.display='none'"/><div class="snc-overlay"></div></div>`
+        :`<div class="snc-no-img"><span class="snc-no-img-game">${isCS2?'🎯':'🛡️'}</span></div>`
+      }
+      <div class="snc-body">
+        <div class="snc-meta">
+          <span class="snc-tag ${tagClass}">${esc(n.tag||'Новость')}</span>
+          <span class="snc-date">${esc(n.date||'')}</span>
+        </div>
+        <div class="snc-title">${esc(n.title)}</div>
+        ${n.desc?`<div class="snc-desc">${esc(n.desc)}</div>`:''}
+        <div class="snc-read">Читать →</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════
+   ЧИТАЛКА НОВОСТИ (модалка)
+════════════════════════════════ */
+function openNewsReader(n, game){
+  const isCS2=game==='cs2';
+  const tagClass=TAG_MAP[n.tag]||'default';
+
+  document.getElementById('nm-badge').innerHTML=
+    `<span class="snc-tag ${tagClass}" style="font-size:0.72rem">${esc(n.tag||'Новость')}</span>
+     <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-left:0.5rem">${esc(n.date||'')}</span>`;
+  document.getElementById('nm-source-link').href=n.url||'#';
+  document.getElementById('nm-source-link').style.color=isCS2?'var(--warning)':'var(--accent)';
+  document.getElementById('nm-source-link').style.borderColor=isCS2?'rgba(245,158,11,0.25)':'rgba(0,212,255,0.25)';
+  document.getElementById('nm-source-link').style.background=isCS2?'rgba(245,158,11,0.08)':'rgba(0,212,255,0.08)';
+
+  const body=document.getElementById('nm-body');
+  body.innerHTML=`
+    ${n.img?`<img class="nm-hero-img" src="${esc(n.img)}" onerror="this.style.display='none'"/>`:''}
+    <div class="nm-content">
+      <div class="nm-title">${esc(n.title)}</div>
+      <div class="nm-date">${esc(n.date||'')} · Steam Official</div>
+      <div class="nm-text">${esc(n.desc||'Нажми "Источник" чтобы прочитать полный текст на сайте Steam.')}</div>
+    </div>`;
+  body.scrollTop=0;
+  document.getElementById('news-modal').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function closeNewsReader(){
+  document.getElementById('news-modal').style.display='none';
+  document.body.style.overflow='';
+}
+function closeNewsModal(e){if(e.target===document.getElementById('news-modal'))closeNewsReader();}
+
+/* ════════════════════════════════
+   СВОИ ПОСТЫ — публикация
+════════════════════════════════ */
+async function submitPost(game){
+  const title=document.getElementById(game+'-post-title').value.trim();
+  const text=document.getElementById(game+'-post-text').value.trim();
+  const img=document.getElementById(game+'-post-img').value.trim();
+  const author=document.getElementById(game+'-post-author').value.trim()||'Аноним';
+  const tag=document.querySelector('#'+game+'-tag-picker .tag-pick-btn.active')?.dataset.tag||'Новость';
+  const alertEl=document.getElementById(game+'-post-alert');
+
+  if(!title||!text){
+    alertEl.innerHTML='<div style="color:var(--danger);font-family:var(--font-mono);font-size:0.78rem;margin-top:0.5rem">⚠️ Заполни заголовок и текст</div>';
+    return;
+  }
+
+  try{
+    const resp=await fetch('/api/posts',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({game,title,text,img,author,tag})
+    });
+    const d=await resp.json();
+    if(resp.ok){
+      alertEl.innerHTML='<div style="color:var(--success);font-family:var(--font-mono);font-size:0.78rem;margin-top:0.5rem">✅ Пост опубликован!</div>';
+      document.getElementById(game+'-post-title').value='';
+      document.getElementById(game+'-post-text').value='';
+      document.getElementById(game+'-post-img').value='';
+      window['_'+game+'PostsLoaded']=false;
+      loadCommunityPosts(game);
+    }else{
+      alertEl.innerHTML=`<div style="color:var(--danger);font-family:var(--font-mono);font-size:0.78rem;margin-top:0.5rem">❌ ${d.detail||'Ошибка'}</div>`;
+    }
+  }catch(e){
+    alertEl.innerHTML='<div style="color:var(--danger);font-family:var(--font-mono);font-size:0.78rem;margin-top:0.5rem">❌ Ошибка соединения</div>';
+  }
+}
+
+async function loadCommunityPosts(game){
+  const el=document.getElementById(game+'-community-posts');
+  try{
+    const posts=await fetch('/api/posts?game='+game).then(r=>r.json());
+    if(!posts.length){
+      el.innerHTML='<div style="text-align:center;padding:1.5rem;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted)">Постов пока нет. Стань первым! ✍️</div>';
+      return;
+    }
+    el.innerHTML=posts.map((p,i)=>`<div class="community-post-card" style="animation-delay:${i*0.06}s" onclick="openCommunityPost(${JSON.stringify(p).replace(/"/g,'&quot;')})">
+      ${p.img?`<img class="cp-img" src="${esc(p.img)}" onerror="this.style.display='none'" loading="lazy"/>`:''}
+      <div class="cp-body">
+        <div class="cp-meta">
+          <span class="snc-tag ${TAG_MAP[p.tag]||'default'}">${esc(p.tag)}</span>
+          <span style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);margin-left:auto">${esc(p.date)}</span>
+        </div>
+        <div class="cp-title">${esc(p.title)}</div>
+        <div class="cp-text">${esc(p.text)}</div>
+        <div class="cp-footer">
+          <span class="cp-author">✍️ ${esc(p.author)}</span>
+        </div>
+      </div>
+    </div>`).join('');
+  }catch(e){
+    el.innerHTML='<div style="text-align:center;padding:1rem;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted)">Посты сообщества появятся здесь</div>';
+  }
+}
+
+function openCommunityPost(p){
+  document.getElementById('nm-badge').innerHTML=
+    `<span class="snc-tag ${TAG_MAP[p.tag]||'default'}" style="font-size:0.72rem">${esc(p.tag)}</span>
+     <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-left:0.5rem">✍️ ${esc(p.author)} · ${esc(p.date)}</span>`;
+  document.getElementById('nm-source-link').style.display='none';
+  const body=document.getElementById('nm-body');
+  body.innerHTML=`
+    ${p.img?`<img class="nm-hero-img" src="${esc(p.img)}" onerror="this.style.display='none'"/>`:''}
+    <div class="nm-content">
+      <div class="nm-title">${esc(p.title)}</div>
+      <div class="nm-date">✍️ ${esc(p.author)} · ${esc(p.date)}</div>
+      <div class="nm-text">${esc(p.text)}</div>
+    </div>`;
+  body.scrollTop=0;
+  document.getElementById('news-modal').style.display='flex';
+  document.getElementById('nm-source-link').style.display='none';
+  document.body.style.overflow='hidden';
+}
+
+/* ════════════════════════════════
+   REDDIT ЛЕНТА
+════════════════════════════════ */
+let dotaAfter='',cs2After='',dotaSub='DotA2',dotaSort='hot',cs2Sub='GlobalOffensive',cs2Sort='hot';
+
 function getPostFlair(post){
   const f=(post.link_flair_text||'').toLowerCase();
   const t=post.title.toLowerCase();
-  if(f.includes('meme')||f.includes('мем')||t.includes('meme')||t.includes('😂')||t.includes('lmao')||t.includes('lol'))return{cls:'meme',label:'😂 Мем'};
-  if(f.includes('patch')||f.includes('update')||t.includes('patch')||t.includes('7.'))return{cls:'patch',label:'🔧 Патч'};
-  if(f.includes('esport')||f.includes('tournament')||f.includes('pro')||t.includes('win')||t.includes('champion'))return{cls:'esports',label:'🏆 Киберспорт'};
-  if(f.includes('artwork')||f.includes('art')||f.includes('fan'))return{cls:'artwork',label:'🎨 Арт'};
-  if(f.includes('media')||f.includes('clip')||f.includes('highlight')||post.is_video)return{cls:'media',label:'🎬 Клип'};
+  if(f.includes('meme')||t.includes('meme')||t.includes('lmao'))return{cls:'meme',label:'😂 Мем'};
+  if(f.includes('patch')||t.includes('patch')||t.includes('7.'))return{cls:'patch',label:'🔧 Патч'};
+  if(f.includes('esport')||f.includes('tournament')||t.includes('win'))return{cls:'esports',label:'🏆 Киберспорт'};
+  if(f.includes('artwork')||f.includes('art'))return{cls:'artwork',label:'🎨 Арт'};
+  if(post.is_video)return{cls:'media',label:'🎬 Клип'};
   return{cls:'discussion',label:'💬 Обсуждение'};
 }
 
-// Оборачиваем URL картинки в наш прокси
-function proxyImg(url){
-  if(!url) return null;
-  return '/api/img?url=' + encodeURIComponent(url);
-}
+function proxyImg(url){if(!url)return null;return'/api/img?url='+encodeURIComponent(url);}
 
-// Достаём лучшую картинку из поста
 function getPostImg(post){
-  // preview.images — лучшее качество
   if(post.preview&&post.preview.images&&post.preview.images[0]){
-    const imgs=post.preview.images[0];
-    const res=imgs.resolutions||[];
-    // Берём среднее разрешение (не слишком большое)
-    const src=res[2]||res[1]||res[0]||imgs.source;
-    if(src&&src.url){
-      const clean=src.url.replace(/&amp;/g,'&');
-      return proxyImg(clean);
-    }
+    const res=post.preview.images[0].resolutions||[];
+    const src=res[2]||res[1]||res[0]||post.preview.images[0].source;
+    if(src&&src.url)return proxyImg(src.url.replace(/&amp;/g,'&'));
   }
-  // i.redd.it или i.imgur.com напрямую
-  if(post.url&&/^https?:\/\/(i\.redd\.it|i\.imgur\.com)\//i.test(post.url))
-    return proxyImg(post.url);
-  // thumbnail как запасной вариант
-  if(post.thumbnail&&post.thumbnail.startsWith('http')
-     &&!post.thumbnail.includes('default')
-     &&!post.thumbnail.includes('self')
-     &&!post.thumbnail.includes('nsfw'))
-    return proxyImg(post.thumbnail);
-  // url если это картинка
-  if(post.url&&/\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(post.url))
-    return proxyImg(post.url);
+  if(post.url&&/^https?:\/\/(i\.redd\.it|i\.imgur\.com)\//i.test(post.url))return proxyImg(post.url);
+  if(post.thumbnail&&post.thumbnail.startsWith('http')&&!post.thumbnail.includes('default')&&!post.thumbnail.includes('self'))return proxyImg(post.thumbnail);
+  if(post.url&&/\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(post.url))return proxyImg(post.url);
   return null;
 }
 
-function renderPosts(posts, elId, isCS2, append){
+function renderPosts(posts,elId,isCS2,append){
   const el=document.getElementById(elId);
   if(!el)return;
-  if(!append) el.innerHTML='';
-
+  if(!append)el.innerHTML='';
   posts.forEach((item,i)=>{
     const p=item.data;
     if(p.stickied||!p.title)return;
     const flair=getPostFlair(p);
     const img=getPostImg(p);
-    const hasImg=!!img;
-    const accentColor=isCS2?'var(--warning)':'#ff6314';
-
     const card=document.createElement('div');
     card.className='post-card'+(isCS2?' cs2-card':'');
     card.style.animationDelay=(i*0.06)+'s';
-    card.innerHTML=`
-      ${hasImg?`
-        <div class="post-img-wrap">
-          <img class="post-img" src="${esc(img)}" alt="${esc(p.title)}"
-               loading="lazy"
-               onerror="this.closest('.post-img-wrap').style.display='none'"/>
-          <div class="post-img-overlay"></div>
-          <span class="post-flair ${flair.cls}">${flair.label}</span>
-        </div>
-      `:`
-        <div class="post-no-img">
-          <span class="post-no-img-icon">${flair.cls==='meme'?'😂':flair.cls==='patch'?'🔧':flair.cls==='esports'?'🏆':flair.cls==='artwork'?'🎨':'💬'}</span>
-          <div class="post-no-img-title">${esc(p.title)}</div>
-        </div>
-      `}
-      <div class="post-body">
-        <div class="post-meta-row">
-          ${!hasImg?`<span class="post-flair ${flair.cls}" style="position:relative;top:0;left:0">${flair.label}</span>`:''}
-          <span class="post-author">u/<span>${esc(p.author||'?')}</span></span>
-          <span class="post-time">${timeAgo(p.created_utc)}</span>
-        </div>
-        ${hasImg?`<div class="post-title">${esc(p.title)}</div>`:''}
-        ${p.selftext?`<div class="post-text-preview">${esc(p.selftext.slice(0,180))}</div>`:''}
-        <div class="post-stats">
-          <span class="post-stat ${isCS2?'cs2-upvotes':'upvotes'}">▲ ${fmtNum(p.ups||0)}</span>
-          <span class="post-stat comments">💬 ${fmtNum(p.num_comments||0)}</span>
-          <span class="post-stat">r/${esc(p.subreddit)}</span>
-          <span class="post-read-hint">Читать →</span>
-        </div>
-      </div>`;
-
-    card.addEventListener('click',()=>openPost(p, isCS2));
+    card.innerHTML=img
+      ?`<div class="post-img-wrap"><img class="post-img" src="${esc(img)}" loading="lazy" onerror="this.closest('.post-img-wrap').style.display='none'"/><div class="post-img-overlay"></div><span class="post-flair ${flair.cls}">${flair.label}</span></div>
+        <div class="post-body"><div class="post-meta-row"><span class="post-author">u/<span>${esc(p.author||'?')}</span></span><span class="post-time">${timeAgo(p.created_utc)}</span></div>
+        <div class="post-title">${esc(p.title)}</div>
+        ${p.selftext?`<div class="post-text-preview">${esc(p.selftext.slice(0,160))}</div>`:''}
+        <div class="post-stats"><span class="${isCS2?'post-stat-up cs2':'post-stat-up'}">▲ ${fmtNum(p.ups||0)}</span><span class="post-stat-cm">💬 ${fmtNum(p.num_comments||0)}</span></div></div>`
+      :`<div class="post-no-img"><span class="post-no-img-icon">${flair.cls==='meme'?'😂':flair.cls==='patch'?'🔧':flair.cls==='esports'?'🏆':'💬'}</span><div class="post-no-img-title">${esc(p.title)}</div></div>
+        <div class="post-body"><div class="post-meta-row"><span class="post-flair ${flair.cls}" style="position:relative;top:0;left:0">${flair.label}</span><span class="post-author">u/<span>${esc(p.author||'?')}</span></span><span class="post-time">${timeAgo(p.created_utc)}</span></div>
+        ${p.selftext?`<div class="post-text-preview">${esc(p.selftext.slice(0,160))}</div>`:''}
+        <div class="post-stats"><span class="${isCS2?'post-stat-up cs2':'post-stat-up'}">▲ ${fmtNum(p.ups||0)}</span><span class="post-stat-cm">💬 ${fmtNum(p.num_comments||0)}</span></div></div>`;
+    card.addEventListener('click',()=>openPost(p,isCS2));
     el.appendChild(card);
   });
 }
 
-async function loadFeed(subreddit, sort, game, append){
+async function loadFeed(subreddit,sort,game,append){
   const elId=game+'-feed';
   const moreBtn=document.getElementById(game+'-load-more');
   const after=game==='dota'?dotaAfter:cs2After;
-  const isCS2=game==='cs2';
-
   if(!append){
-    document.getElementById(elId).innerHTML=
-      '<div class="post-skeleton"></div><div class="post-skeleton"></div><div class="post-skeleton"></div>';
-    if(moreBtn) moreBtn.style.display='none';
+    document.getElementById(elId).innerHTML='<div class="post-skeleton" style="height:280px;border-radius:12px;background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.35) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:skw 1.4s infinite;border:1px solid var(--border);margin-bottom:1rem"></div>'.repeat(3);
+    if(moreBtn)moreBtn.style.display='none';
   }
-
   try{
     const url=`https://www.reddit.com/r/${subreddit}/${sort}.json?limit=10${append&&after?'&after='+after:''}`;
     const data=await fetch(url,{headers:{Accept:'application/json'}}).then(r=>r.json());
     const posts=data.data.children||[];
     const newAfter=data.data.after||'';
-
-    if(game==='dota') dotaAfter=newAfter;
-    else cs2After=newAfter;
-
-    if(!append) document.getElementById(elId).innerHTML='';
-    renderPosts(posts,elId,isCS2,append);
-
-    if(moreBtn) moreBtn.style.display=newAfter?'block':'none';
+    if(game==='dota')dotaAfter=newAfter;else cs2After=newAfter;
+    if(!append)document.getElementById(elId).innerHTML='';
+    renderPosts(posts,elId,game==='cs2',append);
+    if(moreBtn)moreBtn.style.display=newAfter?'block':'none';
   }catch(e){
-    if(!append) document.getElementById(elId).innerHTML=
-      '<div style="text-align:center;padding:2rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">⚠️ Не удалось загрузить ленту Reddit.<br>Проверьте интернет-соединение.</div>';
+    if(!append)document.getElementById(elId).innerHTML='<div style="text-align:center;padding:2rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">⚠️ Не удалось загрузить ленту Reddit.</div>';
   }
 }
 
 function loadMoreDota(){loadFeed(dotaSub,dotaSort,'dota',true)}
 function loadMoreCS2(){loadFeed(cs2Sub,cs2Sort,'cs2',true)}
 
-/* Фильтры Dota */
-document.querySelectorAll('.feed-filter-btn:not(.cs2-filter)').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.feed-filter-btn:not(.cs2-filter)').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    dotaSub=btn.dataset.sub;
-    dotaSort=btn.dataset.sort;
-    dotaAfter='';
-    loadFeed(dotaSub,dotaSort,'dota',false);
-  });
-});
-
-/* Фильтры CS2 */
-document.querySelectorAll('.feed-filter-btn.cs2-filter').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.feed-filter-btn.cs2-filter').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    cs2Sub=btn.dataset.sub;
-    cs2Sort=btn.dataset.sort;
-    cs2After='';
-    loadFeed(cs2Sub,cs2Sort,'cs2',false);
-  });
-});
-
-/* ════════════════════════════════════════
-   МОДАЛКА ПОСТА — читаем на сайте
-════════════════════════════════════════ */
-function openPost(p, isCS2){
+/* ════════════════════════════════
+   REDDIT МОДАЛКА
+════════════════════════════════ */
+function openPost(p,isCS2){
   const img=getPostImg(p);
   const flair=getPostFlair(p);
-  const redditUrl='https://reddit.com'+p.permalink;
-
   document.getElementById('pm-sub').textContent='r/'+p.subreddit;
   document.getElementById('pm-sub').style.color=isCS2?'var(--warning)':'#ff6314';
-  document.getElementById('pm-reddit-link').href=redditUrl;
+  document.getElementById('pm-reddit-link').href='https://reddit.com'+p.permalink;
   document.getElementById('pm-reddit-link').style.color=isCS2?'var(--warning)':'#ff6314';
   document.getElementById('pm-reddit-link').style.borderColor=isCS2?'rgba(245,158,11,0.3)':'rgba(255,69,0,0.3)';
   document.getElementById('pm-reddit-link').style.background=isCS2?'rgba(245,158,11,0.1)':'rgba(255,69,0,0.1)';
-  document.getElementById('pm-stats').innerHTML=
-    `<span>▲ ${fmtNum(p.ups||0)}</span><span>💬 ${fmtNum(p.num_comments||0)}</span>`;
-
+  document.getElementById('pm-stats').innerHTML=`<span>▲ ${fmtNum(p.ups||0)}</span><span>💬 ${fmtNum(p.num_comments||0)}</span>`;
   const body=document.getElementById('pm-body');
   body.innerHTML=`
-    ${img?`<img class="pm-post-img" src="${esc(img)}" alt="${esc(p.title)}" onerror="this.style.display='none'"/>`:''}
+    ${img?`<img class="pm-post-img" src="${esc(img)}" onerror="this.style.display='none'"/>`:''}
     <div class="pm-content">
-      <div class="pm-flair-row">
-        <span class="post-flair ${flair.cls}" style="position:relative;top:0;left:0">${flair.label}</span>
-        <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted)">${timeAgo(p.created_utc)}</span>
-      </div>
+      <div style="margin-bottom:0.5rem"><span class="post-flair ${flair.cls}" style="position:relative;top:0;left:0">${flair.label}</span></div>
       <div class="pm-title">${esc(p.title)}</div>
-      <div class="pm-author">Автор: <span>u/${esc(p.author||'?')}</span></div>
-      ${p.selftext
-        ?`<div class="pm-text">${esc(p.selftext.slice(0,2000))}${p.selftext.length>2000?'\n\n[...читать полностью на Reddit]':''}</div>`
-        :`<div style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);padding:0.5rem 0">
-            Это ${p.is_video?'видео':p.url&&/\.(jpg|jpeg|png|gif|webp)/i.test(p.url)?'изображение':'ссылка'} — открой на Reddit для просмотра.
-          </div>`
-      }
+      <div class="pm-author">u/<span>${esc(p.author||'?')}</span> · ${timeAgo(p.created_utc)}</div>
+      ${p.selftext?`<div class="pm-text">${esc(p.selftext.slice(0,2000))}${p.selftext.length>2000?'\n\n[...читать полностью на Reddit]':''}</div>`
+        :`<div style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted)">Это ${p.is_video?'видео':'ссылка'} — открой на Reddit.</div>`}
     </div>`;
-
   body.scrollTop=0;
   document.getElementById('post-modal').style.display='flex';
+  document.getElementById('nm-source-link').style.display='';
   document.body.style.overflow='hidden';
 }
-
-function closePost(){
-  document.getElementById('post-modal').style.display='none';
-  document.body.style.overflow='';
-}
+function closePost(){document.getElementById('post-modal').style.display='none';document.body.style.overflow='';}
 function closePostModal(e){if(e.target===document.getElementById('post-modal'))closePost();}
 
-/* ════════════════════════════════════════
+/* ════════════════════════════════
    ТУРНИРЫ
-════════════════════════════════════════ */
+════════════════════════════════ */
 const DOTA_T=[
-  {id:'ti2025',name:'The International 2025',prize:'$40,000,000',tier:'major',tierLabel:'MAJOR',date:'Авг–Сен 2025',location:'🌍 TBA',top:['Team Spirit','OG'],
-   bracket:{type:'single',rounds:[
-     {label:'Четвертьфинал',matches:[{p1:'Team Spirit',p2:'Tundra Esports',winner:'Team Spirit'},{p1:'Gaimin Gladiators',p2:'BetBoom Team',winner:'Gaimin Gladiators'},{p1:'OG',p2:'Team Liquid',winner:'OG'},{p1:'nouns',p2:'PSG.LGD',winner:'PSG.LGD'}]},
-     {label:'Полуфинал',matches:[{p1:'Team Spirit',p2:'Gaimin Gladiators',winner:'Team Spirit'},{p1:'OG',p2:'PSG.LGD',winner:'OG'}]},
-     {label:'Финал',matches:[{p1:'Team Spirit',p2:'OG',winner:'Team Spirit'}]},
-   ]}},
-  {id:'dreamleague25',name:'DreamLeague Season 25',prize:'$1,000,000',tier:'premier',tierLabel:'PREMIER',date:'Июн 2025',location:'🇸🇪 Стокгольм',top:['Gaimin Gladiators','nouns'],
-   bracket:{type:'single',rounds:[
-     {label:'Полуфинал',matches:[{p1:'Gaimin Gladiators',p2:'BetBoom',winner:'Gaimin Gladiators'},{p1:'nouns',p2:'Team Liquid',winner:'nouns'}]},
-     {label:'Финал',matches:[{p1:'Gaimin Gladiators',p2:'nouns',winner:'Gaimin Gladiators'}]},
-   ]}},
-  {id:'eslone25',name:'ESL One Bangkok 2025',prize:'$500,000',tier:'premier',tierLabel:'PREMIER',date:'Мар 2025',location:'🇹🇭 Бангкок',top:['Team Liquid','Azure Ray'],
-   bracket:{type:'single',rounds:[
-     {label:'Полуфинал',matches:[{p1:'Team Liquid',p2:'Azure Ray',winner:'Team Liquid'},{p1:'Aster',p2:'OG',winner:'Aster'}]},
-     {label:'Финал',matches:[{p1:'Team Liquid',p2:'Aster',winner:'Team Liquid'}]},
-   ]}},
-  {id:'dpc2025',name:'DPC Лига 2025 — Div.1',prize:'$205,000',tier:'pro',tierLabel:'DPC',date:'Янв–Апр 2025',location:'🌍 Online',top:['Team Spirit','Gaimin Gladiators'],
-   bracket:{type:'group',groups:[{label:'Итоговая таблица',teams:[
-     {pos:1,name:'Team Spirit',w:7,l:1,qualified:true},{pos:2,name:'Gaimin Gladiators',w:6,l:2,qualified:true},
-     {pos:3,name:'BetBoom Team',w:5,l:3,qualified:true},{pos:4,name:'nouns',w:4,l:4,qualified:true},
-     {pos:5,name:'OG',w:3,l:5,qualified:false},{pos:6,name:'Team Liquid',w:2,l:6,qualified:false},
-     {pos:7,name:'Tundra',w:1,l:7,eliminated:true},{pos:8,name:'Entity',w:0,l:8,eliminated:true},
-   ]}]}},
+  {id:'ti2025',name:'The International 2025',prize:'$40,000,000',tier:'major',tierLabel:'MAJOR',date:'Авг–Сен 2025',location:'🌍 TBA',top:['Team Spirit','OG'],bracket:{type:'single',rounds:[{label:'Четвертьфинал',matches:[{p1:'Team Spirit',p2:'Tundra Esports',winner:'Team Spirit'},{p1:'Gaimin Gladiators',p2:'BetBoom Team',winner:'Gaimin Gladiators'},{p1:'OG',p2:'Team Liquid',winner:'OG'},{p1:'nouns',p2:'PSG.LGD',winner:'PSG.LGD'}]},{label:'Полуфинал',matches:[{p1:'Team Spirit',p2:'Gaimin Gladiators',winner:'Team Spirit'},{p1:'OG',p2:'PSG.LGD',winner:'OG'}]},{label:'Финал',matches:[{p1:'Team Spirit',p2:'OG',winner:'Team Spirit'}]}]}},
+  {id:'dreamleague25',name:'DreamLeague Season 25',prize:'$1,000,000',tier:'premier',tierLabel:'PREMIER',date:'Июн 2025',location:'🇸🇪 Стокгольм',top:['Gaimin Gladiators','nouns'],bracket:{type:'single',rounds:[{label:'Полуфинал',matches:[{p1:'Gaimin Gladiators',p2:'BetBoom',winner:'Gaimin Gladiators'},{p1:'nouns',p2:'Team Liquid',winner:'nouns'}]},{label:'Финал',matches:[{p1:'Gaimin Gladiators',p2:'nouns',winner:'Gaimin Gladiators'}]}]}},
+  {id:'eslone25',name:'ESL One Bangkok 2025',prize:'$500,000',tier:'premier',tierLabel:'PREMIER',date:'Мар 2025',location:'🇹🇭 Бангкок',top:['Team Liquid','Azure Ray'],bracket:{type:'single',rounds:[{label:'Полуфинал',matches:[{p1:'Team Liquid',p2:'Azure Ray',winner:'Team Liquid'},{p1:'Aster',p2:'OG',winner:'Aster'}]},{label:'Финал',matches:[{p1:'Team Liquid',p2:'Aster',winner:'Team Liquid'}]}]}},
+  {id:'dpc2025',name:'DPC Лига 2025 — Div.1',prize:'$205,000',tier:'pro',tierLabel:'DPC',date:'Янв–Апр 2025',location:'🌍 Online',top:['Team Spirit','Gaimin Gladiators'],bracket:{type:'group',groups:[{label:'Итоговая таблица',teams:[{pos:1,name:'Team Spirit',w:7,l:1,qualified:true},{pos:2,name:'Gaimin Gladiators',w:6,l:2,qualified:true},{pos:3,name:'BetBoom Team',w:5,l:3,qualified:true},{pos:4,name:'nouns',w:4,l:4,qualified:true},{pos:5,name:'OG',w:3,l:5,qualified:false},{pos:6,name:'Team Liquid',w:2,l:6,qualified:false},{pos:7,name:'Tundra',w:1,l:7,eliminated:true},{pos:8,name:'Entity',w:0,l:8,eliminated:true}]}]}},
 ];
 const CS2_T=[
-  {id:'pgl_major_2025',name:'PGL Major Bucharest 2025',prize:'$1,250,000',tier:'major',tierLabel:'MAJOR',date:'Сен 2025',location:'🇷🇴 Бухарест',top:['TBD','TBD'],
-   bracket:{type:'group',groups:[
-     {label:'Группа A',teams:[{pos:1,name:'NAVI',w:3,l:0,qualified:true},{pos:2,name:'FaZe Clan',w:2,l:1,qualified:true},{pos:3,name:'Vitality',w:2,l:1,qualified:true},{pos:4,name:'G2',w:1,l:2,qualified:false},{pos:5,name:'MOUZ',w:0,l:3,eliminated:true}]},
-     {label:'Группа B',teams:[{pos:1,name:'Team Spirit',w:3,l:0,qualified:true},{pos:2,name:'Cloud9',w:2,l:1,qualified:true},{pos:3,name:'Eternal Fire',w:1,l:2,qualified:false},{pos:4,name:'MongolZ',w:1,l:2,qualified:false},{pos:5,name:'paiN',w:0,l:3,eliminated:true}]},
-   ]}},
-  {id:'iem_dallas_2025',name:'IEM Dallas 2025',prize:'$250,000',tier:'premier',tierLabel:'IEM',date:'Май 2025',location:'🇺🇸 Даллас',top:['MOUZ','NaVi'],
-   bracket:{type:'single',rounds:[
-     {label:'Полуфинал',matches:[{p1:'MOUZ',p2:'Team Spirit',winner:'MOUZ'},{p1:'NaVi',p2:'Cloud9',winner:'NaVi'}]},
-     {label:'Финал',matches:[{p1:'MOUZ',p2:'NaVi',winner:'MOUZ'}]},
-   ]}},
-  {id:'blast_spring_2025',name:'BLAST Premier: Spring Final',prize:'$425,000',tier:'premier',tierLabel:'BLAST',date:'Июн 2025',location:'🇩🇰 Копенгаген',top:['FaZe Clan','Vitality'],
-   bracket:{type:'single',rounds:[
-     {label:'Полуфинал',matches:[{p1:'FaZe Clan',p2:'G2',winner:'FaZe Clan'},{p1:'Vitality',p2:'MOUZ',winner:'Vitality'}]},
-     {label:'Финал',matches:[{p1:'FaZe Clan',p2:'Vitality',winner:'FaZe Clan'}]},
-   ]}},
-  {id:'esl_pro_s21',name:'ESL Pro League Season 21',prize:'$850,000',tier:'premier',tierLabel:'EPL',date:'Апр 2025',location:'🇲🇹 Мальта',top:['Team Spirit','NAVI'],
-   bracket:{type:'group',groups:[{label:'Финальная таблица',teams:[
-     {pos:1,name:'Team Spirit',w:5,l:1,qualified:true},{pos:2,name:'NAVI',w:4,l:2,qualified:true},
-     {pos:3,name:'G2',w:3,l:3,qualified:true},{pos:4,name:'MOUZ',w:2,l:4,qualified:false},
-     {pos:5,name:'Vitality',w:1,l:5,eliminated:true},{pos:6,name:'Cloud9',w:0,l:6,eliminated:true},
-   ]}]}},
+  {id:'pgl_major_2025',name:'PGL Major Bucharest 2025',prize:'$1,250,000',tier:'major',tierLabel:'MAJOR',date:'Сен 2025',location:'🇷🇴 Бухарест',top:['TBD','TBD'],bracket:{type:'group',groups:[{label:'Группа A',teams:[{pos:1,name:'NAVI',w:3,l:0,qualified:true},{pos:2,name:'FaZe Clan',w:2,l:1,qualified:true},{pos:3,name:'Vitality',w:2,l:1,qualified:true},{pos:4,name:'G2',w:1,l:2,qualified:false},{pos:5,name:'MOUZ',w:0,l:3,eliminated:true}]},{label:'Группа B',teams:[{pos:1,name:'Team Spirit',w:3,l:0,qualified:true},{pos:2,name:'Cloud9',w:2,l:1,qualified:true},{pos:3,name:'Eternal Fire',w:1,l:2,qualified:false},{pos:4,name:'MongolZ',w:1,l:2,qualified:false},{pos:5,name:'paiN',w:0,l:3,eliminated:true}]}]}},
+  {id:'iem_dallas_2025',name:'IEM Dallas 2025',prize:'$250,000',tier:'premier',tierLabel:'IEM',date:'Май 2025',location:'🇺🇸 Даллас',top:['MOUZ','NaVi'],bracket:{type:'single',rounds:[{label:'Полуфинал',matches:[{p1:'MOUZ',p2:'Team Spirit',winner:'MOUZ'},{p1:'NaVi',p2:'Cloud9',winner:'NaVi'}]},{label:'Финал',matches:[{p1:'MOUZ',p2:'NaVi',winner:'MOUZ'}]}]}},
+  {id:'blast_spring_2025',name:'BLAST Premier: Spring Final',prize:'$425,000',tier:'premier',tierLabel:'BLAST',date:'Июн 2025',location:'🇩🇰 Копенгаген',top:['FaZe Clan','Vitality'],bracket:{type:'single',rounds:[{label:'Полуфинал',matches:[{p1:'FaZe Clan',p2:'G2',winner:'FaZe Clan'},{p1:'Vitality',p2:'MOUZ',winner:'Vitality'}]},{label:'Финал',matches:[{p1:'FaZe Clan',p2:'Vitality',winner:'FaZe Clan'}]}]}},
+  {id:'esl_pro_s21',name:'ESL Pro League Season 21',prize:'$850,000',tier:'premier',tierLabel:'EPL',date:'Апр 2025',location:'🇲🇹 Мальта',top:['Team Spirit','NAVI'],bracket:{type:'group',groups:[{label:'Финальная таблица',teams:[{pos:1,name:'Team Spirit',w:5,l:1,qualified:true},{pos:2,name:'NAVI',w:4,l:2,qualified:true},{pos:3,name:'G2',w:3,l:3,qualified:true},{pos:4,name:'MOUZ',w:2,l:4,qualified:false},{pos:5,name:'Vitality',w:1,l:5,eliminated:true},{pos:6,name:'Cloud9',w:0,l:6,eliminated:true}]}]}},
 ];
 
 function renderEsports(list,elId){
@@ -586,10 +895,7 @@ function renderEsports(list,elId){
   document.getElementById(elId).innerHTML=list.map(t=>{
     const chips=t.top.map((tm,i)=>`<span class="esports-team-chip ${i===0?'gold':i===1?'silver':''}">${i===0?'🥇 ':i===1?'🥈 ':''}${esc(tm)}</span>`).join('');
     return`<div class="esports-card" onclick="openBracket('${game}','${t.id}')">
-      <div class="esports-card-header">
-        <span class="esports-name">${esc(t.name)}</span>
-        <span class="esports-tier-badge ${t.tier}">${esc(t.tierLabel)}</span>
-      </div>
+      <div class="esports-card-header"><span class="esports-name">${esc(t.name)}</span><span class="esports-tier-badge ${t.tier}">${esc(t.tierLabel)}</span></div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.35rem">
         <span style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted)">${esc(t.date)} · ${t.location}</span>
         <span class="esports-prize">${esc(t.prize)}</span>
@@ -615,10 +921,10 @@ function openBracket(game,id){
 }
 function closeBracket(){document.getElementById('bracket-modal').style.display='none';document.body.style.overflow='';}
 function closeBracketModal(e){if(e.target===document.getElementById('bracket-modal'))closeBracket();}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePost();closeBracket();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeNewsReader();closePost();closeBracket();}});
 
 /* ── Старт ── */
-loadFeed('DotA2','hot','dota',false);
+loadSteamNews('dota');
 renderEsports(DOTA_T,'dota-esports-list');
 renderEsports(CS2_T,'cs2-esports-list');
 </script>

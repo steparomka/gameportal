@@ -76,3 +76,14 @@ class SteamUser(Base):
     avatar      = Column(String(500), nullable=True)
     profile_url = Column(String(500), nullable=True)
     created_at  = Column(DateTime, nullable=False)
+    
+class CommunityPost(Base):
+    __tablename__ = "community_posts"
+    id         = Column(Integer, primary_key=True, index=True)
+    game       = Column(String(20), nullable=False)
+    title      = Column(String(200), nullable=False)
+    text       = Column(Text, nullable=False)
+    img        = Column(String(500), nullable=True)
+    author     = Column(String(50), default="Аноним")
+    tag        = Column(String(50), default="Новость")
+    created_at = Column(DateTime, nullable=False)
