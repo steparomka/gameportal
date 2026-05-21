@@ -949,6 +949,147 @@ async def cs2_page(request: Request):
     resp.set_cookie("session_id", sid, max_age=86400)
     return resp
 
+# ════════════════════════════════════════════════
+# ДОБАВИТЬ В main.py — после /api/cs2-news
+# PandaScore API — живые турниры и матчи
+# ════════════════════════════════════════════════
+
+PANDASCORE_TOKEN = os.getenv("PANDASCORE_TOKEN", "vxRoG5-UQ2bQrKyeCaTSPGLwfXtyuSn5tq0k92jRsoVVgBOHLgU")
+PANDASCORE_BASE  = "https://api.pandascore.co"
+
+async def pandascore_get(path: str, params: dict = None) -> list:
+    """Запрос к PandaScore API с кешем"""
+    cache_key = f"ps:{path}:{str(params)}"
+    cached = cache_get(cache_key)
+    if cached:
+        return cached
+    try:
+        headers = {"Authorization": f"Bearer {PANDASCORE_TOKEN}"}
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(
+                f"{PANDASCORE_BASE}{path}",
+                params=params or {},
+                headers=headers,
+                timeout=10.0
+            )
+        data = resp.json()
+        cache_set(cache_key, data, ttl=300)  # кеш 5 минут
+        return data
+    except Exception as e:
+        return []
+
+
+@app.get("/api/esports/dota/tournaments")
+async def dota_tournaments():
+    """Текущие и ближайшие турниры по Dota 2"""
+    running = await pandascore_get("/dota2/tournaments/running", {"page[size]": 10, "sort": "-begin_at"})
+    upcoming = await pandascore_get("/dota2/tournaments/upcoming", {"page[size]": 5, "sort": "begin_at"})
+    
+    def fmt(t):
+        return {
+            "id": t.get("id"),
+            "name": t.get("name"),
+            "slug": t.get("slug"),
+            "status": "live" if t in running else "upcoming",
+            "begin_at": t.get("begin_at"),
+            "end_at": t.get("end_at"),
+            "prize_pool": t.get("prize_pool"),
+            "tier": t.get("tier"),
+            "league": t.get("league", {}).get("name") if t.get("league") else None,
+            "league_img": t.get("league", {}).get("image_url") if t.get("league") else None,
+        }
+    
+    return {
+        "running": [fmt(t) for t in (running if isinstance(running, list) else [])],
+        "upcoming": [fmt(t) for t in (upcoming if isinstance(upcoming, list) else [])],
+    }
+
+
+@app.get("/api/esports/dota/matches")
+async def dota_matches():
+    """Live и ближайшие матчи Dota 2"""
+    running = await pandascore_get("/dota2/matches/running", {"page[size]": 10})
+    upcoming = await pandascore_get("/dota2/matches/upcoming", {"page[size]": 10, "sort": "begin_at"})
+    
+    def fmt(m):
+        ops = m.get("opponents", [])
+        t1 = ops[0].get("opponent", {}) if len(ops) > 0 else {}
+        t2 = ops[1].get("opponent", {}) if len(ops) > 1 else {}
+        res = m.get("results", [])
+        s1 = res[0].get("score") if len(res) > 0 else None
+        s2 = res[1].get("score") if len(res) > 1 else None
+        return {
+            "id": m.get("id"),
+            "name": m.get("name"),
+            "status": m.get("status"),
+            "begin_at": m.get("begin_at"),
+            "tournament_name": m.get("tournament", {}).get("name") if m.get("tournament") else None,
+            "team1": {"name": t1.get("name"), "img": t1.get("image_url"), "acronym": t1.get("acronym")},
+            "team2": {"name": t2.get("name"), "img": t2.get("image_url"), "acronym": t2.get("acronym")},
+            "score1": s1,
+            "score2": s2,
+            "winner_id": m.get("winner_id"),
+        }
+    
+    return {
+        "running": [fmt(m) for m in (running if isinstance(running, list) else [])],
+        "upcoming": [fmt(m) for m in (upcoming if isinstance(upcoming, list) else [])[:8]],
+    }
+
+
+@app.get("/api/esports/cs2/matches")
+async def cs2_matches():
+    """Live и ближайшие матчи CS2"""
+    running = await pandascore_get("/csgo/matches/running", {"page[size]": 10})
+    upcoming = await pandascore_get("/csgo/matches/upcoming", {"page[size]": 10, "sort": "begin_at"})
+    
+    def fmt(m):
+        ops = m.get("opponents", [])
+        t1 = ops[0].get("opponent", {}) if len(ops) > 0 else {}
+        t2 = ops[1].get("opponent", {}) if len(ops) > 1 else {}
+        res = m.get("results", [])
+        s1 = res[0].get("score") if len(res) > 0 else None
+        s2 = res[1].get("score") if len(res) > 1 else None
+        return {
+            "id": m.get("id"),
+            "status": m.get("status"),
+            "begin_at": m.get("begin_at"),
+            "tournament_name": m.get("tournament", {}).get("name") if m.get("tournament") else None,
+            "team1": {"name": t1.get("name"), "img": t1.get("image_url"), "acronym": t1.get("acronym")},
+            "team2": {"name": t2.get("name"), "img": t2.get("image_url"), "acronym": t2.get("acronym")},
+            "score1": s1,
+            "score2": s2,
+            "winner_id": m.get("winner_id"),
+        }
+    
+    return {
+        "running": [fmt(m) for m in (running if isinstance(running, list) else [])],
+        "upcoming": [fmt(m) for m in (upcoming if isinstance(upcoming, list) else [])[:8]],
+    }
+
+
+@app.get("/api/esports/cs2/tournaments")
+async def cs2_tournaments():
+    running = await pandascore_get("/csgo/tournaments/running", {"page[size]": 10})
+    upcoming = await pandascore_get("/csgo/tournaments/upcoming", {"page[size]": 5, "sort": "begin_at"})
+    
+    def fmt(t):
+        return {
+            "id": t.get("id"),
+            "name": t.get("name"),
+            "status": "live" if t in running else "upcoming",
+            "begin_at": t.get("begin_at"),
+            "end_at": t.get("end_at"),
+            "prize_pool": t.get("prize_pool"),
+            "tier": t.get("tier"),
+            "league": t.get("league", {}).get("name") if t.get("league") else None,
+        }
+    
+    return {
+        "running": [fmt(t) for t in (running if isinstance(running, list) else [])],
+        "upcoming": [fmt(t) for t in (upcoming if isinstance(upcoming, list) else [])],
+    }
+
 @app.get("/esports", response_class=HTMLResponse)
 async def esports_page(request: Request):
     """Страница киберспорта — турниры, групповые таблицы, плей-офф"""
