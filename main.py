@@ -948,6 +948,19 @@ async def cs2_page(request: Request):
     })
     resp.set_cookie("session_id", sid, max_age=86400)
     return resp
+
+@app.get("/esports", response_class=HTMLResponse)
+async def esports_page(request: Request):
+    """Страница киберспорта — турниры, групповые таблицы, плей-офф"""
+    sid = get_session_id(request)
+    update_online(sid)
+    resp = templates.TemplateResponse("esports.html", {
+        "request": request,
+        "online": count_online(),
+    })
+    resp.set_cookie("session_id", sid, max_age=86400)
+    return resp
+ 
     
 @app.post("/api/ai-analyze")
 async def ai_analyze(request: Request):
