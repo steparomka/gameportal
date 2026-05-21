@@ -1129,3 +1129,246 @@ textarea.form-control { min-height: 100px; resize: vertical; }
 .search-item-badge{margin-left:auto;font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);border:1px solid var(--accent);border-radius:99px;padding:0.1rem 0.4rem;white-space:nowrap}
 
 .search-hint{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted);padding:0.2rem 0.5rem;opacity:0.7}
+
+/* ════════════════════════════════════════════════════
+   ДОБАВИТЬ В КОНЕЦ static/css/style.css
+   Мобильная компактность + новые компоненты главной
+   ════════════════════════════════════════════════════ */
+
+/* ── Компактный hero на мобиле ─────────────────────── */
+@media (max-width: 768px) {
+  .hero {
+    padding: 2.5rem 1rem 1.5rem;
+  }
+  .hero h1 {
+    font-size: 2rem;
+    letter-spacing: 2px;
+  }
+  .hero p {
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero-nav {
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero-card {
+    width: 80px;
+    padding: 0.85rem 0.5rem;
+    gap: 0.4rem;
+  }
+  .hero-card .icon {
+    font-size: 1.6rem;
+  }
+  .hero-card span:last-child {
+    font-size: 0.7rem;
+    letter-spacing: 0;
+  }
+}
+
+/* ── Компактный контейнер на мобиле ────────────────── */
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem 0.75rem;
+  }
+  .card {
+    padding: 1rem;
+  }
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+  .page-header {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+  }
+}
+
+/* ── Stat-box компактнее на мобиле ─────────────────── */
+@media (max-width: 480px) {
+  .stat-box {
+    padding: 0.75rem 0.5rem;
+  }
+  .stat-box .value {
+    font-size: 1.4rem;
+  }
+  .stat-box .label {
+    font-size: 0.65rem;
+    letter-spacing: 0.5px;
+  }
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+}
+
+/* ── Табы компактнее ────────────────────────────────── */
+@media (max-width: 480px) {
+  .tabs-bar {
+    gap: 0.25rem;
+  }
+  .tab-btn {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.85rem;
+    letter-spacing: 0;
+  }
+  .tab-btn span {
+    font-size: 1rem;
+  }
+}
+
+/* ── Мета-строка героя — убираем pick на очень маленьких ── */
+@media (max-width: 360px) {
+  .meta-stat.pick {
+    display: none;
+  }
+  .hero-meta-img {
+    width: 36px;
+    height: 20px;
+  }
+}
+
+/* ── Бургер-меню — компактнее на маленьких ─────────── */
+@media (max-width: 380px) {
+  .burger-menu {
+    width: 280px;
+  }
+  .burger-link {
+    padding: 0.7rem 0.85rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* ── Турнирные карточки на мобиле ──────────────────── */
+@media (max-width: 480px) {
+  .esports-card {
+    padding: 0.75rem 0.9rem;
+  }
+  .esports-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    margin-bottom: 0.5rem;
+  }
+  .esports-name {
+    font-size: 0.85rem;
+  }
+  .esports-match-row {
+    font-size: 0.72rem;
+    padding: 0.35rem 0.5rem;
+    gap: 0.3rem;
+  }
+  .esports-score {
+    min-width: 26px;
+  }
+}
+
+/* ── Новостные карточки на мобиле ──────────────────── */
+@media (max-width: 480px) {
+  .news-card {
+    padding: 0.6rem 0.75rem;
+  }
+  .news-card-title {
+    font-size: 0.82rem;
+  }
+  .news-card-meta {
+    font-size: 0.65rem;
+  }
+}
+
+/* ── Рейтинг-строка на мобиле ──────────────────────── */
+@media (max-width: 480px) {
+  .ranking-row {
+    padding: 0.45rem 0.6rem;
+    gap: 0.45rem;
+  }
+  .ranking-name {
+    font-size: 0.8rem;
+  }
+  .ranking-points {
+    display: none; /* скрываем очки, оставляем позицию + флаг + имя + изменение */
+  }
+}
+
+/* ── CS2 карты на мобиле ────────────────────────────── */
+@media (max-width: 480px) {
+  .cs2-maps-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  .cs2-map-card {
+    padding: 0.65rem 0.5rem;
+  }
+  .cs2-map-icon {
+    font-size: 1.4rem;
+  }
+  .cs2-map-name {
+    font-size: 0.78rem;
+  }
+}
+
+/* ── Навбар — убираем лишнее на очень маленьких ─────── */
+@media (max-width: 360px) {
+  .navbar-brand {
+    font-size: 1.1rem;
+  }
+  .online-badge {
+    display: none;
+  }
+}
+
+/* ── Секция-заголовок компактнее ───────────────────── */
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+  }
+  .section-badge {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.35rem;
+  }
+}
+
+/* ── Убираем лишние отступы на мобиле ──────────────── */
+@media (max-width: 480px) {
+  .neon-line {
+    margin: 1rem 0;
+  }
+  .mb-3 {
+    margin-bottom: 1rem;
+  }
+  .grid-3, .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* ── Тиммейт-карточки компактнее ───────────────────── */
+@media (max-width: 480px) {
+  .teammate-card .avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+  }
+  .teammate-card h3 {
+    font-size: 0.9rem;
+  }
+  .teammate-card .description {
+    font-size: 0.8rem;
+  }
+}
+
+/* ── Кнопки — полная ширина на мобиле ──────────────── */
+@media (max-width: 480px) {
+  .btn-lg {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ── fix: grid-2col на главной ──────────────────────── */
+@media (max-width: 768px) {
+  .home-grid-2col {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}

@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 <!-- Файл: templates/index.html — Главная страница -->
 
-{% block title %}GamePortal — Главная{% endblock %}
+{% block title %}DotaClutch — Главная{% endblock %}
 
 {% block content %}
 <!-- ══ ГЕРОЙ-СЕКЦИЯ ════════════════════════════════════ -->
 <section class="hero">
   <h1>DOTA<span class="glow">CLUTCH</span></h1>
-  <p>Реплеи · Турниры · Поиск тиммейтов · Чат в реальном времени</p>
+  <p>Реплеи · Турниры · Поиск тиммейтов · Новости · Мета</p>
 
-  <!-- Карточки-навигация на главной -->
   <div class="hero-nav">
     <a href="/replays" class="hero-card">
       <span class="icon">📹</span>
@@ -23,14 +22,15 @@
       <span class="icon">🔍</span>
       <span>Тиммейты</span>
     </a>
-    <a href="#chat" class="hero-card">
-      <span class="icon">💬</span>
-      <span>Чат</span>
+    <a href="/cs2" class="hero-card">
+      <span class="icon">🎯</span>
+      <span>CS2</span>
     </a>
   </div>
 </section>
 
 <div class="container">
+
   <!-- ══ МИНИ-СТАТИСТИКА ═══════════════════════════════ -->
   <div class="grid grid-4 mb-3">
     <div class="stat-box">
@@ -53,52 +53,535 @@
 
   <hr class="neon-line" />
 
-  <!-- ══ МИНИ-ЧАТ ═══════════════════════════════════════ -->
-  <div id="chat">
-    <div class="page-header" style="margin-bottom:1rem">
-      <h1><span class="accent">💬</span> Чат</h1>
-      <p>Общайся с другими игроками в реальном времени</p>
-    </div>
+  <!-- ══ ТАБЫ: ДОТА / CS2 ═══════════════════════════════ -->
+  <div class="tabs-bar mb-3">
+    <button class="tab-btn active" data-tab="dota">
+      <span>🛡️</span> Dota 2
+    </button>
+    <button class="tab-btn" data-tab="cs2">
+      <span>🎯</span> CS2
+    </button>
+  </div>
 
-    <div class="chat-widget">
-      <!-- Заголовок чата -->
-      <div class="chat-header">
-        <span class="dot"></span>
-        Live Chat
-        <span style="margin-left:auto; font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono)" id="chat-status">Подключение...</span>
-      </div>
+  <!-- ══ DOTA 2 TAB ══════════════════════════════════════ -->
+  <div id="tab-dota" class="tab-content active">
 
-      <!-- Область сообщений -->
-      <div class="chat-messages" id="chat-messages">
-        <div class="chat-msg">
-          <span class="nick">🤖 Система <span class="time">сейчас</span></span>
-          <span class="text">Добро пожаловать в GamePortal! Представьтесь и пообщайтесь 👋</span>
+    <!-- Новости + Мета в двух колонках -->
+    <div class="home-grid-2col">
+
+      <!-- НОВОСТИ DOTA 2 -->
+      <div>
+        <div class="section-title">
+          <span class="section-icon">📰</span>
+          Новости Dota 2
+          <span class="section-badge" id="news-source-badge">STEAM</span>
+        </div>
+        <div id="dota-news-list">
+          <div class="skeleton-list">
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+          </div>
         </div>
       </div>
 
-      <!-- Поле ввода -->
-      <div class="chat-input-area">
-        <input
-          class="chat-nick-input"
-          id="chat-nick"
-          type="text"
-          placeholder="Ник"
-          maxlength="30"
-          value="Игрок"
-        />
-        <input
-          class="chat-text-input"
-          id="chat-text"
-          type="text"
-          placeholder="Написать сообщение..."
-          maxlength="500"
-          autocomplete="off"
-        />
-        <button class="chat-send-btn" id="chat-send" title="Отправить">➤</button>
+      <!-- МЕТА ГЕРОЕВ -->
+      <div>
+        <div class="section-title">
+          <span class="section-icon">⚡</span>
+          Мета героев
+          <span class="section-badge">OPENDOTA</span>
+        </div>
+        <div class="meta-tabs">
+          <button class="meta-tab-btn active" data-role="carry">Carry</button>
+          <button class="meta-tab-btn" data-role="mid">Mid</button>
+          <button class="meta-tab-btn" data-role="support">Support</button>
+        </div>
+        <div id="dota-meta-list">
+          <div class="skeleton-list">
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="neon-line" />
+
+    <!-- ТУРНИРНЫЕ ТАБЛИЦЫ DOTA 2 -->
+    <div class="section-title mb-2">
+      <span class="section-icon">🏆</span>
+      Киберспорт Dota 2
+      <span class="section-badge">LIVE</span>
+    </div>
+    <div id="dota-esports-list">
+      <div class="skeleton-list">
+        <div class="skeleton-item" style="height:80px"></div>
+        <div class="skeleton-item" style="height:80px"></div>
       </div>
     </div>
+
   </div>
+
+  <!-- ══ CS2 TAB ═════════════════════════════════════════ -->
+  <div id="tab-cs2" class="tab-content" style="display:none">
+
+    <div class="home-grid-2col">
+
+      <!-- НОВОСТИ CS2 -->
+      <div>
+        <div class="section-title">
+          <span class="section-icon">📰</span>
+          Новости CS2
+          <span class="section-badge">STEAM</span>
+        </div>
+        <div id="cs2-news-list">
+          <div class="skeleton-list">
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CS2 РЕЙТИНГИ КОМАНД -->
+      <div>
+        <div class="section-title">
+          <span class="section-icon">📊</span>
+          Рейтинг команд CS2
+          <span class="section-badge">HLTV</span>
+        </div>
+        <div id="cs2-rankings-list">
+          <div class="skeleton-list">
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="neon-line" />
+
+    <!-- ТУРНИРНЫЕ ТАБЛИЦЫ CS2 -->
+    <div class="section-title mb-2">
+      <span class="section-icon">🏆</span>
+      Киберспорт CS2
+      <span class="section-badge">LIVE</span>
+    </div>
+    <div id="cs2-esports-list">
+      <div class="skeleton-list">
+        <div class="skeleton-item" style="height:80px"></div>
+        <div class="skeleton-item" style="height:80px"></div>
+      </div>
+    </div>
+
+  </div>
+
 </div>
+{% endblock %}
+
+
+{% block extra_css %}
+<style>
+/* ── Табы ────────────────────────────────────────── */
+.tabs-bar {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0;
+  margin-bottom: 1.5rem;
+}
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.4rem;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.tab-btn:hover { color: var(--accent); }
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  background: rgba(0,212,255,0.05);
+}
+
+/* ── Секция-заголовок ────────────────────────────── */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-bright);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-icon { font-size: 1.1rem; }
+.section-badge {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 99px;
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.25);
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+/* ── Двухколоночная сетка ────────────────────────── */
+.home-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+@media (max-width: 768px) {
+  .home-grid-2col { grid-template-columns: 1fr; gap: 1.25rem; }
+}
+
+/* ── Скелетон-загрузка ───────────────────────────── */
+.skeleton-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.skeleton-item {
+  height: 52px;
+  background: linear-gradient(90deg, var(--bg-surface) 25%, rgba(30,58,95,0.3) 50%, var(--bg-surface) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-wave 1.4s infinite;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+@keyframes skeleton-wave {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Карточка новости ────────────────────────────── */
+.news-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+}
+.news-card:hover {
+  border-color: rgba(0,212,255,0.35);
+  background: rgba(0,212,255,0.04);
+  color: inherit;
+  transform: translateX(3px);
+}
+.news-card-title {
+  font-family: var(--font-head);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  line-height: 1.3;
+}
+.news-card-meta {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.news-card-tag {
+  padding: 0.1rem 0.45rem;
+  border-radius: 99px;
+  font-size: 0.65rem;
+  background: rgba(168,85,247,0.12);
+  color: var(--accent3);
+  border: 1px solid rgba(168,85,247,0.2);
+}
+
+/* ── Мета-табы ───────────────────────────────────── */
+.meta-tabs {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+.meta-tab-btn {
+  padding: 0.3rem 0.75rem;
+  border-radius: 99px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.meta-tab-btn.active, .meta-tab-btn:hover {
+  background: rgba(0,212,255,0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Карточка героя мета ─────────────────────────── */
+.hero-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 0.4rem;
+  transition: all 0.2s;
+}
+.hero-meta-row:hover {
+  border-color: rgba(0,212,255,0.3);
+  transform: translateX(2px);
+}
+.hero-meta-num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.hero-meta-img {
+  width: 44px;
+  height: 25px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--bg-surface);
+}
+.hero-meta-name {
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hero-meta-stats {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+.meta-stat {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+.meta-stat.wr {
+  background: rgba(16,185,129,0.12);
+  color: var(--success);
+  border: 1px solid rgba(16,185,129,0.2);
+}
+.meta-stat.pick {
+  background: rgba(245,158,11,0.1);
+  color: var(--warning);
+  border: 1px solid rgba(245,158,11,0.2);
+}
+.meta-tier {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.tier-s { background: #ff6b35; box-shadow: 0 0 6px #ff6b35; }
+.tier-a { background: var(--success); box-shadow: 0 0 6px var(--success); }
+.tier-b { background: var(--warning); }
+.tier-c { background: var(--text-muted); }
+
+/* ── Турнирная карточка ──────────────────────────── */
+.esports-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  transition: all 0.2s;
+}
+.esports-card:hover { border-color: rgba(0,212,255,0.3); box-shadow: var(--shadow-glow); }
+.esports-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  gap: 0.75rem;
+}
+.esports-name {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-bright);
+  letter-spacing: 0.5px;
+}
+.esports-prize {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--warning);
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.2);
+  padding: 0.15rem 0.5rem;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+.esports-teams {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.esports-team-chip {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  background: rgba(0,212,255,0.07);
+  border: 1px solid rgba(0,212,255,0.15);
+  color: var(--accent);
+  white-space: nowrap;
+}
+.esports-team-chip.first {
+  background: rgba(255,215,0,0.1);
+  border-color: rgba(255,215,0,0.25);
+  color: gold;
+}
+.esports-match-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background: var(--bg-surface);
+  border-radius: var(--radius);
+  margin-bottom: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+.esports-team-name {
+  flex: 1;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.esports-score {
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 32px;
+  text-align: center;
+}
+.esports-status {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+.esports-status.live {
+  background: rgba(239,68,68,0.15);
+  color: var(--danger);
+  border: 1px solid rgba(239,68,68,0.3);
+  animation: pulse-badge 1.5s infinite;
+}
+.esports-status.upcoming {
+  background: rgba(245,158,11,0.1);
+  color: var(--warning);
+  border: 1px solid rgba(245,158,11,0.2);
+}
+.esports-status.finished {
+  background: rgba(100,116,139,0.12);
+  color: var(--text-muted);
+  border: 1px solid rgba(100,116,139,0.2);
+}
+
+/* ── CS2 Rankings ────────────────────────────────── */
+.ranking-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 0.4rem;
+  transition: all 0.2s;
+}
+.ranking-row:hover { border-color: rgba(0,212,255,0.3); transform: translateX(2px); }
+.ranking-pos {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.ranking-pos.top3 { color: gold; font-weight: 700; }
+.ranking-flag { font-size: 1rem; flex-shrink: 0; }
+.ranking-name {
+  font-family: var(--font-head);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  flex: 1;
+}
+.ranking-points {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+}
+.ranking-change {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  width: 28px;
+  text-align: right;
+}
+.ranking-change.up { color: var(--success); }
+.ranking-change.down { color: var(--danger); }
+.ranking-change.same { color: var(--text-muted); }
+
+/* ── Ошибка/пусто ────────────────────────────────── */
+.data-error {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+</style>
 {% endblock %}
 
 
@@ -107,114 +590,353 @@
 // ── Загружаем статистику ─────────────────────────────
 async function loadStats() {
   try {
-    const [replays, tournaments, teammates] = await Promise.all([
-      fetch('/replays-api').then(r => r.json()),
-      fetch('/tournaments').then(() => null),   // считаем через API
-      fetch('/teammates-api').then(r => r.json()),
-    ]);
-    // Количество реплеев
-    if (Array.isArray(replays)) {
-      document.getElementById('stat-replays').textContent = replays.length;
-    }
-    // Количество анкет
-    if (Array.isArray(teammates)) {
-      document.getElementById('stat-teammates').textContent = teammates.length;
-    }
+    const replays = await fetch('/replays-api').then(r => r.json());
+    if (Array.isArray(replays)) document.getElementById('stat-replays').textContent = replays.length;
   } catch(e) {}
-
-  // Онлайн из API
   try {
     const r = await fetch('/api/online');
     const d = await r.json();
     document.getElementById('stat-online').textContent = d.online;
   } catch(_) {}
 }
-
 loadStats();
 
-// ── WebSocket Чат ────────────────────────────────────
-(function() {
-  const messagesEl = document.getElementById('chat-messages');
-  const textInput  = document.getElementById('chat-text');
-  const nickInput  = document.getElementById('chat-nick');
-  const sendBtn    = document.getElementById('chat-send');
-  const statusEl   = document.getElementById('chat-status');
+// ── ТАБЫ ─────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).style.display = 'block';
+  });
+});
 
-  let ws = null;
-  let reconnectTimer = null;
+// ── МЕТА-ТАБЫ ─────────────────────────────────────────
+document.querySelectorAll('.meta-tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.meta-tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    loadDotaMeta(btn.dataset.role);
+  });
+});
 
-  // Добавить сообщение в чат
-  function addMessage(nick, text, time) {
-    const msg = document.createElement('div');
-    msg.className = 'chat-msg';
-    msg.innerHTML = `
-      <span class="nick">${escapeHtml(nick)} <span class="time">${escapeHtml(time)}</span></span>
-      <span class="text">${escapeHtml(text)}</span>
-    `;
-    messagesEl.appendChild(msg);
-    messagesEl.scrollTop = messagesEl.scrollHeight;   // прокручиваем вниз
+// ══════════════════════════════════════════════════════
+//  DOTA 2 — НОВОСТИ (Steam RSS через прокси)
+// ══════════════════════════════════════════════════════
+async function loadDotaNews() {
+  const el = document.getElementById('dota-news-list');
+  try {
+    // Используем Steam API (публичный, без ключа)
+    const resp = await fetch('https://store.steampowered.com/events/ajaxgetpartnereventspageable/?appid=570&count=5&lang=russian');
+    const data = await resp.json();
+    const events = data.events || [];
+
+    if (!events.length) throw new Error('no events');
+
+    el.innerHTML = events.slice(0, 6).map(ev => {
+      const date = new Date(ev.announcement_body?.posttime * 1000 || Date.now());
+      const dateStr = date.toLocaleDateString('ru-RU', {day:'numeric', month:'short'});
+      const title = ev.announcement_body?.headline || ev.event_name || 'Новость Dota 2';
+      const url = `https://store.steampowered.com/news/app/570`;
+      return `<a class="news-card" href="${url}" target="_blank" rel="noopener">
+        <div class="news-card-title">${escHtml(title)}</div>
+        <div class="news-card-meta">
+          <span>${dateStr}</span>
+          <span class="news-card-tag">Dota 2</span>
+        </div>
+      </a>`;
+    }).join('');
+  } catch(e) {
+    // Fallback: Static curated Dota 2 news links
+    el.innerHTML = [
+      { title: 'Патч-ноты 7.38 — изменения баланса героев', url: 'https://www.dota2.com/patches', tag: 'Патч', date: 'Актуально' },
+      { title: 'The International 2025 — отборочные начались', url: 'https://www.dota2.com/esports', tag: 'Турнир', date: 'Актуально' },
+      { title: 'Новые косметики и обновление Дота Плюс', url: 'https://www.dota2.com/news', tag: 'Обновление', date: 'Актуально' },
+      { title: 'DPC-Лига сезон 2025 — расписание и команды', url: 'https://www.dota2.com/esports', tag: 'Лига', date: 'Актуально' },
+      { title: 'Советы по метовым героям от про-игроков', url: 'https://www.dota2.com', tag: 'Гайд', date: 'Актуально' },
+    ].map(n => `<a class="news-card" href="${n.url}" target="_blank" rel="noopener">
+      <div class="news-card-title">${n.title}</div>
+      <div class="news-card-meta"><span>${n.date}</span><span class="news-card-tag">${n.tag}</span></div>
+    </a>`).join('');
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  DOTA 2 — МЕТА (OpenDota через наш бэкенд-прокси)
+// ══════════════════════════════════════════════════════
+
+// Роли по primary_attr + hero name heuristics
+const ROLE_MAP = {
+  carry:   ['Anti-Mage','Juggernaut','Phantom Assassin','Terrorblade','Spectre','Morphling','Medusa','Luna','Gyrocopter','Faceless Void','Chaos Knight','Phantom Lancer','Drow Ranger','Clinkz','Bloodseeker'],
+  mid:     ['Invoker','Storm Spirit','Queen of Pain','Puck','Lina','Shadow Fiend','Zeus','Dragon Knight','Viper','Tinker','Templar Assassin','Sniper','Arc Warden','Ember Spirit','Void Spirit'],
+  support: ['Crystal Maiden','Lion','Shadow Shaman','Witch Doctor','Dazzle','Ogre Magi','Warlock','Jakiro','Lich','Vengeful Spirit','Rubick','Disruptor','Earthshaker','Chen','Omniknight'],
+};
+
+let heroStats = [];
+let heroMeta  = {}; // id -> stats
+
+async function loadHeroStats() {
+  try {
+    const data = await fetch('/api/opendota/heroStats').then(r => r.json());
+    heroStats = Array.isArray(data) ? data : [];
+    // Кэшируем по id
+    heroStats.forEach(h => { heroMeta[h.id] = h; });
+  } catch(e) {}
+}
+
+function getHeroImageUrl(heroName) {
+  if (!heroName) return '';
+  const name = heroName.toLowerCase()
+    .replace(/['\-\s]/g, '_')
+    .replace(/[^a-z0-9_]/g, '');
+  return `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${name}.png`;
+}
+
+function getTier(wr) {
+  if (wr >= 54) return 's';
+  if (wr >= 52) return 'a';
+  if (wr >= 50) return 'b';
+  return 'c';
+}
+
+async function loadDotaMeta(role = 'carry') {
+  const el = document.getElementById('dota-meta-list');
+  el.innerHTML = '<div class="skeleton-list">' + '<div class="skeleton-item"></div>'.repeat(5) + '</div>';
+
+  if (!heroStats.length) await loadHeroStats();
+
+  const roleHeroNames = ROLE_MAP[role] || ROLE_MAP.carry;
+
+  // Фильтруем героев по списку ролей, сортируем по winrate
+  let filtered = heroStats.filter(h => roleHeroNames.includes(h.localized_name));
+
+  if (filtered.length < 5) {
+    // Если данных мало — берём топ по WR среди всех
+    filtered = [...heroStats]
+      .filter(h => h['8_pick'] > 500)
+      .sort((a, b) => (b['8_win']/b['8_pick']) - (a['8_win']/a['8_pick']))
+      .slice(0, 10);
   }
 
-  // Безопасное экранирование HTML
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+  // Сортируем по winrate (8_win / 8_pick = публичные игры)
+  filtered = filtered
+    .filter(h => h['8_pick'] > 0)
+    .sort((a, b) => (b['8_win']/b['8_pick']) - (a['8_win']/a['8_pick']))
+    .slice(0, 8);
+
+  if (!filtered.length) {
+    el.innerHTML = '<div class="data-error">Нет данных. Попробуйте позже.</div>';
+    return;
   }
 
-  // Подключение к WebSocket
-  function connect() {
-    const proto = location.protocol === 'https:' ? 'wss' : 'ws';
-    ws = new WebSocket(`${proto}://${location.host}/ws/chat`);
+  el.innerHTML = filtered.map((h, i) => {
+    const wr = h['8_pick'] > 0 ? ((h['8_win']/h['8_pick'])*100).toFixed(1) : '?';
+    const picks = h['8_pick'] ? (h['8_pick']/1000).toFixed(0)+'k' : '?';
+    const tier = getTier(parseFloat(wr));
+    const imgUrl = getHeroImageUrl(h.localized_name);
+    return `<div class="hero-meta-row">
+      <span class="hero-meta-num">${i+1}</span>
+      <img class="hero-meta-img" src="${imgUrl}" alt="${escHtml(h.localized_name)}" onerror="this.src=''" loading="lazy" />
+      <span class="hero-meta-name">${escHtml(h.localized_name)}</span>
+      <div class="hero-meta-stats">
+        <span class="meta-stat wr">${wr}%</span>
+        <span class="meta-stat pick">${picks}</span>
+      </div>
+      <span class="meta-tier tier-${tier}" title="Tier ${tier.toUpperCase()}"></span>
+    </div>`;
+  }).join('');
+}
 
-    ws.onopen = () => {
-      statusEl.textContent = '🟢 Подключено';
-      statusEl.style.color = 'var(--success)';
-      clearTimeout(reconnectTimer);
-    };
+// ══════════════════════════════════════════════════════
+//  DOTA 2 — КИБЕРСПОРТ (OpenDota leagues)
+// ══════════════════════════════════════════════════════
+async function loadDotaEsports() {
+  const el = document.getElementById('dota-esports-list');
+  try {
+    const leagues = await fetch('/api/opendota/leagues').then(r => r.json());
+    const top = Array.isArray(leagues)
+      ? leagues.filter(l => l.tier === 'premium' || l.tier === 'professional').slice(0, 5)
+      : [];
 
-    ws.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        addMessage(data.nickname, data.text, data.time);
-      } catch(_) {}
-    };
+    if (!top.length) throw new Error('no leagues');
 
-    ws.onclose = () => {
-      statusEl.textContent = '🔴 Переподключение...';
-      statusEl.style.color = 'var(--danger)';
-      // Автоматически переподключаемся через 3 секунды
-      reconnectTimer = setTimeout(connect, 3000);
-    };
-
-    ws.onerror = () => ws.close();
+    el.innerHTML = top.map(l => {
+      const prize = l.prize_pool ? `$${Number(l.prize_pool).toLocaleString()}` : 'N/A';
+      return `<div class="esports-card">
+        <div class="esports-card-header">
+          <span class="esports-name">🏆 ${escHtml(l.name || 'Турнир')}</span>
+          <span class="esports-prize">${prize}</span>
+        </div>
+        <div class="esports-teams">
+          <span class="esports-team-chip" style="background:rgba(168,85,247,0.1);border-color:rgba(168,85,247,0.25);color:var(--accent3)">Tier: ${escHtml(l.tier || '?')}</span>
+          ${l.region ? `<span class="esports-team-chip">${escHtml(l.region)}</span>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    // Статичные данные топ-турниров
+    el.innerHTML = [
+      { name: 'The International 2025', prize: '$40,000,000', tier: 'Мейджор', teams: ['Team Spirit','OG','Secret','Liquid','EG'] },
+      { name: 'DreamLeague S25', prize: '$1,000,000', tier: 'Мейджор', teams: ['Gaimin Gladiators','nouns','BetBoom','Tundra'] },
+      { name: 'ESL One Bangkok 2025', prize: '$500,000', tier: 'Мейджор', teams: ['Team Liquid','PSG.LGD','Azure Ray','Aster'] },
+    ].map(t => `<div class="esports-card">
+      <div class="esports-card-header">
+        <span class="esports-name">🏆 ${t.name}</span>
+        <span class="esports-prize">${t.prize}</span>
+      </div>
+      <div class="esports-teams">
+        <span class="esports-team-chip" style="background:rgba(168,85,247,0.1);border-color:rgba(168,85,247,0.25);color:var(--accent3)">${t.tier}</span>
+        ${t.teams.map((tm,i) => `<span class="esports-team-chip ${i===0?'first':''}">${i===0?'🥇 ':''}${tm}</span>`).join('')}
+      </div>
+    </div>`).join('');
   }
+}
 
-  // Отправить сообщение
-  function sendMessage() {
-    const text = textInput.value.trim();
-    const nick = nickInput.value.trim() || 'Аноним';
-    if (!text || !ws || ws.readyState !== WebSocket.OPEN) return;
-    ws.send(JSON.stringify({ nickname: nick, text }));
-    textInput.value = '';
-    textInput.focus();
+// ══════════════════════════════════════════════════════
+//  CS2 — НОВОСТИ (Steam)
+// ══════════════════════════════════════════════════════
+async function loadCS2News() {
+  const el = document.getElementById('cs2-news-list');
+  try {
+    const resp = await fetch('https://store.steampowered.com/events/ajaxgetpartnereventspageable/?appid=730&count=5&lang=russian');
+    const data = await resp.json();
+    const events = data.events || [];
+    if (!events.length) throw new Error('no events');
+
+    el.innerHTML = events.slice(0, 6).map(ev => {
+      const date = new Date(ev.announcement_body?.posttime * 1000 || Date.now());
+      const dateStr = date.toLocaleDateString('ru-RU', {day:'numeric', month:'short'});
+      const title = ev.announcement_body?.headline || ev.event_name || 'Новость CS2';
+      return `<a class="news-card" href="https://store.steampowered.com/news/app/730" target="_blank" rel="noopener">
+        <div class="news-card-title">${escHtml(title)}</div>
+        <div class="news-card-meta">
+          <span>${dateStr}</span>
+          <span class="news-card-tag" style="background:rgba(245,158,11,0.1);color:var(--warning);border-color:rgba(245,158,11,0.2)">CS2</span>
+        </div>
+      </a>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML = [
+      { title: 'Операция 2025 — новые контракты и скины', url: 'https://www.counter-strike.net/news', tag: 'Операция' },
+      { title: 'Обновление античита VAC — улучшения', url: 'https://www.counter-strike.net/news', tag: 'Обновление' },
+      { title: 'IEM Cologne 2025 — итоги и статистика', url: 'https://www.counter-strike.net/news', tag: 'Турнир' },
+      { title: 'Новые карты в пуле активных дежурств', url: 'https://www.counter-strike.net/news', tag: 'Патч' },
+      { title: 'Major 2025 — квалификации RMR', url: 'https://www.counter-strike.net/news', tag: 'Major' },
+    ].map(n => `<a class="news-card" href="${n.url}" target="_blank" rel="noopener">
+      <div class="news-card-title">${n.title}</div>
+      <div class="news-card-meta">
+        <span>Актуально</span>
+        <span class="news-card-tag" style="background:rgba(245,158,11,0.1);color:var(--warning);border-color:rgba(245,158,11,0.2)">${n.tag}</span>
+      </div>
+    </a>`).join('');
   }
+}
 
-  // Кнопка отправки
-  sendBtn.addEventListener('click', sendMessage);
+// ══════════════════════════════════════════════════════
+//  CS2 — РЕЙТИНГ КОМАНД (статика HLTV-стиль)
+// ══════════════════════════════════════════════════════
+function loadCS2Rankings() {
+  const el = document.getElementById('cs2-rankings-list');
+  const teams = [
+    { pos:1,  name:'NAVI',           flag:'🇺🇦', points:'1000', change:0  },
+    { pos:2,  name:'Team Vitality',  flag:'🇫🇷', points:'914',  change:-1 },
+    { pos:3,  name:'FaZe Clan',      flag:'🌍', points:'870',  change:1  },
+    { pos:4,  name:'G2 Esports',     flag:'🇪🇸', points:'845',  change:0  },
+    { pos:5,  name:'MOUZ',           flag:'🇩🇪', points:'810',  change:2  },
+    { pos:6,  name:'Team Spirit',    flag:'🇷🇺', points:'790',  change:-1 },
+    { pos:7,  name:'Cloud9',         flag:'🇺🇸', points:'754',  change:0  },
+    { pos:8,  name:'Eternal Fire',   flag:'🇹🇷', points:'730',  change:1  },
+    { pos:9,  name:'The MongolZ',    flag:'🇲🇳', points:'710',  change:2  },
+    { pos:10, name:'paiN Gaming',    flag:'🇧🇷', points:'698',  change:-2 },
+  ];
+  el.innerHTML = teams.map(t => {
+    const chClass = t.change > 0 ? 'up' : t.change < 0 ? 'down' : 'same';
+    const chText  = t.change > 0 ? `▲${t.change}` : t.change < 0 ? `▼${Math.abs(t.change)}` : '—';
+    return `<div class="ranking-row">
+      <span class="ranking-pos ${t.pos <= 3 ? 'top3' : ''}">${t.pos}</span>
+      <span class="ranking-flag">${t.flag}</span>
+      <span class="ranking-name">${t.name}</span>
+      <span class="ranking-points">${t.points} pts</span>
+      <span class="ranking-change ${chClass}">${chText}</span>
+    </div>`;
+  }).join('');
+}
 
-  // Enter для отправки
-  textInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
+// ══════════════════════════════════════════════════════
+//  CS2 — КИБЕРСПОРТ
+// ══════════════════════════════════════════════════════
+function loadCS2Esports() {
+  const el = document.getElementById('cs2-esports-list');
+  const tournaments = [
+    {
+      name: 'PGL Major Bucharest 2025',
+      prize: '$1,250,000',
+      status: 'upcoming',
+      matches: [
+        { t1:'NAVI', t2:'FaZe Clan', score:'—', status:'upcoming' },
+        { t1:'Vitality', t2:'G2', score:'—', status:'upcoming' },
+      ]
+    },
+    {
+      name: 'IEM Dallas 2025',
+      prize: '$250,000',
+      status: 'finished',
+      matches: [
+        { t1:'MOUZ', t2:'Team Spirit', score:'2:1', status:'finished' },
+        { t1:'NaVi', t2:'Cloud9', score:'2:0', status:'finished' },
+      ]
+    },
+    {
+      name: 'BLAST Premier: Spring Final 2025',
+      prize: '$425,000',
+      status: 'upcoming',
+      matches: [
+        { t1:'FaZe', t2:'G2', score:'—', status:'upcoming' },
+        { t1:'Vitality', t2:'MOUZ', score:'—', status:'upcoming' },
+      ]
+    },
+  ];
+
+  el.innerHTML = tournaments.map(t => {
+    const statusMap = { live:'live', upcoming:'upcoming', finished:'finished' };
+    const statusLabel = { live:'🔴 Live', upcoming:'⏰ Скоро', finished:'✅ Завершён' };
+    return `<div class="esports-card">
+      <div class="esports-card-header">
+        <span class="esports-name">🏆 ${escHtml(t.name)}</span>
+        <span class="esports-prize">${escHtml(t.prize)}</span>
+      </div>
+      ${t.matches.map(m => `<div class="esports-match-row">
+        <span class="esports-team-name">${escHtml(m.t1)}</span>
+        <span class="esports-score">${escHtml(m.score)}</span>
+        <span class="esports-team-name" style="text-align:right">${escHtml(m.t2)}</span>
+        <span class="esports-status ${statusMap[m.status] || 'upcoming'}">${statusLabel[m.status] || '?'}</span>
+      </div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+// ── XSS-защита ───────────────────────────────────────
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Запуск ───────────────────────────────────────────
+loadDotaNews();
+loadDotaMeta('carry');
+loadDotaEsports();
+loadCS2Rankings();
+loadCS2Esports();
+
+// CS2 новости загружаем при первом переходе на таб
+let cs2NewsLoaded = false;
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.dataset.tab === 'cs2' && !cs2NewsLoaded) {
+      cs2NewsLoaded = true;
+      loadCS2News();
     }
   });
-
-  // Запускаем подключение
-  connect();
-})();
+});
 </script>
 {% endblock %}

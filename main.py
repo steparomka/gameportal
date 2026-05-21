@@ -589,7 +589,7 @@ async def get_me(request: Request):
     return {
         "logged_in": True,
         "steam_id":  steam_id,
-        "nickname":  request.cookies.get("steam_nickname"),
+        "nickname":  request.cookies.get("steam_nickname"), 
         "avatar":    request.cookies.get("steam_avatar"),
     }
     
@@ -620,6 +620,47 @@ async def ai_coach_page(request: Request):
         "request": request,
         "online": count_online(),
     })
+    
+# ════════════════════════════════════════════════
+#  ДОБАВИТЬ В main.py — вставить после /ai-coach роута
+# ════════════════════════════════════════════════
+
+@app.get("/cs2", response_class=HTMLResponse)
+async def cs2_page(request: Request):
+    """Страница CS2 — новости, рейтинги, киберспорт"""
+    sid = get_session_id(request)
+    update_online(sid)
+    resp = templates.TemplateResponse("cs2.html", {
+        "request": request,
+        "online": count_online(),
+    })
+    resp.set_cookie("session_id", sid, max_age=86400)
+    return resp
+
+
+# ════════════════════════════════════════════════
+#  ТАКЖЕ ДОБАВИТЬ — API для подсчёта тиммейтов
+#  (нужен для stat-teammates на главной)
+# ════════════════════════════════════════════════
+
+@app.get("/teammates-api", response_model=List[schemas.TeammateOut])
+async def list_teammates(db: Session = Depends(get_db)):
+    """GET /teammates-api — список всех анкет (JSON)"""
+    return db.query(models.TeammateProfile).order_by(
+        models.TeammateProfile.created_at.desc()
+    ).all()
+    
+@app.get("/cs2", response_class=HTMLResponse)
+async def cs2_page(request: Request):
+    sid = get_session_id(request)
+    update_online(sid)
+    resp = templates.TemplateResponse("cs2.html", {
+        "request": request,
+        "online": count_online(),
+    })
+    resp.set_cookie("session_id", sid, max_age=86400)
+    return resp
+    
 @app.post("/api/ai-analyze")
 async def ai_analyze(request: Request):
     body = await request.json()

@@ -1,0 +1,467 @@
+{% extends "base.html" %}
+<!-- Файл: templates/cs2.html — Страница CS2 -->
+
+{% block title %}CS2 — Новости и Киберспорт | DotaClutch{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding:3rem 2rem 2rem">
+  <h1>COUNTER<span class="glow2">STRIKE</span> <span class="glow">2</span></h1>
+  <p>Новости · Рейтинги · Киберспорт · Мета</p>
+</section>
+
+<div class="container">
+
+  <!-- СТАТЫ CS2 -->
+  <div class="grid grid-4 mb-3">
+    <div class="stat-box">
+      <span class="value" style="color:var(--warning)">TOP 10</span>
+      <span class="label">🎯 Команд в рейтинге</span>
+    </div>
+    <div class="stat-box">
+      <span class="value" style="color:var(--accent2)">3</span>
+      <span class="label">🏆 Активных турниров</span>
+    </div>
+    <div class="stat-box">
+      <span class="value" style="color:var(--accent)">$1.25M</span>
+      <span class="label">💰 Призовых в сезоне</span>
+    </div>
+    <div class="stat-box">
+      <span class="value" style="color:var(--success)" id="cs2-online">{{ online }}</span>
+      <span class="label">🟢 Онлайн</span>
+    </div>
+  </div>
+
+  <hr class="neon-line" />
+
+  <!-- НОВОСТИ + РЕЙТИНГ -->
+  <div id="news" class="home-grid-2col" style="margin-bottom:2rem">
+
+    <!-- НОВОСТИ CS2 -->
+    <div>
+      <div class="section-title">
+        <span class="section-icon">📰</span>
+        Новости CS2
+        <span class="section-badge">STEAM</span>
+      </div>
+      <div id="cs2-news-list">
+        <div class="skeleton-list">
+          <div class="skeleton-item"></div>
+          <div class="skeleton-item"></div>
+          <div class="skeleton-item"></div>
+          <div class="skeleton-item"></div>
+          <div class="skeleton-item"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- РЕЙТИНГ КОМАНД -->
+    <div>
+      <div class="section-title">
+        <span class="section-icon">📊</span>
+        Рейтинг команд
+        <span class="section-badge">HLTV</span>
+      </div>
+      <div id="cs2-rankings-list">
+        <div class="skeleton-list">
+          <div class="skeleton-item"></div>
+          <div class="skeleton-item"></div>
+          <div class="skeleton-item"></div>
+          <div class="skeleton-item"></div>
+          <div class="skeleton-item"></div>
+        </div>
+      </div>
+      <div style="margin-top:0.75rem;text-align:center">
+        <a href="https://www.hltv.org/ranking/teams/" target="_blank" rel="noopener"
+           class="btn btn-ghost btn-sm">Полный рейтинг на HLTV →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="neon-line" />
+
+  <!-- КИБЕРСПОРТ CS2 -->
+  <div id="esports">
+    <div class="section-title mb-2">
+      <span class="section-icon">🏆</span>
+      Киберспорт CS2
+      <span class="section-badge">LIVE</span>
+    </div>
+
+    <!-- Фильтр турниров -->
+    <div style="display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap">
+      <button class="cs2-filter-btn active" data-filter="all">Все</button>
+      <button class="cs2-filter-btn" data-filter="major">Major</button>
+      <button class="cs2-filter-btn" data-filter="iem">IEM</button>
+      <button class="cs2-filter-btn" data-filter="blast">BLAST</button>
+    </div>
+
+    <div id="cs2-esports-list">
+      <div class="skeleton-list">
+        <div class="skeleton-item" style="height:100px"></div>
+        <div class="skeleton-item" style="height:100px"></div>
+        <div class="skeleton-item" style="height:100px"></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="neon-line" />
+
+  <!-- МЕТА КАРТЫ -->
+  <div>
+    <div class="section-title mb-2">
+      <span class="section-icon">🗺️</span>
+      Пул активных карт
+      <span class="section-badge">СЕЗОН 2025</span>
+    </div>
+    <div id="cs2-maps-grid" class="cs2-maps-grid"></div>
+  </div>
+
+</div>
+{% endblock %}
+
+
+{% block extra_css %}
+<style>
+/* ── Двухколонка (переиспользуем из index) ────────── */
+.home-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+@media (max-width: 768px) {
+  .home-grid-2col { grid-template-columns: 1fr; gap: 1.25rem; }
+}
+
+/* ── Скелетон ────────────────────────────────────── */
+.skeleton-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.skeleton-item {
+  height: 52px;
+  background: linear-gradient(90deg, var(--bg-surface) 25%, rgba(30,58,95,0.3) 50%, var(--bg-surface) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-wave 1.4s infinite;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+@keyframes skeleton-wave {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Section title ───────────────────────────────── */
+.section-title {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-head); font-weight: 700; font-size: 1rem;
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-bright);
+  margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+}
+.section-icon { font-size: 1.1rem; }
+.section-badge {
+  margin-left: auto; font-family: var(--font-mono); font-size: 0.65rem;
+  padding: 0.15rem 0.5rem; border-radius: 99px;
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25);
+  color: var(--warning); letter-spacing: 1px;
+}
+
+/* ── Новости ─────────────────────────────────────── */
+.news-card {
+  display: flex; flex-direction: column; gap: 0.3rem;
+  padding: 0.75rem 1rem; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 0.5rem; cursor: pointer; text-decoration: none; color: inherit;
+  transition: all 0.2s;
+}
+.news-card:hover {
+  border-color: rgba(245,158,11,0.35); background: rgba(245,158,11,0.03);
+  color: inherit; transform: translateX(3px);
+}
+.news-card-title {
+  font-family: var(--font-head); font-size: 0.9rem;
+  font-weight: 600; color: var(--text-bright); line-height: 1.3;
+}
+.news-card-meta {
+  font-family: var(--font-mono); font-size: 0.7rem;
+  color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;
+}
+.news-card-tag {
+  padding: 0.1rem 0.45rem; border-radius: 99px; font-size: 0.65rem;
+  background: rgba(245,158,11,0.1); color: var(--warning);
+  border: 1px solid rgba(245,158,11,0.2);
+}
+
+/* ── Рейтинг ─────────────────────────────────────── */
+.ranking-row {
+  display: flex; align-items: center; gap: 0.65rem;
+  padding: 0.55rem 0.75rem; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 0.4rem; transition: all 0.2s;
+}
+.ranking-row:hover { border-color: rgba(245,158,11,0.3); transform: translateX(2px); }
+.ranking-pos { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); width: 22px; text-align: center; flex-shrink: 0; }
+.ranking-pos.top3 { color: gold; font-weight: 700; }
+.ranking-flag { font-size: 1rem; flex-shrink: 0; }
+.ranking-name { font-family: var(--font-head); font-size: 0.88rem; font-weight: 600; color: var(--text-bright); flex: 1; }
+.ranking-points { font-family: var(--font-mono); font-size: 0.7rem; color: var(--warning); }
+.ranking-change { font-family: var(--font-mono); font-size: 0.7rem; width: 28px; text-align: right; }
+.ranking-change.up   { color: var(--success); }
+.ranking-change.down { color: var(--danger); }
+.ranking-change.same { color: var(--text-muted); }
+
+/* ── Фильтр-кнопки ───────────────────────────────── */
+.cs2-filter-btn {
+  padding: 0.3rem 0.85rem; border-radius: 99px;
+  font-family: var(--font-mono); font-size: 0.72rem;
+  background: var(--bg-surface); border: 1px solid var(--border);
+  color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+}
+.cs2-filter-btn.active, .cs2-filter-btn:hover {
+  background: rgba(245,158,11,0.1); border-color: var(--warning); color: var(--warning);
+}
+
+/* ── Турнирные карточки ──────────────────────────── */
+.esports-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem; transition: all 0.2s;
+}
+.esports-card:hover { border-color: rgba(245,158,11,0.3); box-shadow: 0 0 20px rgba(245,158,11,0.08); }
+.esports-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 0.75rem; gap: 0.75rem; flex-wrap: wrap;
+}
+.esports-name { font-family: var(--font-head); font-weight: 700; font-size: 0.95rem; color: var(--text-bright); }
+.esports-prize {
+  font-family: var(--font-mono); font-size: 0.75rem; color: var(--warning);
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2);
+  padding: 0.15rem 0.5rem; border-radius: 99px; white-space: nowrap;
+}
+.esports-match-row {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.4rem 0.6rem; background: var(--bg-surface);
+  border-radius: var(--radius); margin-bottom: 0.3rem;
+  font-family: var(--font-mono); font-size: 0.78rem;
+}
+.esports-team-name { flex: 1; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.esports-score { font-weight: 700; color: var(--warning); min-width: 32px; text-align: center; }
+.esports-status { font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 99px; white-space: nowrap; }
+.esports-status.live     { background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); animation: pulse-badge 1.5s infinite; }
+.esports-status.upcoming { background: rgba(245,158,11,0.1); color: var(--warning); border: 1px solid rgba(245,158,11,0.2); }
+.esports-status.finished { background: rgba(100,116,139,0.12); color: var(--text-muted); border: 1px solid rgba(100,116,139,0.2); }
+@keyframes pulse-badge { 0%,100%{box-shadow:none} 50%{box-shadow:0 0 8px rgba(239,68,68,0.4)} }
+
+/* ── Карты ───────────────────────────────────────── */
+.cs2-maps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+@media (max-width: 480px) {
+  .cs2-maps-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.cs2-map-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 0.85rem 0.75rem;
+  text-align: center; transition: all 0.2s; cursor: default;
+}
+.cs2-map-card:hover { border-color: rgba(245,158,11,0.35); transform: translateY(-2px); }
+.cs2-map-icon { font-size: 1.8rem; display: block; margin-bottom: 0.3rem; }
+.cs2-map-name {
+  font-family: var(--font-head); font-size: 0.85rem;
+  font-weight: 700; color: var(--text-bright); letter-spacing: 0.5px;
+}
+.cs2-map-pool {
+  font-family: var(--font-mono); font-size: 0.65rem;
+  color: var(--warning); margin-top: 0.2rem;
+}
+
+/* ── Error/empty ─────────────────────────────────── */
+.data-error {
+  text-align: center; padding: 1.5rem; color: var(--text-muted);
+  font-family: var(--font-mono); font-size: 0.8rem;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+}
+</style>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── НОВОСТИ CS2 ──────────────────────────────────────
+async function loadCS2News() {
+  const el = document.getElementById('cs2-news-list');
+  try {
+    const resp = await fetch('https://store.steampowered.com/events/ajaxgetpartnereventspageable/?appid=730&count=8&lang=russian');
+    const data = await resp.json();
+    const events = data.events || [];
+    if (!events.length) throw new Error('empty');
+
+    el.innerHTML = events.slice(0, 8).map(ev => {
+      const date = new Date((ev.announcement_body?.posttime || 0) * 1000);
+      const dateStr = date > new Date('2020-01-01')
+        ? date.toLocaleDateString('ru-RU', {day:'numeric', month:'short', year:'numeric'})
+        : 'Актуально';
+      const title = ev.announcement_body?.headline || ev.event_name || 'Новость CS2';
+      return `<a class="news-card" href="https://store.steampowered.com/news/app/730" target="_blank" rel="noopener">
+        <div class="news-card-title">${escHtml(title)}</div>
+        <div class="news-card-meta"><span>${dateStr}</span><span class="news-card-tag">CS2</span></div>
+      </a>`;
+    }).join('');
+  } catch(e) {
+    const fallback = [
+      { title:'Новая операция 2025 — контракты и скины',       tag:'Операция', date:'2025' },
+      { title:'Обновление VAC — улучшения античита',            tag:'Обновление', date:'2025' },
+      { title:'IEM Cologne 2025 — NaVi выигрывает финал',      tag:'Турнир', date:'2025' },
+      { title:'Новый пул карт сезона — изменения',              tag:'Патч', date:'2025' },
+      { title:'PGL Major Bucharest 2025 — квалификации RMR',   tag:'Major', date:'2025' },
+      { title:'Изменения рейтинговой системы Premier',          tag:'Рейтинг', date:'2025' },
+      { title:'BLAST Premier Spring Final — расписание',        tag:'BLAST', date:'2025' },
+      { title:'Топ-10 команд по результатам апреля 2025',       tag:'Рейтинг', date:'2025' },
+    ];
+    el.innerHTML = fallback.map(n => `<a class="news-card"
+        href="https://www.counter-strike.net/news" target="_blank" rel="noopener">
+      <div class="news-card-title">${n.title}</div>
+      <div class="news-card-meta"><span>${n.date}</span><span class="news-card-tag">${n.tag}</span></div>
+    </a>`).join('');
+  }
+}
+
+// ── РЕЙТИНГ КОМАНД ──────────────────────────────────
+function loadCS2Rankings() {
+  const teams = [
+    { pos:1,  name:'NAVI',           flag:'🇺🇦', points:'1000', change:0  },
+    { pos:2,  name:'Team Vitality',  flag:'🇫🇷', points:'914',  change:-1 },
+    { pos:3,  name:'FaZe Clan',      flag:'🌍',  points:'870',  change:1  },
+    { pos:4,  name:'G2 Esports',     flag:'🇪🇸', points:'845',  change:0  },
+    { pos:5,  name:'MOUZ',           flag:'🇩🇪', points:'810',  change:2  },
+    { pos:6,  name:'Team Spirit',    flag:'🇷🇺', points:'790',  change:-1 },
+    { pos:7,  name:'Cloud9',         flag:'🇺🇸', points:'754',  change:0  },
+    { pos:8,  name:'Eternal Fire',   flag:'🇹🇷', points:'730',  change:1  },
+    { pos:9,  name:'The MongolZ',    flag:'🇲🇳', points:'710',  change:2  },
+    { pos:10, name:'paiN Gaming',    flag:'🇧🇷', points:'698',  change:-2 },
+  ];
+  document.getElementById('cs2-rankings-list').innerHTML = teams.map(t => {
+    const chClass = t.change > 0 ? 'up' : t.change < 0 ? 'down' : 'same';
+    const chText  = t.change > 0 ? `▲${t.change}` : t.change < 0 ? `▼${Math.abs(t.change)}` : '—';
+    return `<div class="ranking-row">
+      <span class="ranking-pos ${t.pos <= 3 ? 'top3':''}">${t.pos}</span>
+      <span class="ranking-flag">${t.flag}</span>
+      <span class="ranking-name">${t.name}</span>
+      <span class="ranking-points">${t.points} pts</span>
+      <span class="ranking-change ${chClass}">${chText}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── КИБЕРСПОРТ / ТУРНИРЫ ─────────────────────────────
+const ALL_TOURNAMENTS = [
+  {
+    name:'PGL Major Bucharest 2025', prize:'$1,250,000', type:'major', status:'upcoming',
+    matches:[
+      {t1:'NAVI',     t2:'FaZe Clan', score:'—',  status:'upcoming'},
+      {t1:'Vitality', t2:'G2',        score:'—',  status:'upcoming'},
+      {t1:'MOUZ',     t2:'Spirit',    score:'—',  status:'upcoming'},
+    ]
+  },
+  {
+    name:'IEM Dallas 2025', prize:'$250,000', type:'iem', status:'finished',
+    matches:[
+      {t1:'MOUZ',     t2:'Team Spirit', score:'2:1', status:'finished'},
+      {t1:'NaVi',     t2:'Cloud9',      score:'2:0', status:'finished'},
+      {t1:'FaZe',     t2:'Vitality',    score:'1:2', status:'finished'},
+    ]
+  },
+  {
+    name:'BLAST Premier: Spring Final 2025', prize:'$425,000', type:'blast', status:'upcoming',
+    matches:[
+      {t1:'FaZe',     t2:'G2',   score:'—', status:'upcoming'},
+      {t1:'Vitality', t2:'MOUZ', score:'—', status:'upcoming'},
+    ]
+  },
+  {
+    name:'ESL Pro League S21', prize:'$850,000', type:'iem', status:'upcoming',
+    matches:[
+      {t1:'NaVi',    t2:'MOUZ',  score:'—', status:'upcoming'},
+      {t1:'Spirit',  t2:'FaZe',  score:'—', status:'upcoming'},
+    ]
+  },
+  {
+    name:'BLAST Premier: World Final 2025', prize:'$1,000,000', type:'blast', status:'upcoming',
+    matches:[
+      {t1:'TBD', t2:'TBD', score:'—', status:'upcoming'},
+    ]
+  },
+];
+
+const statusLabel = { live:'🔴 Live', upcoming:'⏰ Скоро', finished:'✅ Финиш' };
+
+function renderTournaments(filter) {
+  const list = filter === 'all'
+    ? ALL_TOURNAMENTS
+    : ALL_TOURNAMENTS.filter(t => t.type === filter);
+
+  const el = document.getElementById('cs2-esports-list');
+  if (!list.length) {
+    el.innerHTML = '<div class="data-error">Турниров по этому фильтру не найдено</div>';
+    return;
+  }
+  el.innerHTML = list.map(t => `<div class="esports-card">
+    <div class="esports-card-header">
+      <span class="esports-name">🏆 ${escHtml(t.name)}</span>
+      <span class="esports-prize">${escHtml(t.prize)}</span>
+    </div>
+    ${t.matches.map(m => `<div class="esports-match-row">
+      <span class="esports-team-name">${escHtml(m.t1)}</span>
+      <span class="esports-score">${escHtml(m.score)}</span>
+      <span class="esports-team-name" style="text-align:right">${escHtml(m.t2)}</span>
+      <span class="esports-status ${m.status}">${statusLabel[m.status]||'?'}</span>
+    </div>`).join('')}
+  </div>`).join('');
+}
+
+// Фильтр-кнопки
+document.querySelectorAll('.cs2-filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cs2-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTournaments(btn.dataset.filter);
+  });
+});
+
+// ── КАРТЫ ────────────────────────────────────────────
+function loadCS2Maps() {
+  const maps = [
+    { name:'Mirage',    icon:'🏜️', pool:'Active Duty' },
+    { name:'Inferno',   icon:'🔥', pool:'Active Duty' },
+    { name:'Dust2',     icon:'⚔️', pool:'Active Duty' },
+    { name:'Nuke',      icon:'☢️', pool:'Active Duty' },
+    { name:'Ancient',   icon:'🏛️', pool:'Active Duty' },
+    { name:'Anubis',    icon:'🐺', pool:'Active Duty' },
+    { name:'Vertigo',   icon:'🏗️', pool:'Active Duty' },
+  ];
+  document.getElementById('cs2-maps-grid').innerHTML = maps.map(m => `
+    <div class="cs2-map-card">
+      <span class="cs2-map-icon">${m.icon}</span>
+      <div class="cs2-map-name">${m.name}</div>
+      <div class="cs2-map-pool">${m.pool}</div>
+    </div>`).join('');
+}
+
+// ── Запуск ───────────────────────────────────────────
+loadCS2News();
+loadCS2Rankings();
+renderTournaments('all');
+loadCS2Maps();
+
+// anchor-scroll при загрузке
+if (location.hash) {
+  setTimeout(() => {
+    const el = document.querySelector(location.hash);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 300);
+}
+</script>
+{% endblock %}
