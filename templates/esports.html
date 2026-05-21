@@ -78,6 +78,22 @@
 
   </div>
 </div>
+
+<!-- МОДАЛКА ТУРНИРНОЙ СЕТКИ -->
+<div id="bracket-modal" class="bm-overlay" style="display:none" onclick="closeBracketModal(event)">
+  <div class="bm-box">
+    <div class="bm-header">
+      <div>
+        <div class="bm-title" id="bm-title">Турнирная сетка</div>
+        <div class="bm-subtitle" id="bm-subtitle"></div>
+      </div>
+      <button class="bm-close" onclick="closeBracket()">✕</button>
+    </div>
+    <div class="bm-body" id="bm-body">
+      <div style="text-align:center;padding:2rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">⏳ Загрузка сетки...</div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block extra_css %}
@@ -111,8 +127,8 @@
 .match-teams{display:flex;align-items:center;gap:0.5rem}
 .match-team{display:flex;align-items:center;gap:0.5rem;flex:1}
 .match-team.right{flex-direction:row-reverse;text-align:right}
-.team-logo{width:32px;height:32px;border-radius:50%;object-fit:contain;background:var(--bg-surface);border:1px solid var(--border);padding:3px;flex-shrink:0}
-.team-logo-placeholder{width:32px;height:32px;border-radius:50%;background:var(--bg-surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:var(--text-muted);flex-shrink:0;font-family:var(--font-head);font-weight:700}
+.team-logo{width:36px;height:36px;border-radius:8px;object-fit:contain;background:transparent;border:1px solid var(--border);padding:3px;flex-shrink:0}
+.team-logo-placeholder{width:36px;height:36px;border-radius:8px;background:var(--bg-surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:var(--text-muted);flex-shrink:0;font-family:var(--font-head);font-weight:700}
 .team-name{font-family:var(--font-head);font-size:0.88rem;font-weight:700;color:var(--text-bright)}
 .team-name.winner{color:var(--success)}
 
@@ -129,7 +145,7 @@
 .t-card.cs2{border-left:3px solid var(--warning)}
 .t-card.cs2:hover{border-color:rgba(245,158,11,0.3)}
 .t-card-left{display:flex;align-items:center;gap:0.85rem;flex:1}
-.t-league-img{width:40px;height:40px;object-fit:contain;border-radius:8px;background:var(--bg-surface);border:1px solid var(--border);padding:4px;flex-shrink:0}
+.t-league-img{width:40px;height:40px;object-fit:contain;border-radius:8px;background:var(--bg-surface);border:1px solid var(--border);padding:4px;flex-shrink:0;background-color:transparent}
 .t-league-placeholder{width:40px;height:40px;border-radius:8px;background:var(--bg-surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
 .t-name{font-family:var(--font-head);font-size:0.95rem;font-weight:700;color:var(--text-bright)}
 .t-league{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted);margin-top:0.15rem}
@@ -156,6 +172,44 @@
   .team-name{font-size:0.8rem}
   .t-card{flex-direction:column;align-items:flex-start}
 }
+
+/* ══ BRACKET МОДАЛКА ══ */
+.bm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(12px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1rem}
+.bm-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);width:100%;max-width:900px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,0.8),0 0 30px rgba(0,212,255,0.04);animation:modal-in 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes modal-in{from{opacity:0;transform:scale(0.93) translateY(18px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.bm-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-surface);flex-shrink:0;gap:1rem}
+.bm-title{font-family:var(--font-head);font-size:1.1rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--accent)}
+.bm-subtitle{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted);margin-top:0.2rem}
+.bm-close{background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.bm-close:hover{color:var(--accent);border-color:var(--accent)}
+.bm-body{padding:1.5rem;overflow-y:auto;overflow-x:auto}
+
+/* Сетка матчей */
+.bm-matches-list{display:flex;flex-direction:column;gap:0.65rem}
+.bm-match{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all 0.2s}
+.bm-match:hover{border-color:rgba(0,212,255,0.3)}
+.bm-match.live{border-color:rgba(239,68,68,0.4);animation:live-card 2s infinite}
+.bm-match-head{display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0.85rem;background:rgba(0,0,0,0.15);border-bottom:1px solid var(--border);gap:0.5rem}
+.bm-match-tournament{font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted)}
+.bm-match-time{font-family:var(--font-mono);font-size:0.62rem;color:var(--warning)}
+.bm-match-body{display:flex;align-items:center;padding:0.65rem 0.85rem;gap:0.5rem}
+.bm-team{display:flex;align-items:center;gap:0.5rem;flex:1}
+.bm-team.right{flex-direction:row-reverse;text-align:right}
+.bm-team-logo{width:30px;height:30px;border-radius:6px;object-fit:contain;background:transparent;padding:2px;flex-shrink:0}
+.bm-team-logo-ph{width:30px;height:30px;border-radius:6px;background:var(--bg-card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.62rem;color:var(--text-muted);flex-shrink:0;font-family:var(--font-head);font-weight:700}
+.bm-team-name{font-family:var(--font-head);font-size:0.88rem;font-weight:700;color:var(--text-primary)}
+.bm-team-name.winner{color:var(--success)}
+.bm-score-wrap{display:flex;align-items:center;gap:0.35rem;min-width:60px;justify-content:center;flex-shrink:0}
+.bm-score{font-family:var(--font-mono);font-size:1.1rem;font-weight:700;color:var(--text-muted);min-width:22px;text-align:center}
+.bm-score.win{color:var(--success)}
+.bm-score.live{color:var(--danger);animation:score-pulse 1.5s infinite}
+.bm-sep{font-family:var(--font-mono);font-size:0.75rem;color:var(--border)}
+.bm-status-live{display:flex;align-items:center;gap:0.3rem;font-family:var(--font-mono);font-size:0.6rem;color:var(--danger)}
+.bm-dot{width:6px;height:6px;border-radius:50%;background:var(--danger);animation:pdot 1.5s infinite;flex-shrink:0}
+
+/* t-card кликабельный */
+.t-card{cursor:pointer}
+.t-card:hover .t-name{color:var(--accent)}
 </style>
 {% endblock %}
 
@@ -331,5 +385,92 @@ async function loadCS2Esports(){
 // Автообновление каждые 60 секунд
 loadDotaEsports();
 setInterval(loadDotaEsports, 60000);
+
+/* ════════════════════════════════
+   МОДАЛКА ТУРНИРНОЙ СЕТКИ
+════════════════════════════════ */
+async function openTournament(id, name, league, prize, isCS2){
+  document.getElementById('bm-title').textContent = name;
+  document.getElementById('bm-subtitle').textContent = (league||'') + (prize ? ' · $' + Number(prize).toLocaleString() : '');
+  document.getElementById('bm-body').innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">⏳ Загрузка матчей...</div>';
+  document.getElementById('bracket-modal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  try {
+    const game = isCS2 ? 'csgo' : 'dota2';
+    const resp = await fetch(`https://api.pandascore.co/tournaments/${id}/matches?sort=begin_at&page[size]=20`, {
+      headers: { 'Authorization': 'Bearer vxRoG5-UQ2bQrKyeCaTSPGLwfXtyuSn5tq0k92jRsoVVgBOHLgU' }
+    });
+    const matches = await resp.json();
+
+    if (!Array.isArray(matches) || !matches.length) {
+      document.getElementById('bm-body').innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">Матчи ещё не добавлены в расписание</div>';
+      return;
+    }
+
+    const html = '<div class="bm-matches-list">' + matches.map(m => {
+      const ops = m.opponents || [];
+      const t1 = ops[0]?.opponent || {};
+      const t2 = ops[1]?.opponent || {};
+      const res = m.results || [];
+      const s1 = res[0]?.score;
+      const s2 = res[1]?.score;
+      const isLive = m.status === 'running';
+      const isDone = m.status === 'finished';
+      const w1 = isDone && m.winner_id && m.winner_id === t1.id;
+      const w2 = isDone && m.winner_id && m.winner_id === t2.id;
+
+      const logo = (t) => t.image_url
+        ? `<img class="bm-team-logo" src="${esc(t.image_url)}" onerror="this.outerHTML='<div class=bm-team-logo-ph>${esc((t.acronym||t.name||'?').slice(0,3))}</div>'" />`
+        : `<div class="bm-team-logo-ph">${esc((t.acronym||t.name||'?').slice(0,3))}</div>`;
+
+      return `<div class="bm-match${isLive?' live':''}">
+        <div class="bm-match-head">
+          <span class="bm-match-tournament">${esc(m.name||'Матч')}</span>
+          ${isLive
+            ? '<span class="bm-status-live"><span class="bm-dot"></span> LIVE</span>'
+            : `<span class="bm-match-time">${fmtDate(m.begin_at)}</span>`
+          }
+        </div>
+        <div class="bm-match-body">
+          <div class="bm-team">
+            ${logo(t1)}
+            <span class="bm-team-name${w1?' winner':''}">${esc(t1.name||'TBD')}</span>
+          </div>
+          <div class="bm-score-wrap">
+            <span class="bm-score${isLive?' live':''}${w1?' win':''}">${s1!=null?s1:'—'}</span>
+            <span class="bm-sep">:</span>
+            <span class="bm-score${isLive?' live':''}${w2?' win':''}">${s2!=null?s2:'—'}</span>
+          </div>
+          <div class="bm-team right">
+            <span class="bm-team-name${w2?' winner':''}">${esc(t2.name||'TBD')}</span>
+            ${logo(t2)}
+          </div>
+        </div>
+      </div>`;
+    }).join('') + '</div>';
+
+    document.getElementById('bm-body').innerHTML = html;
+
+  } catch(e) {
+    document.getElementById('bm-body').innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--danger)">⚠️ Ошибка загрузки матчей</div>';
+  }
+}
+
+function closeBracket(){
+  document.getElementById('bracket-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+function closeBracketModal(e){
+  if(e.target === document.getElementById('bracket-modal')) closeBracket();
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeBracket(); });
+
+/* Патч renderTournament — добавляем onclick */
+const _origRenderTournament = renderTournament;
+window.renderTournament = function(t, isCS2){
+  const html = _origRenderTournament(t, isCS2);
+  return html.replace('<div class="t-card', `<div onclick="openTournament(${t.id},'${(t.name||'').replace(/'/g,'\'')}','${(t.league||'').replace(/'/g,'\'')}','${t.prize_pool||''}',${isCS2})" class="t-card`);
+};
 </script>
 {% endblock %}
