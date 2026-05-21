@@ -6,10 +6,10 @@
   <h1>DOTA<span class="glow">CLUTCH</span></h1>
   <p>Реплеи · Турниры · Поиск тиммейтов · Новости · Мета</p>
   <div class="hero-nav">
-    <a href="/replays" class="hero-card"><span class="icon">📹</span><span>Реплеи</span></a>
-    <a href="/tournaments" class="hero-card"><span class="icon">🏆</span><span>Турниры</span></a>
-    <a href="/find-teammates" class="hero-card"><span class="icon">🔍</span><span>Тиммейты</span></a>
-    <a href="/meta" class="hero-card"><span class="icon">⚡</span><span>Мета</span></a>
+    <a href="/replays"       class="hero-card"><span class="icon">📹</span><span>Реплеи</span></a>
+    <a href="/tournaments"   class="hero-card"><span class="icon">🏆</span><span>Турниры</span></a>
+    <a href="/find-teammates"class="hero-card"><span class="icon">🔍</span><span>Тиммейты</span></a>
+    <a href="/meta"          class="hero-card"><span class="icon">⚡</span><span>Мета</span></a>
   </div>
 </section>
 
@@ -21,56 +21,71 @@
     <div class="stat-box"><span class="value" style="color:var(--success)" id="stat-online">{{ online }}</span><span class="label">🟢 Онлайн</span></div>
   </div>
 
-  <hr class="neon-line" />
+  <hr class="neon-line"/>
 
+  <!-- ТАБЫ -->
   <div class="tabs-bar">
     <button class="tab-btn active" data-tab="dota">🛡️ Dota 2</button>
     <button class="tab-btn" data-tab="cs2">🎯 CS2</button>
   </div>
 
-  <!-- DOTA 2 TAB -->
+  <!-- ══ DOTA 2 ══ -->
   <div id="tab-dota" class="tab-content">
-    <div class="section-title">
-      <span class="section-icon">📰</span> Новости Dota 2
-      <span class="section-live-dot"></span>
-      <span class="section-badge">STEAM OFFICIAL</span>
-    </div>
-    <div id="dota-news-list" class="news-grid-wide">
-      <div class="news-skeleton-featured"></div>
-      <div class="news-skeleton-row"></div>
-      <div class="news-skeleton-row"></div>
-    </div>
+    <div class="news-page-layout">
 
-    <hr class="neon-line" />
+      <!-- Лента новостей (левая широкая колонка) -->
+      <div class="news-feed-col">
+        <div class="section-title">
+          <span class="section-icon">📰</span> Новости Dota 2
+          <span class="section-live-dot"></span>
+          <span class="section-badge">STEAM OFFICIAL</span>
+        </div>
+        <div id="dota-news-list">
+          <div class="nf-skeleton"></div>
+          <div class="nf-skeleton"></div>
+          <div class="nf-skeleton"></div>
+        </div>
+      </div>
 
-    <div class="section-title mb-2">
-      <span class="section-icon">🏆</span> Киберспорт Dota 2
-      <span class="section-badge dota-live-badge">● LIVE</span>
+      <!-- Сайдбар: турниры -->
+      <div class="news-sidebar-col">
+        <div class="section-title">
+          <span class="section-icon">🏆</span> Киберспорт
+          <span class="section-badge dota-live-badge">● LIVE</span>
+        </div>
+        <p style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);margin-bottom:0.75rem">Нажми — открыть сетку</p>
+        <div id="dota-esports-list"></div>
+      </div>
+
     </div>
-    <p style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);margin-bottom:1rem">Нажми на турнир чтобы увидеть сетку</p>
-    <div id="dota-esports-list"></div>
   </div>
 
-  <!-- CS2 TAB -->
+  <!-- ══ CS2 ══ -->
   <div id="tab-cs2" class="tab-content" style="display:none">
-    <div class="section-title">
-      <span class="section-icon">📰</span> Новости CS2
-      <span class="section-badge cs2-badge">STEAM OFFICIAL</span>
-    </div>
-    <div id="cs2-news-list" class="news-grid-wide">
-      <div class="news-skeleton-featured"></div>
-      <div class="news-skeleton-row"></div>
-      <div class="news-skeleton-row"></div>
-    </div>
+    <div class="news-page-layout">
 
-    <hr class="neon-line" />
+      <div class="news-feed-col">
+        <div class="section-title">
+          <span class="section-icon">📰</span> Новости CS2
+          <span class="section-badge cs2-badge">STEAM OFFICIAL</span>
+        </div>
+        <div id="cs2-news-list">
+          <div class="nf-skeleton"></div>
+          <div class="nf-skeleton"></div>
+          <div class="nf-skeleton"></div>
+        </div>
+      </div>
 
-    <div class="section-title mb-2">
-      <span class="section-icon">🏆</span> Киберспорт CS2
-      <span class="section-badge cs2-badge">● LIVE</span>
+      <div class="news-sidebar-col">
+        <div class="section-title">
+          <span class="section-icon">🏆</span> Киберспорт
+          <span class="section-badge cs2-badge">● LIVE</span>
+        </div>
+        <p style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);margin-bottom:0.75rem">Нажми — открыть сетку</p>
+        <div id="cs2-esports-list"></div>
+      </div>
+
     </div>
-    <p style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);margin-bottom:1rem">Нажми на турнир чтобы увидеть сетку</p>
-    <div id="cs2-esports-list"></div>
   </div>
 </div>
 
@@ -88,74 +103,91 @@
 
 {% block extra_css %}
 <style>
-.tabs-bar{display:flex;gap:0.5rem;border-bottom:2px solid var(--border);margin-bottom:1.5rem}
-.tab-btn{display:flex;align-items:center;gap:0.4rem;padding:0.6rem 1.3rem;font-family:var(--font-head);font-weight:700;font-size:0.95rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all 0.2s;border-radius:var(--radius) var(--radius) 0 0}
+/* ── Табы ── */
+.tabs-bar{display:flex;gap:0.5rem;border-bottom:2px solid var(--border);margin-bottom:1.75rem}
+.tab-btn{display:flex;align-items:center;gap:0.4rem;padding:0.65rem 1.4rem;font-family:var(--font-head);font-weight:700;font-size:0.95rem;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all 0.2s;border-radius:var(--radius) var(--radius) 0 0}
 .tab-btn:hover{color:var(--accent)}
 .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(0,212,255,0.05)}
-.section-title{display:flex;align-items:center;gap:0.5rem;font-family:var(--font-head);font-weight:700;font-size:1rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-bright);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)}
+
+/* ── Section ── */
+.section-title{display:flex;align-items:center;gap:0.5rem;font-family:var(--font-head);font-weight:700;font-size:1rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-bright);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border)}
 .section-badge{margin-left:auto;font-family:var(--font-mono);font-size:0.65rem;padding:0.15rem 0.5rem;border-radius:99px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.25);color:var(--accent);letter-spacing:1px}
-.section-live-dot{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 6px var(--success);animation:pulse-dot 2s infinite;flex-shrink:0}
-@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+.section-live-dot{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 6px var(--success);animation:pdot 2s infinite;flex-shrink:0}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
 .cs2-badge{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.25);color:var(--warning)}
-.dota-live-badge{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);color:var(--danger);animation:pulse-badge 2s infinite}
-@keyframes pulse-badge{0%,100%{box-shadow:none}50%{box-shadow:0 0 8px rgba(239,68,68,0.3)}}
+.dota-live-badge{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);color:var(--danger);animation:pbadge 2s infinite}
+@keyframes pbadge{0%,100%{box-shadow:none}50%{box-shadow:0 0 8px rgba(239,68,68,0.3)}}
 
-/* ── Новости сетка широкая — 3 колонки ── */
-.news-grid-wide{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem}
-.news-grid-wide .news-bigcard.featured{grid-column:1/-1}
-@media(max-width:900px){.news-grid-wide{grid-template-columns:1fr 1fr}}
-@media(max-width:600px){.news-grid-wide{grid-template-columns:1fr}}
+/* ── Лейаут: лента + сайдбар ── */
+.news-page-layout{display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start}
+@media(max-width:900px){.news-page-layout{grid-template-columns:1fr}}
+@media(max-width:900px){.news-sidebar-col{display:none}} /* на мобиле сайдбар скрываем */
 
-/* ── Карточка новости ── */
-.news-bigcard{display:flex;flex-direction:column;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;text-decoration:none;color:inherit;transition:all 0.25s;cursor:pointer}
-.news-bigcard:hover{border-color:rgba(0,212,255,0.4);box-shadow:0 8px 32px rgba(0,0,0,0.35),0 0 20px rgba(0,212,255,0.06);transform:translateY(-3px);color:inherit}
-.news-bigcard-img-wrap{overflow:hidden;position:relative;flex-shrink:0}
-.news-bigcard-img-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:50px;background:linear-gradient(transparent,var(--bg-card));pointer-events:none}
-.news-bigcard-img{width:100%;height:180px;object-fit:cover;display:block;background:var(--bg-surface);transition:transform 0.4s ease}
-.news-bigcard.featured .news-bigcard-img{height:260px}
-.news-bigcard:hover .news-bigcard-img{transform:scale(1.04)}
-.news-bigcard-body{padding:0.9rem 1rem 1rem;display:flex;flex-direction:column;gap:0.4rem;flex:1}
-.news-bigcard-meta{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
-.news-bigcard-tag{font-family:var(--font-mono);font-size:0.62rem;padding:0.12rem 0.5rem;border-radius:99px;letter-spacing:0.5px;text-transform:uppercase;font-weight:700}
-.news-bigcard-tag.patch{background:rgba(16,185,129,0.15);color:var(--success);border:1px solid rgba(16,185,129,0.25)}
-.news-bigcard-tag.tournament{background:rgba(245,158,11,0.15);color:var(--warning);border:1px solid rgba(245,158,11,0.25)}
-.news-bigcard-tag.update{background:rgba(168,85,247,0.15);color:var(--accent3);border:1px solid rgba(168,85,247,0.25)}
-.news-bigcard-tag.guide{background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.2)}
-.news-bigcard-tag.default{background:rgba(0,212,255,0.08);color:var(--accent);border:1px solid rgba(0,212,255,0.15)}
-.news-bigcard-tag.major{background:rgba(255,107,53,0.15);color:#ff6b35;border:1px solid rgba(255,107,53,0.3)}
-.news-bigcard-date{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-left:auto}
-.news-bigcard-title{font-family:var(--font-head);font-size:0.95rem;font-weight:700;color:var(--text-bright);line-height:1.3}
-.news-bigcard.featured .news-bigcard-title{font-size:1.15rem}
-.news-bigcard-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.news-bigcard-arrow{font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);margin-top:auto;padding-top:0.3rem;opacity:0;transform:translateX(-4px);transition:all 0.2s}
-.news-bigcard:hover .news-bigcard-arrow{opacity:1;transform:translateX(0)}
+/* ── Скелетон ── */
+.nf-skeleton{height:340px;border-radius:var(--radius-lg);background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.35) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:skw 1.4s infinite;border:1px solid var(--border);margin-bottom:1.5rem}
+@keyframes skw{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-/* Скелетон */
-.news-skeleton-featured{border-radius:var(--radius-lg);height:320px;background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:sk-wave 1.4s infinite;border:1px solid var(--border);grid-column:1/-1}
-.news-skeleton-row{border-radius:var(--radius-lg);height:220px;background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.3) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:sk-wave 1.4s infinite;border:1px solid var(--border)}
-@keyframes sk-wave{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* ══════════════════════════════════════
+   КАРТОЧКА НОВОСТИ — Dotabuff-стиль
+══════════════════════════════════════ */
+.nf-card{display:block;text-decoration:none;color:inherit;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.5rem;transition:all 0.3s;position:relative}
+.nf-card::after{content:'';position:absolute;inset:0;border-radius:var(--radius-lg);box-shadow:inset 0 0 0 0 rgba(0,212,255,0.15);transition:box-shadow 0.3s;pointer-events:none}
+.nf-card:hover{border-color:rgba(0,212,255,0.4);transform:translateY(-2px);color:inherit}
+.nf-card:hover::after{box-shadow:inset 0 0 0 1px rgba(0,212,255,0.2),0 12px 40px rgba(0,0,0,0.4)}
 
-/* ── Турниры ── */
-.esports-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:0.75rem;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
-.esports-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent3));opacity:0;transition:opacity 0.2s}
-.esports-card:hover{border-color:rgba(0,212,255,0.4);box-shadow:0 0 20px rgba(0,212,255,0.08);transform:translateY(-1px)}
+/* Картинка */
+.nf-img-wrap{position:relative;overflow:hidden;width:100%;height:0;padding-bottom:46%} /* 46% = ~2.17:1 как Dotabuff */
+.nf-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease;display:block}
+.nf-card:hover .nf-img{transform:scale(1.04)}
+
+/* Градиент снизу картинки */
+.nf-img-overlay{position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(transparent,rgba(13,20,34,0.95));pointer-events:none}
+
+/* Тег поверх картинки */
+.nf-img-tag{position:absolute;top:0.75rem;left:0.85rem;z-index:2}
+
+/* Нижняя часть — текст */
+.nf-body{padding:1rem 1.2rem 1.25rem}
+.nf-meta{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem}
+.nf-tag{font-family:var(--font-mono);font-size:0.62rem;padding:0.12rem 0.55rem;border-radius:99px;letter-spacing:0.5px;text-transform:uppercase;font-weight:700}
+.nf-tag.patch{background:rgba(16,185,129,0.15);color:var(--success);border:1px solid rgba(16,185,129,0.3)}
+.nf-tag.tournament{background:rgba(245,158,11,0.15);color:var(--warning);border:1px solid rgba(245,158,11,0.3)}
+.nf-tag.update{background:rgba(168,85,247,0.15);color:var(--accent3);border:1px solid rgba(168,85,247,0.3)}
+.nf-tag.guide{background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.2)}
+.nf-tag.major{background:rgba(255,107,53,0.15);color:#ff6b35;border:1px solid rgba(255,107,53,0.3)}
+.nf-tag.default{background:rgba(100,116,139,0.12);color:var(--text-muted);border:1px solid rgba(100,116,139,0.2)}
+.nf-date{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-muted)}
+.nf-title{font-family:var(--font-head);font-size:1.15rem;font-weight:700;color:var(--text-bright);line-height:1.3;margin-bottom:0.5rem;letter-spacing:0.3px}
+.nf-card:hover .nf-title{color:var(--accent)}
+.nf-desc{font-size:0.85rem;color:var(--text-muted);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.nf-read{display:inline-flex;align-items:center;gap:0.35rem;font-family:var(--font-mono);font-size:0.72rem;color:var(--accent);margin-top:0.75rem;opacity:0;transform:translateX(-6px);transition:all 0.25s}
+.nf-card:hover .nf-read{opacity:1;transform:translateX(0)}
+
+/* Заглушка когда нет картинки */
+.nf-img-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--bg-surface),var(--bg-card))}
+.nf-img-fallback-icon{font-size:3.5rem;opacity:0.25}
+
+/* ── Сайдбар: турнирные карточки ── */
+.esports-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.9rem 1rem;margin-bottom:0.65rem;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
+.esports-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);opacity:0;transition:opacity 0.2s}
+.esports-card:hover{border-color:rgba(0,212,255,0.35);transform:translateX(3px)}
 .esports-card:hover::before{opacity:1}
-.esports-card-header{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem;flex-wrap:wrap}
-.esports-name{font-family:var(--font-head);font-weight:700;font-size:1rem;color:var(--text-bright);flex:1}
-.esports-prize{font-family:var(--font-mono);font-size:0.75rem;color:var(--warning);background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);padding:0.15rem 0.5rem;border-radius:99px;white-space:nowrap}
-.esports-tier-badge{font-family:var(--font-mono);font-size:0.65rem;padding:0.15rem 0.5rem;border-radius:99px;white-space:nowrap}
+.esports-card-header{display:flex;align-items:flex-start;gap:0.5rem;margin-bottom:0.45rem}
+.esports-name{font-family:var(--font-head);font-weight:700;font-size:0.88rem;color:var(--text-bright);flex:1;line-height:1.25}
+.esports-prize{font-family:var(--font-mono);font-size:0.65rem;color:var(--warning);white-space:nowrap;margin-top:2px}
+.esports-tier-badge{font-family:var(--font-mono);font-size:0.6rem;padding:0.1rem 0.4rem;border-radius:99px;white-space:nowrap;flex-shrink:0}
 .esports-tier-badge.major{background:rgba(255,107,53,0.15);color:#ff6b35;border:1px solid rgba(255,107,53,0.3)}
 .esports-tier-badge.premier{background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.25)}
 .esports-tier-badge.pro{background:rgba(168,85,247,0.12);color:var(--accent3);border:1px solid rgba(168,85,247,0.25)}
-.esports-teams{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.4rem}
-.esports-team-chip{font-family:var(--font-mono);font-size:0.72rem;padding:0.2rem 0.6rem;border-radius:99px;background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.15);color:var(--accent)}
-.esports-team-chip.gold{background:rgba(255,215,0,0.1);border-color:rgba(255,215,0,0.25);color:gold}
-.esports-team-chip.silver{background:rgba(192,192,192,0.1);border-color:rgba(192,192,192,0.2);color:#c0c0c0}
-.esports-click-hint{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-top:0.5rem}
+.esports-teams{display:flex;gap:0.35rem;flex-wrap:wrap}
+.esports-team-chip{font-family:var(--font-mono);font-size:0.65rem;padding:0.15rem 0.5rem;border-radius:99px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.12);color:var(--accent)}
+.esports-team-chip.gold{background:rgba(255,215,0,0.08);border-color:rgba(255,215,0,0.2);color:gold}
+.esports-team-chip.silver{background:rgba(192,192,192,0.08);border-color:rgba(192,192,192,0.18);color:#c0c0c0}
+.esports-click-hint{font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);margin-top:0.4rem;opacity:0.7}
 
 /* ── Модалка ── */
-.bracket-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.82);backdrop-filter:blur(8px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1rem}
-.bracket-modal-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);width:100%;max-width:780px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.7)}
+.bracket-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1rem}
+.bracket-modal-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);width:100%;max-width:780px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,0.8),0 0 30px rgba(0,212,255,0.05)}
 .bracket-modal-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-surface);flex-shrink:0}
 .bracket-modal-title{font-family:var(--font-head);font-size:1.05rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent)}
 .bracket-modal-close{background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
@@ -180,12 +212,14 @@
 .group-table tr.qualified td{border-left:2px solid var(--success)}
 .group-table tr.eliminated td{opacity:0.5}
 
+/* Мобайл */
 @media(max-width:480px){
+  .tab-btn{padding:0.45rem 0.7rem;font-size:0.82rem}
+  .nf-title{font-size:1rem}
+  .nf-body{padding:0.85rem}
   .bracket-modal-body{padding:0.75rem}
   .bracket-round{min-width:130px}
   .bracket-player{font-size:0.75rem;padding:0.4rem 0.5rem}
-  .esports-card{padding:0.75rem}
-  .esports-card-header{flex-direction:column;align-items:flex-start;gap:0.3rem}
 }
 </style>
 {% endblock %}
@@ -211,124 +245,107 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
   });
 });
 
-// ════════════════════════════════════════
-//  КАРТИНКИ — официальные арты Dota 2
-//  Берём с Steam CDN (Valve CDN, легально)
-// ════════════════════════════════════════
-const DOTA_IMGS = {
-  patch:      'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/home/dota2_logo_symbol.png',
-  tournament: 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/global/dota2_logo_horiz.png',
-  update:     'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/home/dota2_logo_symbol.png',
-  default:    'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/home/dota2_logo_symbol.png',
-};
-
-// Красивые официальные обложки Dota 2 патчей — берём с steamstore
-const DOTA_PATCH_IMGS = [
-  'https://cdn.cloudflare.steamstatic.com/steam/apps/570/capsule_616x353.jpg',
-  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570/ss_86d675fdc73ba10462abb8f5eda7bdec6a8a3aa7.600x338.jpg',
+/* ════════════════════════════════════════
+   КАРТИНКИ-ФОЛЛБЭК по тегу
+════════════════════════════════════════ */
+const DOTA_FALLBACK = [
+  'https://cdn.cloudflare.steamstatic.com/steam/apps/570/ss_86d675fdc73ba10462abb8f5eda7bdec6a8a3aa7.600x338.jpg',
   'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570/ss_ad8b2af27661a4b0b84f3edff88bcf21f29af0e5.600x338.jpg',
   'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570/ss_f9f9f61e8df15b0fa3e6ad0b9f0f1a2b1e2b9d5b.600x338.jpg',
   'https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg',
   'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570/ss_372cc8cfb79e19e36e8540b54e484f3d2d11fddc.600x338.jpg',
+  'https://cdn.cloudflare.steamstatic.com/steam/apps/570/capsule_616x353.jpg',
 ];
-
-// Официальные обложки CS2
-const CS2_IMGS = [
+const CS2_FALLBACK = [
   'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/capsule_616x353.jpg',
   'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
   'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/ss_34090867f1a02d68792b273744c30a55bd927e10.600x338.jpg',
-  'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/ss_6a9bf0b09c8f9b9f7c1a1e5c7a3e3c3e3c3e3c3e.600x338.jpg',
   'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/ss_796601d9d67faf53486eee6c24d8f66e09cac33c.600x338.jpg',
 ];
 
-const TAG_MAP={'Патч':'patch','Обновление':'update','Турнир':'tournament','TI':'tournament','DPC':'tournament','Major':'major','Гайд':'guide','Новость':'default','IEM':'tournament','BLAST':'tournament'};
+const TAG_MAP={'Патч':'patch','Обновление':'update','Турнир':'tournament','TI':'tournament','DPC':'tournament','Major':'major','Гайд':'guide','IEM':'tournament','BLAST':'tournament','Косметика':'update'};
 
-// ════════════════════
-//  DOTA НОВОСТИ — Steam API через наш бэкенд
-// ════════════════════
+/* ════════════════════════════════════════
+   РЕНДЕР НОВОСТЕЙ — Dotabuff-стиль
+════════════════════════════════════════ */
+function renderNewsFeed(news, elId, fallbacks){
+  const el=document.getElementById(elId);
+  if(!el)return;
+  el.innerHTML=news.slice(0,6).map((n,i)=>{
+    const tagClass=TAG_MAP[n.tag]||'default';
+    const img=n.img||(fallbacks[i%fallbacks.length]);
+    const hasImg=!!img;
+
+    return `<a class="nf-card" href="${esc(n.url)}" target="_blank" rel="noopener">
+      <div class="nf-img-wrap">
+        ${hasImg
+          ? `<img class="nf-img" src="${esc(img)}" alt="${esc(n.title)}" loading="lazy"
+               onerror="this.parentElement.innerHTML='<div class=nf-img-fallback><span class=nf-img-fallback-icon>🎮</span></div>'"/>`
+          : `<div class="nf-img-fallback"><span class="nf-img-fallback-icon">🎮</span></div>`
+        }
+        <div class="nf-img-overlay"></div>
+      </div>
+      <div class="nf-body">
+        <div class="nf-meta">
+          <span class="nf-tag ${tagClass}">${esc(n.tag||'Новость')}</span>
+          <span class="nf-date">${esc(n.date||'')}</span>
+        </div>
+        <div class="nf-title">${esc(n.title)}</div>
+        ${n.desc?`<div class="nf-desc">${esc(n.desc)}</div>`:''}
+        <div class="nf-read">Читать полностью →</div>
+      </div>
+    </a>`;
+  }).join('');
+
+  // Анимация появления
+  el.querySelectorAll('.nf-card').forEach((c,i)=>{
+    c.style.cssText='opacity:0;transform:translateY(16px);transition:opacity 0.35s ease,transform 0.35s ease';
+    setTimeout(()=>{c.style.opacity='1';c.style.transform='translateY(0)'},i*80);
+  });
+}
+
+/* ════════════════════════════════════════
+   ЗАГРУЗКА НОВОСТЕЙ
+════════════════════════════════════════ */
 async function loadDotaNews(){
-  const el=document.getElementById('dota-news-list');
   try{
     const data=await fetch('/api/dota-news').then(r=>r.json());
     const news=data.news||[];
     if(!news.length) throw new Error('empty');
-    renderNewsCards(news.map((n,i)=>({
-      ...n,
-      tagClass: TAG_MAP[n.tag]||'default',
-      img: DOTA_PATCH_IMGS[i % DOTA_PATCH_IMGS.length],
-      desc: i===0 ? (n.desc||'Официальные новости и обновления Dota 2 от Valve.') : undefined,
-    })),'dota-news-list');
+    renderNewsFeed(news,'dota-news-list',DOTA_FALLBACK);
   }catch(e){
-    renderNewsCards([
-      {title:'7.41c Gameplay Patch — изменения баланса героев',date:'Май 2026',tag:'Патч',tagClass:'patch',img:DOTA_PATCH_IMGS[0],url:'https://www.dota2.com/patches',desc:'Valve выпустила очередной балансный патч. Нерф Medusa и Phantom Assassin, бафф Invoker и Tidehunter.'},
-      {title:'The International 2025 — регистрация команд открыта',date:'Апр 2026',tag:'TI',tagClass:'tournament',img:DOTA_PATCH_IMGS[1],url:'https://www.dota2.com/esports'},
-      {title:'DreamLeague Season 25 — Gaimin Gladiators чемпионы',date:'Апр 2026',tag:'Турнир',tagClass:'tournament',img:DOTA_PATCH_IMGS[2],url:'https://www.dota2.com/esports'},
-      {title:'Обновление Dota Plus — новые квесты и награды',date:'Мар 2026',tag:'Обновление',tagClass:'update',img:DOTA_PATCH_IMGS[3],url:'https://www.dota2.com/news'},
-      {title:'ESL One Bangkok 2025 — Team Liquid победители',date:'Мар 2026',tag:'Турнир',tagClass:'tournament',img:DOTA_PATCH_IMGS[4],url:'https://www.dota2.com/esports'},
-      {title:'Новые Arcana скины и косметика сезона',date:'Фев 2026',tag:'Обновление',tagClass:'update',img:DOTA_PATCH_IMGS[5],url:'https://www.dota2.com/news'},
-    ],'dota-news-list');
+    renderNewsFeed([
+      {title:'7.41c Gameplay Patch — изменения баланса',date:'6 Май 2026',tag:'Патч',img:DOTA_FALLBACK[0],url:'https://www.dota2.com/patches',desc:'Valve выпустила очередной балансный патч. Нерф Medusa и Phantom Assassin, бафф Invoker и Tidehunter.'},
+      {title:'The International 2025 — регистрация команд',date:'4 Май 2026',tag:'TI',img:DOTA_FALLBACK[1],url:'https://www.dota2.com/esports',desc:'Открыта регистрация участников на главный турнир года с призовым фондом $40,000,000.'},
+      {title:'7.41b Gameplay Patch',date:'7 Апр 2026',tag:'Патч',img:DOTA_FALLBACK[2],url:'https://www.dota2.com/patches',desc:'Малый балансный патч с исправлениями и корректировками героев.'},
+      {title:'DreamLeague Season 25 — итоги турнира',date:'31 Мар 2026',tag:'Турнир',img:DOTA_FALLBACK[3],url:'https://www.dota2.com/esports',desc:'Gaimin Gladiators стали чемпионами DreamLeague Season 25.'},
+      {title:'Обновление Dota Plus и новые косметики',date:'27 Мар 2026',tag:'Обновление',img:DOTA_FALLBACK[4],url:'https://www.dota2.com/news',desc:'Новые квесты, награды и косметические предметы в обновлении сезона.'},
+      {title:'7.41a Gameplay Patch',date:'24 Мар 2026',tag:'Патч',img:DOTA_FALLBACK[5],url:'https://www.dota2.com/patches',desc:'Быстрый хотфикс патч с исправлением критических ошибок.'},
+    ],'dota-news-list',DOTA_FALLBACK);
   }
 }
 
-// ════════════════════
-//  CS2 НОВОСТИ
-// ════════════════════
 async function loadCS2News(){
-  const el=document.getElementById('cs2-news-list');
   try{
     const data=await fetch('/api/cs2-news').then(r=>r.json());
     const news=data.news||[];
     if(!news.length) throw new Error('empty');
-    renderNewsCards(news.map((n,i)=>({
-      ...n,
-      tagClass: TAG_MAP[n.tag]||'default',
-      img: CS2_IMGS[i % CS2_IMGS.length],
-      desc: i===0 ? (n.desc||'Официальные новости Counter-Strike 2.') : undefined,
-    })),'cs2-news-list');
+    renderNewsFeed(news,'cs2-news-list',CS2_FALLBACK);
   }catch(e){
-    renderNewsCards([
-      {title:'PGL Major Bucharest 2025 — анонс, формат, команды',date:'Май 2026',tag:'Major',tagClass:'major',img:CS2_IMGS[0],url:'https://www.counter-strike.net/news',desc:'Крупнейший Major сезона. Призовой фонд $1,250,000. Объявлены даты квалификаций RMR.'},
-      {title:'Counter-Strike 2 Update — улучшения SubTick',date:'Май 2026',tag:'Обновление',tagClass:'update',img:CS2_IMGS[1],url:'https://www.counter-strike.net/news'},
-      {title:'IEM Dallas 2025 — MOUZ выигрывает финал',date:'Май 2026',tag:'IEM',tagClass:'tournament',img:CS2_IMGS[2],url:'https://www.counter-strike.net/news'},
-      {title:'Новый пул карт 2025 — изменения Active Duty',date:'Апр 2026',tag:'Патч',tagClass:'patch',img:CS2_IMGS[3],url:'https://www.counter-strike.net/news'},
-      {title:'VAC Live — реалтайм-античит обновлён',date:'Апр 2026',tag:'Обновление',tagClass:'update',img:CS2_IMGS[4],url:'https://www.counter-strike.net/news'},
-      {title:'BLAST Premier Spring Final — FaZe победители',date:'Мар 2026',tag:'BLAST',tagClass:'tournament',img:CS2_IMGS[0],url:'https://www.counter-strike.net/news'},
-    ],'cs2-news-list');
+    renderNewsFeed([
+      {title:'Counter-Strike 2 Update — 20 Май 2026',date:'20 Май 2026',tag:'Обновление',img:CS2_FALLBACK[0],url:'https://www.counter-strike.net/news',desc:'Исправления и улучшения игрового процесса Counter-Strike 2.'},
+      {title:'PGL Major Bucharest 2025 — анонс',date:'18 Май 2026',tag:'Major',img:CS2_FALLBACK[1],url:'https://www.counter-strike.net/news',desc:'Объявлены даты и формат крупнейшего Major сезона с призовым $1,250,000.'},
+      {title:'NIGHTMODE II Music Kits',date:'7 Май 2026',tag:'Косметика',img:CS2_FALLBACK[2],url:'https://www.counter-strike.net/news',desc:'Новые музыкальные наборы доступны в CS2.'},
+      {title:'Counter-Strike 2 Update',date:'14 Май 2026',tag:'Обновление',img:CS2_FALLBACK[3],url:'https://www.counter-strike.net/news',desc:'Регулярное обновление с исправлениями.'},
+      {title:'IEM Dallas 2025 — итоги турнира',date:'Май 2026',tag:'IEM',img:CS2_FALLBACK[0],url:'https://www.counter-strike.net/news',desc:'MOUZ стали чемпионами IEM Dallas 2025, обыграв NaVi в финале.'},
+      {title:'BLAST Premier Spring Final 2025',date:'Июн 2026',tag:'BLAST',img:CS2_FALLBACK[1],url:'https://www.counter-strike.net/news',desc:'FaZe Clan победили в финале BLAST Premier Spring.'},
+    ],'cs2-news-list',CS2_FALLBACK);
   }
 }
 
-function renderNewsCards(news, elId){
-  const el=document.getElementById(elId);
-  if(!el)return;
-  el.className='news-grid-wide';
-  setTimeout(()=>{
-    el.innerHTML=news.slice(0,6).map((n,i)=>{
-      const featured=i===0;
-      return'<a class="news-bigcard '+(featured?'featured':'')+'" href="'+esc(n.url)+'" target="_blank" rel="noopener">'+
-        '<div class="news-bigcard-img-wrap">'+
-          '<img class="news-bigcard-img" src="'+esc(n.img||'')+'" alt="'+esc(n.title)+'" onerror="this.parentElement.style.background=\'var(--bg-surface)\';this.style.display=\'none\'" loading="lazy"/>'+
-        '</div>'+
-        '<div class="news-bigcard-body">'+
-          '<div class="news-bigcard-meta">'+
-            '<span class="news-bigcard-tag '+(n.tagClass||'default')+'">'+esc(n.tag||'Новость')+'</span>'+
-            '<span class="news-bigcard-date">'+esc(n.date||'')+'</span>'+
-          '</div>'+
-          '<div class="news-bigcard-title">'+esc(n.title)+'</div>'+
-          (featured&&n.desc?'<div class="news-bigcard-desc">'+esc(n.desc)+'</div>':'')+
-          '<div class="news-bigcard-arrow">Читать →</div>'+
-        '</div>'+
-      '</a>';
-    }).join('');
-    el.querySelectorAll('.news-bigcard').forEach((c,i)=>{
-      c.style.cssText='opacity:0;transform:translateY(10px);transition:opacity 0.3s ease,transform 0.3s ease';
-      setTimeout(()=>{c.style.opacity='1';c.style.transform='translateY(0)'},i*60);
-    });
-  },200);
-}
-
-// ════════════════════
-//  ТУРНИРЫ
-// ════════════════════
+/* ════════════════════════════════════════
+   ТУРНИРЫ
+════════════════════════════════════════ */
 const DOTA_T=[
   {id:'ti2025',name:'The International 2025',prize:'$40,000,000',tier:'major',tierLabel:'MAJOR',date:'Авг–Сен 2025',location:'🌍 TBA',top:['Team Spirit','OG'],
    bracket:{type:'single',rounds:[
@@ -336,41 +353,41 @@ const DOTA_T=[
      {label:'Полуфинал',matches:[{p1:'Team Spirit',p2:'Gaimin Gladiators',winner:'Team Spirit'},{p1:'OG',p2:'PSG.LGD',winner:'OG'}]},
      {label:'Финал',matches:[{p1:'Team Spirit',p2:'OG',winner:'Team Spirit'}]},
    ]}},
-  {id:'dreamleague25',name:'DreamLeague Season 25',prize:'$1,000,000',tier:'premier',tierLabel:'PREMIER',date:'Июн 2025',location:'🇸🇪 Стокгольм',top:['Gaimin Gladiators','nouns','Team Liquid'],
+  {id:'dreamleague25',name:'DreamLeague Season 25',prize:'$1,000,000',tier:'premier',tierLabel:'PREMIER',date:'Июн 2025',location:'🇸🇪 Стокгольм',top:['Gaimin Gladiators','nouns'],
    bracket:{type:'single',rounds:[
-     {label:'Полуфинал',matches:[{p1:'Gaimin Gladiators',p2:'BetBoom Team',winner:'Gaimin Gladiators'},{p1:'nouns',p2:'Team Liquid',winner:'nouns'}]},
+     {label:'Полуфинал',matches:[{p1:'Gaimin Gladiators',p2:'BetBoom',winner:'Gaimin Gladiators'},{p1:'nouns',p2:'Team Liquid',winner:'nouns'}]},
      {label:'Финал',matches:[{p1:'Gaimin Gladiators',p2:'nouns',winner:'Gaimin Gladiators'}]},
    ]}},
-  {id:'eslone25',name:'ESL One Bangkok 2025',prize:'$500,000',tier:'premier',tierLabel:'PREMIER',date:'Мар 2025',location:'🇹🇭 Бангкок',top:['Team Liquid','Azure Ray','Aster'],
+  {id:'eslone25',name:'ESL One Bangkok 2025',prize:'$500,000',tier:'premier',tierLabel:'PREMIER',date:'Мар 2025',location:'🇹🇭 Бангкок',top:['Team Liquid','Azure Ray'],
    bracket:{type:'single',rounds:[
      {label:'Полуфинал',matches:[{p1:'Team Liquid',p2:'Azure Ray',winner:'Team Liquid'},{p1:'Aster',p2:'OG',winner:'Aster'}]},
      {label:'Финал',matches:[{p1:'Team Liquid',p2:'Aster',winner:'Team Liquid'}]},
    ]}},
-  {id:'dpc2025',name:'DPC Лига 2025 — Дивизион 1',prize:'$205,000',tier:'pro',tierLabel:'DPC',date:'Янв–Апр 2025',location:'🌍 Online',top:['Team Spirit','Gaimin Gladiators','BetBoom Team'],
+  {id:'dpc2025',name:'DPC Лига 2025 — Div.1',prize:'$205,000',tier:'pro',tierLabel:'DPC',date:'Янв–Апр 2025',location:'🌍 Online',top:['Team Spirit','Gaimin Gladiators'],
    bracket:{type:'group',groups:[{label:'Итоговая таблица',teams:[
      {pos:1,name:'Team Spirit',w:7,l:1,qualified:true},{pos:2,name:'Gaimin Gladiators',w:6,l:2,qualified:true},
      {pos:3,name:'BetBoom Team',w:5,l:3,qualified:true},{pos:4,name:'nouns',w:4,l:4,qualified:true},
      {pos:5,name:'OG',w:3,l:5,qualified:false},{pos:6,name:'Team Liquid',w:2,l:6,qualified:false},
-     {pos:7,name:'Tundra Esports',w:1,l:7,eliminated:true},{pos:8,name:'Entity',w:0,l:8,eliminated:true},
+     {pos:7,name:'Tundra',w:1,l:7,eliminated:true},{pos:8,name:'Entity',w:0,l:8,eliminated:true},
    ]}]}},
 ];
 const CS2_T=[
   {id:'pgl_major_2025',name:'PGL Major Bucharest 2025',prize:'$1,250,000',tier:'major',tierLabel:'MAJOR',date:'Сен 2025',location:'🇷🇴 Бухарест',top:['TBD','TBD'],
    bracket:{type:'group',groups:[
-     {label:'Группа A',teams:[{pos:1,name:'NAVI',w:3,l:0,qualified:true},{pos:2,name:'FaZe Clan',w:2,l:1,qualified:true},{pos:3,name:'Team Vitality',w:2,l:1,qualified:true},{pos:4,name:'G2 Esports',w:1,l:2,qualified:false},{pos:5,name:'MOUZ',w:0,l:3,eliminated:true}]},
-     {label:'Группа B',teams:[{pos:1,name:'Team Spirit',w:3,l:0,qualified:true},{pos:2,name:'Cloud9',w:2,l:1,qualified:true},{pos:3,name:'Eternal Fire',w:1,l:2,qualified:false},{pos:4,name:'The MongolZ',w:1,l:2,qualified:false},{pos:5,name:'paiN',w:0,l:3,eliminated:true}]},
+     {label:'Группа A',teams:[{pos:1,name:'NAVI',w:3,l:0,qualified:true},{pos:2,name:'FaZe Clan',w:2,l:1,qualified:true},{pos:3,name:'Vitality',w:2,l:1,qualified:true},{pos:4,name:'G2',w:1,l:2,qualified:false},{pos:5,name:'MOUZ',w:0,l:3,eliminated:true}]},
+     {label:'Группа B',teams:[{pos:1,name:'Team Spirit',w:3,l:0,qualified:true},{pos:2,name:'Cloud9',w:2,l:1,qualified:true},{pos:3,name:'Eternal Fire',w:1,l:2,qualified:false},{pos:4,name:'MongolZ',w:1,l:2,qualified:false},{pos:5,name:'paiN',w:0,l:3,eliminated:true}]},
    ]}},
-  {id:'iem_dallas_2025',name:'IEM Dallas 2025',prize:'$250,000',tier:'premier',tierLabel:'IEM',date:'Май 2025',location:'🇺🇸 Даллас',top:['MOUZ','NaVi','FaZe Clan'],
+  {id:'iem_dallas_2025',name:'IEM Dallas 2025',prize:'$250,000',tier:'premier',tierLabel:'IEM',date:'Май 2025',location:'🇺🇸 Даллас',top:['MOUZ','NaVi'],
    bracket:{type:'single',rounds:[
      {label:'Полуфинал',matches:[{p1:'MOUZ',p2:'Team Spirit',winner:'MOUZ'},{p1:'NaVi',p2:'Cloud9',winner:'NaVi'}]},
      {label:'Финал',matches:[{p1:'MOUZ',p2:'NaVi',winner:'MOUZ'}]},
    ]}},
-  {id:'blast_spring_2025',name:'BLAST Premier: Spring Final 2025',prize:'$425,000',tier:'premier',tierLabel:'BLAST',date:'Июн 2025',location:'🇩🇰 Копенгаген',top:['FaZe Clan','Team Vitality'],
+  {id:'blast_spring_2025',name:'BLAST Premier: Spring Final',prize:'$425,000',tier:'premier',tierLabel:'BLAST',date:'Июн 2025',location:'🇩🇰 Копенгаген',top:['FaZe Clan','Vitality'],
    bracket:{type:'single',rounds:[
-     {label:'Полуфинал',matches:[{p1:'FaZe Clan',p2:'G2 Esports',winner:'FaZe Clan'},{p1:'Team Vitality',p2:'MOUZ',winner:'Team Vitality'}]},
-     {label:'Финал',matches:[{p1:'FaZe Clan',p2:'Team Vitality',winner:'FaZe Clan'}]},
+     {label:'Полуфинал',matches:[{p1:'FaZe Clan',p2:'G2',winner:'FaZe Clan'},{p1:'Vitality',p2:'MOUZ',winner:'Vitality'}]},
+     {label:'Финал',matches:[{p1:'FaZe Clan',p2:'Vitality',winner:'FaZe Clan'}]},
    ]}},
-  {id:'esl_pro_s21',name:'ESL Pro League Season 21',prize:'$850,000',tier:'premier',tierLabel:'EPL',date:'Апр 2025',location:'🇲🇹 Мальта',top:['Team Spirit','NAVI','G2'],
+  {id:'esl_pro_s21',name:'ESL Pro League Season 21',prize:'$850,000',tier:'premier',tierLabel:'EPL',date:'Апр 2025',location:'🇲🇹 Мальта',top:['Team Spirit','NAVI'],
    bracket:{type:'group',groups:[{label:'Финальная таблица',teams:[
      {pos:1,name:'Team Spirit',w:5,l:1,qualified:true},{pos:2,name:'NAVI',w:4,l:2,qualified:true},
      {pos:3,name:'G2',w:3,l:3,qualified:true},{pos:4,name:'MOUZ',w:2,l:4,qualified:false},
@@ -381,13 +398,19 @@ const CS2_T=[
 function renderEsports(list,elId){
   const game=elId.includes('dota')?'dota':'cs2';
   document.getElementById(elId).innerHTML=list.map(t=>{
-    const chips=t.top.map((tm,i)=>'<span class="esports-team-chip '+(i===0?'gold':i===1?'silver':'')+'">'+( i===0?'🥇 ':i===1?'🥈 ':'')+esc(tm)+'</span>').join('');
-    return'<div class="esports-card" onclick="openBracket(\''+game+'\',\''+t.id+'\')">'+
-      '<div class="esports-card-header"><span class="esports-name">🏆 '+esc(t.name)+'</span><span class="esports-prize">'+esc(t.prize)+'</span><span class="esports-tier-badge '+t.tier+'">'+esc(t.tierLabel)+'</span></div>'+
-      '<div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);margin-bottom:0.5rem">'+esc(t.date)+' · '+t.location+'</div>'+
-      '<div class="esports-teams">'+chips+'</div>'+
-      '<div class="esports-click-hint">🖱️ Нажми — открыть сетку →</div>'+
-    '</div>';
+    const chips=t.top.map((tm,i)=>`<span class="esports-team-chip ${i===0?'gold':i===1?'silver':''}">${i===0?'🥇 ':i===1?'🥈 ':''}${esc(tm)}</span>`).join('');
+    return`<div class="esports-card" onclick="openBracket('${game}','${t.id}')">
+      <div class="esports-card-header">
+        <span class="esports-name">${esc(t.name)}</span>
+        <span class="esports-tier-badge ${t.tier}">${esc(t.tierLabel)}</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem">
+        <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted)">${esc(t.date)} · ${t.location}</span>
+        <span class="esports-prize">${esc(t.prize)}</span>
+      </div>
+      <div class="esports-teams">${chips}</div>
+      <div class="esports-click-hint">🖱️ Открыть сетку →</div>
+    </div>`;
   }).join('');
 }
 

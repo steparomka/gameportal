@@ -519,10 +519,16 @@ async def get_online(request: Request):
 # Кешируется на 1 час — не спамит запросами
 # ════════════════════════════════════════════════
 
+# ════════════════════════════════════════════════
+# ЗАМЕНИТЬ роут /api/dota-news в main.py
+# Теперь вытаскивает картинки из тела новости
+# ════════════════════════════════════════════════
+
+import re as _re
+
 @app.get("/api/dota-news")
 async def get_dota_news():
-    """Официальные новости Dota 2 с Steam API (кеш 1 час)"""
-    cache_key = "dota_news"
+    cache_key = "dota_news_v2"
     cached = cache_get(cache_key)
     if cached:
         return cached
@@ -533,8 +539,8 @@ async def get_dota_news():
                 "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/",
                 params={
                     "appid": "570",
-                    "count": "10",
-                    "maxlength": "300",
+                    "count": "8",
+                    "maxlength": "600",
                     "format": "json",
                     "feeds": "steam_community_announcements"
                 },
@@ -545,37 +551,128 @@ async def get_dota_news():
 
         news = []
         for item in items:
-            # Определяем тег по заголовку
             title = item.get("title", "")
+            contents = item.get("contents", "")
+
+            # Вытаскиваем картинку из contents (BBCode или HTML)
+            img = ""
+            # Ищем {STEAM_CLAN_IMAGE}/... или img src
+            img_match = _re.search(r'\{STEAM_CLAN_IMAGE\}/(\S+?)(?:\s|$|\[)', contents)
+            if img_match:
+                img = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/clans/" + img_match.group(1)
+            if not img:
+                img_match2 = _re.search(r'https://[^\s\]"]+\.(?:jpg|jpeg|png|gif|webp)', contents)
+                if img_match2:
+                    img = img_match2.group(0)
+
+            # Тег
             tag = "Новость"
-            if any(w in title.lower() for w in ["patch", "патч", "update", "7."]):
+            tl = title.lower()
+            if any(w in tl for w in ["patch", "7.", "gameplay", "update", "balance"]):
                 tag = "Патч"
-            elif any(w in title.lower() for w in ["tournament", "турнир", "major", "international"]):
+            elif any(w in tl for w in ["tournament", "international", "major", "dreamleague", "esl", "registration"]):
                 tag = "Турнир"
-            elif any(w in title.lower() for w in ["plus", "плюс", "battle pass", "arcana"]):
+            elif any(w in tl for w in ["plus", "arcana", "compendium", "battle pass", "cosmetic", "spring", "summer", "winter", "fall"]):
                 tag = "Обновление"
-            elif any(w in title.lower() for w in ["guide", "гайд", "tips"]):
+            elif any(w in tl for w in ["guide", "tips", "hero"]):
                 tag = "Гайд"
 
+            # Дата
             import datetime
             dt = datetime.datetime.fromtimestamp(item.get("date", 0))
             months_ru = ["","Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"]
             date_str = f"{dt.day} {months_ru[dt.month]} {dt.year}"
+
+            # Описание — чистим от BBCode
+            desc = _re.sub(r'\[/?[^\]]+\]', '', contents[:300]).strip()
+            desc = _re.sub(r'\s+', ' ', desc)[:200]
 
             news.append({
                 "title": title,
                 "url": item.get("url", "https://www.dota2.com/news"),
                 "date": date_str,
                 "tag": tag,
+                "img": img,
+                "desc": desc,
             })
 
         result = {"news": news, "source": "steam"}
-        cache_set(cache_key, result, ttl=3600)  # кеш 1 час
+        cache_set(cache_key, result, ttl=3600)
         return result
 
     except Exception as e:
         return {"news": [], "source": "error", "error": str(e)}
 
+
+@app.get("/api/cs2-news")
+async def get_cs2_news():
+    cache_key = "cs2_news_v2"
+    cached = cache_get(cache_key)
+    if cached:
+        return cached
+
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(
+                "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/",
+                params={
+                    "appid": "730",
+                    "count": "8",
+                    "maxlength": "600",
+                    "format": "json",
+                    "feeds": "steam_community_announcements"
+                },
+                timeout=10.0
+            )
+        data = resp.json()
+        items = data.get("appnews", {}).get("newsitems", [])
+
+        news = []
+        for item in items:
+            title = item.get("title", "")
+            contents = item.get("contents", "")
+
+            img = ""
+            img_match = _re.search(r'\{STEAM_CLAN_IMAGE\}/(\S+?)(?:\s|$|\[)', contents)
+            if img_match:
+                img = "https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/clans/" + img_match.group(1)
+            if not img:
+                img_match2 = _re.search(r'https://[^\s\]"]+\.(?:jpg|jpeg|png|gif|webp)', contents)
+                if img_match2:
+                    img = img_match2.group(0)
+
+            tag = "Обновление"
+            tl = title.lower()
+            if any(w in tl for w in ["major", "tournament"]):
+                tag = "Major"
+            elif any(w in tl for w in ["operation", "операция"]):
+                tag = "Операция"
+            elif any(w in tl for w in ["music", "case", "skin", "glove"]):
+                tag = "Косметика"
+
+            import datetime
+            dt = datetime.datetime.fromtimestamp(item.get("date", 0))
+            months_ru = ["","Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"]
+            date_str = f"{dt.day} {months_ru[dt.month]} {dt.year}"
+
+            desc = _re.sub(r'\[/?[^\]]+\]', '', contents[:300]).strip()
+            desc = _re.sub(r'\s+', ' ', desc)[:200]
+
+            news.append({
+                "title": title,
+                "url": item.get("url", "https://www.counter-strike.net/news"),
+                "date": date_str,
+                "tag": tag,
+                "img": img,
+                "desc": desc,
+            })
+
+        result = {"news": news, "source": "steam"}
+        cache_set(cache_key, result, ttl=3600)
+        return result
+
+    except Exception as e:
+        return {"news": [], "source": "error", "error": str(e)}
 
 @app.get("/api/cs2-news")
 async def get_cs2_news():
