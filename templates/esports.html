@@ -94,6 +94,21 @@
     </div>
   </div>
 </div>
+<!-- МОДАЛКА ТУРНИРНОЙ СЕТКИ -->
+<div id="bracket-overlay" class="bracket-overlay" style="display:none" onclick="if(event.target===this)closeBracketOverlay()">
+  <div class="bracket-modal">
+    <div class="bracket-modal-head">
+      <div>
+        <div class="bracket-modal-name" id="bm-name"></div>
+        <div class="bracket-modal-meta" id="bm-meta"></div>
+      </div>
+      <button class="bracket-modal-x" onclick="closeBracketOverlay()">✕</button>
+    </div>
+    <div class="bracket-modal-body" id="bm-body">
+      <div class="bm-loading">Загрузка сетки...</div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block extra_css %}
@@ -167,7 +182,69 @@
 /* Пустое состояние */
 .empty-state{text-align:center;padding:2rem;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);background:var(--bg-surface);border-radius:var(--radius-lg);border:1px solid var(--border)}
 
+/* ══ BRACKET OVERLAY ══ */
+.bracket-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);backdrop-filter:blur(14px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1rem}
+.bracket-modal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);width:100%;max-width:900px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,0.8),0 0 30px rgba(0,212,255,0.05);animation:bm-in 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes bm-in{from{opacity:0;transform:scale(0.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.bracket-modal-head{padding:1.1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-surface);flex-shrink:0;position:relative;overflow:hidden}
+.bracket-modal-head::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent3))}
+.bracket-modal-name{font-family:var(--font-head);font-size:1.1rem;font-weight:800;color:var(--text-bright);letter-spacing:0.5px}
+.bracket-modal-meta{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);margin-top:0.2rem}
+.bracket-modal-x{background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.bracket-modal-x:hover{color:var(--accent);border-color:var(--accent)}
+.bracket-modal-body{flex:1;overflow-y:auto;padding:1.5rem}
+.bm-loading{text-align:center;padding:3rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)}
+
+/* Табы групп/плей-офф внутри модалки */
+.bm-tabs{display:flex;gap:0.4rem;margin-bottom:1.25rem}
+.bm-tab{padding:0.4rem 1rem;border-radius:99px;font-family:var(--font-mono);font-size:0.72rem;background:var(--bg-surface);border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all 0.2s}
+.bm-tab.active{background:rgba(0,212,255,0.1);border-color:var(--accent);color:var(--accent);font-weight:700}
+
+/* Группы */
+.bm-groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem}
+.bm-group{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.bm-group-title{font-family:var(--font-head);font-size:0.82rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);padding:0.65rem 1rem;border-bottom:1px solid var(--border);background:rgba(0,212,255,0.04)}
+.bm-standings{width:100%;border-collapse:collapse}
+.bm-standings th{font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);padding:0.4rem 0.75rem;border-bottom:1px solid var(--border);text-align:left;background:var(--bg-card)}
+.bm-standings th:not(:nth-child(2)){text-align:center}
+.bm-standings td{padding:0.5rem 0.75rem;border-bottom:1px solid rgba(30,58,95,0.4);transition:background 0.15s;vertical-align:middle}
+.bm-standings td:not(:nth-child(2)){text-align:center;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted)}
+.bm-standings tr:last-child td{border-bottom:none}
+.bm-standings tr:hover td{background:rgba(0,212,255,0.03)}
+.bm-standings tr.adv td{border-left:3px solid var(--success)}
+.bm-standings tr.adv-low td{border-left:3px solid var(--warning)}
+.bm-standings tr.elim td{opacity:0.4}
+.bm-team-cell{display:flex;align-items:center;gap:0.5rem}
+.bm-team-img{width:22px;height:22px;border-radius:4px;object-fit:contain;background:var(--bg-surface)}
+.bm-team-name{font-family:var(--font-head);font-size:0.82rem;font-weight:600;color:var(--text-bright)}
+.bm-pts{font-weight:700;color:var(--accent)!important}
+
+/* Плей-офф bracket */
+.bm-bracket{display:flex;gap:1.5rem;overflow-x:auto;padding-bottom:0.5rem;align-items:flex-start}
+.bm-round{display:flex;flex-direction:column;gap:0.75rem;min-width:190px;flex-shrink:0}
+.bm-round-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);letter-spacing:2px;text-transform:uppercase;text-align:center;padding:0.35rem;border-bottom:1px solid var(--border);margin-bottom:0.1rem}
+.bm-match{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all 0.2s}
+.bm-match:hover{border-color:rgba(0,212,255,0.3);box-shadow:0 3px 12px rgba(0,0,0,0.3)}
+.bm-match.final{border-color:rgba(255,215,0,0.3);background:rgba(255,215,0,0.02)}
+.bm-match.final:hover{border-color:gold;box-shadow:0 4px 18px rgba(255,215,0,0.15)}
+.bm-match.live-m{border-color:rgba(239,68,68,0.4);animation:live-card 2s infinite}
+.bm-player{display:flex;align-items:center;gap:0.5rem;padding:0.55rem 0.75rem;transition:background 0.15s}
+.bm-player+.bm-player{border-top:1px solid var(--border)}
+.bm-player.win{background:rgba(16,185,129,0.1)}
+.bm-player.tbd{opacity:0.55}
+.bm-player-img{width:22px;height:22px;border-radius:4px;object-fit:contain;background:var(--bg-surface);flex-shrink:0}
+.bm-player-name{font-family:var(--font-head);font-size:0.82rem;font-weight:600;color:var(--text-primary);flex:1}
+.bm-player.win .bm-player-name{color:var(--success);font-weight:700}
+.bm-player-score{font-family:var(--font-mono);font-size:0.85rem;font-weight:700;color:var(--text-muted);min-width:18px;text-align:center}
+.bm-player.win .bm-player-score{color:var(--success)}
+.bm-match-status{font-family:var(--font-mono);font-size:0.6rem;padding:0.25rem 0.75rem;text-align:center;border-top:1px solid var(--border)}
+.bm-match-status.live{background:rgba(239,68,68,0.08);color:var(--danger)}
+.bm-match-status.done{background:rgba(100,116,139,0.08);color:var(--text-muted)}
+.bm-match-status.soon{background:rgba(245,158,11,0.06);color:var(--warning)}
+.bm-live-bar{font-family:var(--font-mono);font-size:0.58rem;color:var(--danger);font-weight:700;letter-spacing:1px;padding:0.25rem 0.75rem;background:rgba(239,68,68,0.1);border-bottom:1px solid rgba(239,68,68,0.2);text-align:center;animation:pbadge 1.5s infinite}
+
 @media(max-width:600px){
+
   .matches-grid{grid-template-columns:1fr}
   .team-name{font-size:0.8rem}
   .t-card{flex-direction:column;align-items:flex-start}
