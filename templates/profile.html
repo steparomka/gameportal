@@ -17,7 +17,7 @@
         <div class="profile-sub" id="profile-sub"></div>
         <div class="profile-actions">
           <a id="profile-steam-link" href="#" target="_blank" rel="noopener" class="profile-action-btn">Steam →</a>
-          <a id="profile-dotabuff-link" href="#" target="_blank" rel="noopener" class="profile-action-btn cs2">Dotabuff →</a>
+          <a id="profile-opendota-link" href="#" target="_blank" rel="noopener" class="profile-action-btn cs2">OpenDota →</a>
         </div>
       </div>
     </div>
@@ -145,6 +145,18 @@
     </div>
   </div>
 </div>
+<!-- МОДАЛКА МАТЧЕЙ ГЕРОЯ -->
+<div id="hero-matches-modal" class="hm-modal-overlay" style="display:none" onclick="if(event.target===this)closeHeroMatches()">
+  <div class="hm-modal-box">
+    <div class="hm-modal-head">
+      <div class="hm-modal-hero" id="hmm-hero"></div>
+      <button class="hm-modal-close" onclick="closeHeroMatches()">✕</button>
+    </div>
+    <div class="hm-modal-body" id="hmm-body">
+      <div style="text-align:center;padding:2rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">⏳ Загрузка...</div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block extra_css %}
@@ -169,6 +181,16 @@
 /* ── Статы ── */
 .profile-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0.85rem;margin-bottom:1.5rem}
 @media(max-width:600px){.profile-stats-row{grid-template-columns:repeat(2,1fr)}}
+
+/* ── Модалка матчей героя ── */
+.hm-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);backdrop-filter:blur(14px);z-index:3000;display:flex;align-items:center;justify-content:center;padding:1rem}
+.hm-modal-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);width:100%;max-width:680px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,0.8);animation:modal-in 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes modal-in{from{opacity:0;transform:scale(0.93) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.hm-modal-head{display:flex;align-items:center;justify-content:space-between;padding:0.85rem 1.25rem;border-bottom:1px solid var(--border);background:var(--bg-surface);flex-shrink:0}
+.hm-modal-hero{font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--text-bright);display:flex;align-items:center;gap:0.75rem}
+.hm-modal-close{background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.hm-modal-close:hover{color:var(--accent);border-color:var(--accent)}
+.hm-modal-body{flex:1;overflow-y:auto;padding:1rem}
 .pstat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.85rem 1rem;text-align:center}
 .pstat-val{font-family:var(--font-mono);font-size:1.3rem;font-weight:800;color:var(--accent);display:block;margin-bottom:0.2rem}
 .pstat-val.win{color:var(--success)}
@@ -197,7 +219,7 @@
 
 /* ── Лучшие герои ── */
 .pbh-skeleton{height:52px;border-radius:var(--radius);background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.35) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:skw 1.4s infinite;margin-bottom:0.5rem;border:1px solid var(--border)}
-.pbh-row{display:flex;align-items:center;gap:0.65rem;padding:0.55rem 0.75rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:0.5rem;transition:all 0.2s;animation:card-in 0.3s ease both}
+.pbh-row{display:flex;align-items:center;gap:0.65rem;padding:0.55rem 0.75rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:0.5rem;transition:all 0.2s;animation:card-in 0.3s ease both;cursor:pointer}
 @keyframes card-in{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
 .pbh-row:hover{border-color:rgba(0,212,255,0.25);transform:translateX(3px)}
 .pbh-rank{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);width:20px;text-align:center;flex-shrink:0}
@@ -308,7 +330,7 @@ async function loadProfile(){
       document.getElementById('profile-sub').textContent = `Steam ID: ${steamId}`;
       document.getElementById('profile-steam-link').href = `https://steamcommunity.com/profiles/${steamId}`;
       const accountIdForLinks = (BigInt(steamId) - BigInt('76561197960265728')).toString();
-      document.getElementById('profile-dotabuff-link').href = `https://www.dotabuff.com/players/${accountIdForLinks}`;
+      document.getElementById('profile-opendota-link').href = `https://www.opendota.com/players/${accountIdForLinks}`;
     }
   }catch(e){}
 
@@ -475,7 +497,8 @@ function renderBestHeroesData(top, el){
     const wr = h.games ? (h.win/h.games*100).toFixed(1) : '—';
     const wrClass = parseFloat(wr) >= 50 ? 'win' : 'loss';
     const img = heroImgById(h.hero_id);
-    return `<div class="pbh-row" style="animation-delay:${i*0.04}s">
+    return `<div class="pbh-row" style="animation-delay:${i*0.04}s;cursor:pointer" 
+        onclick="openHeroMatches(${h.hero_id}, this.querySelector('.pbh-name').textContent)">
       <span class="pbh-rank">${i+1}</span>
       ${img ? `<img class="pbh-img" src="${img}" onerror="this.style.display='none'" loading="lazy"/>` : ''}
       <div class="pbh-info">
@@ -522,7 +545,7 @@ function renderRecentMatches(matches){
       return `<img class="match-item-img" src="${itemUrl}" onerror="this.style.display='none'" loading="lazy" title="${itemName||id}"/>`;
     }).join('')}</div>` : '';
     
-    return `<div class="match-row" style="animation-delay:${i*0.04}s" onclick="window.open('https://www.dotabuff.com/matches/'+m.match_id,'_blank')">
+    return `<div class="match-row" style="animation-delay:${i*0.04}s" onclick="window.open('https://www.opendota.com/matches/'+m.match_id,'_blank')">
       <div class="match-result ${won?'win':'loss'}"></div>
       ${img ? `<img class="match-hero-img" src="${img}" onerror="this.style.display='none'" loading="lazy"/>` : ''}
       <div class="match-info">
@@ -550,10 +573,10 @@ function renderPeers(peers){
   const el = document.getElementById('profile-peers');
   // Фильтруем: минимум 3 игры вместе, сортируем по количеству
   const validPeers = Array.isArray(peers) 
-    ? peers.filter(p=>p.games>=3 && p.personaname).sort((a,b)=>b.games-a.games)
+    ? peers.filter(p=>p.games>=2).sort((a,b)=>b.games-a.games)
     : [];
   if(!validPeers.length){
-    el.innerHTML = '<div class="empty-profile">Нет данных о союзниках.<br><small style="font-size:0.65rem">Профиль может быть приватным или мало матчей.</small></div>';
+    el.innerHTML = '<div class="empty-profile">Нет данных о союзниках.</div>';
     return;
   }
   el.innerHTML = validPeers.slice(0,8).map((p,i)=>{
@@ -565,7 +588,7 @@ function renderPeers(peers){
         ? `<img class="peer-avatar" src="${esc(p.avatarfull)}" onerror="this.outerHTML='<div class=peer-avatar-ph>👤</div>'" loading="lazy"/>`
         : `<div class="peer-avatar-ph">👤</div>`}
       <div class="peer-info">
-        <div class="peer-name">${esc(p.personaname || 'Аноним')}</div>
+        <div class="peer-name">${esc(p.personaname || p.account_id || 'Игрок')}</div>
         <div class="peer-sub">${p.games} игр вместе</div>
       </div>
       <div class="peer-wr-wrap">
@@ -579,5 +602,97 @@ function renderPeers(peers){
 }
 
 loadProfile();
+
+/* ════ МОДАЛКА МАТЧЕЙ ГЕРОЯ ════ */
+async function openHeroMatches(heroId, heroName){
+  const modal = document.getElementById('hero-matches-modal');
+  const body = document.getElementById('hmm-body');
+  const headEl = document.getElementById('hmm-hero');
+  
+  const img = heroImgById(heroId);
+  headEl.innerHTML = `${img ? `<img src="${img}" style="width:52px;height:30px;border-radius:6px;object-fit:cover;object-position:center top"/>` : ''}
+    <span>${esc(heroName)}</span>`;
+  
+  body.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">⏳ Загрузка матчей...</div>';
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  
+  try {
+    const oid = window._profileOid;
+    if(!oid) throw new Error('no oid');
+    
+    const [matches, heroList] = await Promise.all([
+      fetch(`/api/opendota/players/${oid}/matches?hero_id=${heroId}&limit=20`).then(r=>r.json()),
+      fetch('/api/opendota/heroes').then(r=>r.json()).catch(()=>[]),
+    ]);
+    
+    if(!Array.isArray(matches) || !matches.length){
+      body.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">Нет матчей с этим героем</div>';
+      return;
+    }
+    
+    // Строим itemMap
+    let itemNames = window._itemMap || {};
+    
+    const wins = matches.filter(m => m.radiant_win === (m.player_slot < 128)).length;
+    const wr = (wins/matches.length*100).toFixed(1);
+    
+    body.innerHTML = `
+      <div style="display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap">
+        <div class="pstat-card" style="flex:1;min-width:100px">
+          <span class="pstat-val">${matches.length}</span>
+          <span class="pstat-label">Матчей</span>
+        </div>
+        <div class="pstat-card" style="flex:1;min-width:100px">
+          <span class="pstat-val ${parseFloat(wr)>=50?'win':'danger'}">${wr}%</span>
+          <span class="pstat-label">Winrate</span>
+        </div>
+        <div class="pstat-card" style="flex:1;min-width:100px">
+          <span class="pstat-val win">${wins}</span>
+          <span class="pstat-label">Побед</span>
+        </div>
+      </div>
+      <div id="hmm-matches-list"></div>`;
+    
+    const listEl = document.getElementById('hmm-matches-list');
+    listEl.innerHTML = matches.map((m,i) => {
+      const won = m.radiant_win === (m.player_slot < 128);
+      const kda = `${m.kills}/${m.deaths}/${m.assists}`;
+      const dur = fmtDuration(m.duration);
+      const ago = m.start_time ? Math.floor((Date.now()/1000 - m.start_time)/86400)+'д назад' : '';
+      
+      // Закупки
+      const itemSlots = [m.item_0,m.item_1,m.item_2,m.item_3,m.item_4,m.item_5].filter(id=>id>0);
+      const itemsHtml = itemSlots.length ? `<div class="match-items" style="margin-top:0.3rem">${itemSlots.map(id => {
+        const iname = itemNames[id] ? itemNames[id].replace('item_','') : null;
+        const iurl = iname 
+          ? `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${iname}.png`
+          : '';
+        return iurl ? `<img class="match-item-img" src="${iurl}" onerror="this.style.display='none'" loading="lazy"/>` : '';
+      }).join('')}</div>` : '';
+      
+      return `<div class="match-row" style="animation-delay:${i*0.03}s" onclick="window.open('https://www.dotabuff.com/matches/${m.match_id}','_blank')">
+        <div class="match-result ${won?'win':'loss'}"></div>
+        <div class="match-info">
+          <div class="match-hero-name" style="display:flex;align-items:center;justify-content:space-between">
+            <span>KDA: ${kda} · ${dur}</span>
+            <span class="match-badge ${won?'win':'loss'}">${won?'ПОБЕДА':'ПОРАЖ.'}</span>
+          </div>
+          <div class="match-kda">${ago}</div>
+          ${itemsHtml}
+        </div>
+      </div>`;
+    }).join('');
+    
+  } catch(e) {
+    body.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--danger)">⚠️ Ошибка загрузки</div>';
+  }
+}
+
+function closeHeroMatches(){
+  document.getElementById('hero-matches-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeHeroMatches(); });
 </script>
 {% endblock %}
