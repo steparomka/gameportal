@@ -30,13 +30,6 @@
 </section>
 
 <div class="container">
-  <div class="grid grid-4 mb-3">
-    <div class="stat-box"><span class="value" id="stat-replays">—</span><span class="label">📹 Реплеев</span></div>
-    <div class="stat-box"><span class="value" id="stat-tournaments">—</span><span class="label">🏆 Турниров</span></div>
-    <div class="stat-box"><span class="value" id="stat-teammates">—</span><span class="label">🔍 Анкет</span></div>
-    <div class="stat-box"><span class="value" style="color:var(--success)" id="stat-online">{{ online }}</span><span class="label">🟢 Онлайн</span></div>
-  </div>
-
   <hr class="neon-line"/>
 
   <!-- ИГРОВЫЕ ТАБЫ -->
@@ -959,7 +952,7 @@ function renderEsports(list,elId){
         <span class="esports-prize">${esc(t.prize)}</span>
       </div>
       <div class="esports-teams">${chips}</div>
-      <div class="esports-click-hint">🖱️ Открыть сетку →</div>
+
     </div>`;
   }).join('');
 }
