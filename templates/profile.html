@@ -214,9 +214,9 @@
 .prm-skeleton{height:56px;border-radius:var(--radius);background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.35) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:skw 1.4s infinite;margin-bottom:0.5rem;border:1px solid var(--border)}
 .match-row{display:flex;align-items:center;gap:0.65rem;padding:0.55rem 0.75rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:0.5rem;transition:all 0.2s;animation:card-in 0.3s ease both;cursor:pointer}
 .match-row:hover{border-color:rgba(0,212,255,0.25);transform:translateX(2px)}
-.match-result{width:4px;height:40px;border-radius:2px;flex-shrink:0}
+.match-result{width:3px;height:36px;border-radius:2px;flex-shrink:0;opacity:0.7}
 .match-result.win{background:var(--success)}
-.match-result.loss{background:var(--danger)}
+.match-result.loss{background:rgba(239,68,68,0.6)}
 .match-hero-img{width:48px;height:28px;border-radius:6px;object-fit:cover;object-position:center top;flex-shrink:0}
 .match-info{flex:1;min-width:0}
 .match-hero-name{font-family:var(--font-head);font-size:0.82rem;font-weight:700;color:var(--text-bright)}
@@ -225,6 +225,8 @@
 .match-badge.win{background:rgba(16,185,129,0.12);color:var(--success)}
 .match-badge.loss{background:rgba(239,68,68,0.1);color:var(--danger)}
 .match-duration{font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);flex-shrink:0}
+.match-items{display:flex;gap:2px;flex-wrap:wrap;margin-top:0.25rem}
+.match-item-img{width:22px;height:16px;border-radius:3px;object-fit:cover;background:var(--bg-card);border:1px solid var(--border)}
 
 /* ── Союзники ── */
 .peer-row{display:flex;align-items:center;gap:0.65rem;padding:0.5rem 0.75rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:0.5rem;transition:all 0.2s;animation:card-in 0.3s ease both}
@@ -316,13 +318,21 @@ async function loadProfile(){
     const accountId = BigInt(steamId) - BigInt('76561197960265728');
     const oid = accountId.toString();
     
-    const [playerData, wl, recentMatches, heroes, peers] = await Promise.all([
+    const [playerData, wl, recentMatches, heroes, peers, itemConstants] = await Promise.all([
       fetch(`/api/opendota/players/${oid}`).then(r=>r.json()),
       fetch(`/api/opendota/players/${oid}/wl`).then(r=>r.json()),
       fetch(`/api/opendota/players/${oid}/recentMatches`).then(r=>r.json()),
       fetch(`/api/opendota/players/${oid}/heroes?limit=100`).then(r=>r.json()),
-      fetch(`/api/opendota/players/${oid}/peers?limit=8`).then(r=>r.json()),
+      fetch(`/api/opendota/players/${oid}/peers?limit=20`).then(r=>r.json()).catch(()=>[]),
+      fetch(`/api/opendota/constants/items`).then(r=>r.json()).catch(()=>({})),
     ]);
+    // Строим маппинг id -> img_name
+    window._itemMap = {};
+    if(itemConstants && typeof itemConstants === 'object'){
+      Object.entries(itemConstants).forEach(([name,data])=>{
+        if(data && data.id) window._itemMap[data.id] = name;
+      });
+    }
 
     window._profileOid = oid;
     renderProfileHead(playerData, oid);
@@ -452,12 +462,11 @@ function renderBestHeroes(heroes){
     return;
   }
   
-  const top = heroes.filter(h=>h.games>=50).slice(0,8);
-  if(!top.length){
-    // Если нет с 50+ играми, берём топ по играм
-    const fallback = [...heroes].sort((a,b)=>b.games-a.games).slice(0,8);
-    return renderBestHeroesData(fallback, el);
-  }
+    // Сортируем по winrate среди героев с 5+ играми
+  const enough = heroes.filter(h=>h.games>=5);
+  const top = (enough.length >= 3 ? enough : heroes)
+    .sort((a,b)=>(b.win/b.games)-(a.win/a.games))
+    .slice(0,8);
   return renderBestHeroesData(top, el);
 }
 
@@ -503,15 +512,25 @@ function renderRecentMatches(matches){
     const kda = `${m.kills}/${m.deaths}/${m.assists}`;
     const dur = fmtDuration(m.duration);
     const ago = m.start_time ? Math.floor((Date.now()/1000 - m.start_time)/86400) + 'д назад' : '';
+    // Закупки из item_0..item_5
+    const itemSlots = [m.item_0,m.item_1,m.item_2,m.item_3,m.item_4,m.item_5].filter(Boolean);
+    const itemsHtml = itemSlots.length ? `<div class="match-items">${itemSlots.map(id=>{
+      const itemName = (window._itemMap && window._itemMap[id]) ? window._itemMap[id].replace('item_','') : null;
+      const itemUrl = itemName 
+        ? `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${itemName}.png`
+        : `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/items/${id === 0 ? 'emptyitembg' : id}.png`;
+      return `<img class="match-item-img" src="${itemUrl}" onerror="this.style.display='none'" loading="lazy" title="${itemName||id}"/>`;
+    }).join('')}</div>` : '';
+    
     return `<div class="match-row" style="animation-delay:${i*0.04}s" onclick="window.open('https://www.dotabuff.com/matches/'+m.match_id,'_blank')">
       <div class="match-result ${won?'win':'loss'}"></div>
       ${img ? `<img class="match-hero-img" src="${img}" onerror="this.style.display='none'" loading="lazy"/>` : ''}
       <div class="match-info">
         <div class="match-hero-name">Hero #${m.hero_id}</div>
-        <div class="match-kda">KDA: ${kda} · ${dur}</div>
+        <div class="match-kda">KDA: ${kda} · ${dur} · ${ago}</div>
+        ${itemsHtml}
       </div>
-      <span class="match-badge ${won?'win':'loss'}">${won?'ПОБЕДА':'ПОРАЖЕНИЕ'}</span>
-      <span class="match-duration">${ago}</span>
+      <span class="match-badge ${won?'win':'loss'}">${won?'ПОБЕДА':'ПОРАЖ.'}</span>
     </div>`;
   }).join('');
   
@@ -529,11 +548,15 @@ function renderRecentMatches(matches){
 
 function renderPeers(peers){
   const el = document.getElementById('profile-peers');
-  if(!Array.isArray(peers) || !peers.length){
-    el.innerHTML = '<div class="empty-profile">Нет данных о союзниках</div>';
+  // Фильтруем: минимум 3 игры вместе, сортируем по количеству
+  const validPeers = Array.isArray(peers) 
+    ? peers.filter(p=>p.games>=3 && p.personaname).sort((a,b)=>b.games-a.games)
+    : [];
+  if(!validPeers.length){
+    el.innerHTML = '<div class="empty-profile">Нет данных о союзниках.<br><small style="font-size:0.65rem">Профиль может быть приватным или мало матчей.</small></div>';
     return;
   }
-  
+  const peers = validPeers;
   el.innerHTML = peers.slice(0,8).map((p,i)=>{
     const wr = p.games ? (p.win/p.games*100).toFixed(1) : '—';
     const wrClass = parseFloat(wr) >= 50 ? 'win' : 'loss';
