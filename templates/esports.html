@@ -474,10 +474,8 @@ async function openTournament(id, name, league, prize, isCS2){
   document.body.style.overflow = 'hidden';
 
   try {
-    const game = isCS2 ? 'csgo' : 'dota2';
-    const resp = await fetch(`https://api.pandascore.co/tournaments/${id}/matches?sort=begin_at&page[size]=20`, {
-      headers: { 'Authorization': 'Bearer vxRoG5-UQ2bQrKyeCaTSPGLwfXtyuSn5tq0k92jRsoVVgBOHLgU' }
-    });
+    const game = isCS2 ? 'cs2' : 'dota2';
+    const resp = await fetch(`/api/esports/tournament/${id}/matches?game=${game}`);
     const matches = await resp.json();
 
     if (!Array.isArray(matches) || !matches.length) {

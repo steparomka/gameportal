@@ -464,7 +464,7 @@ async def dota_tournaments():
     running  = await pandascore_get("/dota2/tournaments/running",  {"page[size]": 10})
     upcoming = await pandascore_get("/dota2/tournaments/upcoming", {"page[size]": 5, "sort": "begin_at"})
     def fmt(t, status):
-        return {"id":t.get("id"),"name":t.get("name"),"status":status,"begin_at":t.get("begin_at"),"end_at":t.get("end_at"),"prize_pool":t.get("prize_pool"),"tier":t.get("tier"),"league":(t.get("league") or {}).get("name"),"league_img":(t.get("league") or {}).get("image_url")}
+        return {"id":t.get("id"),"serie_id":(t.get("serie") or {}).get("id"),"name":t.get("name"),"status":status,"begin_at":t.get("begin_at"),"end_at":t.get("end_at"),"prize_pool":t.get("prize_pool"),"tier":t.get("tier"),"league":(t.get("league") or {}).get("name"),"league_img":(t.get("league") or {}).get("image_url")}
     return {"running":[fmt(t,"live") for t in (running if isinstance(running,list) else [])],"upcoming":[fmt(t,"upcoming") for t in (upcoming if isinstance(upcoming,list) else [])]}
 
 @app.get("/api/esports/cs2/matches")
@@ -484,13 +484,18 @@ async def cs2_tournaments():
     running  = await pandascore_get("/csgo/tournaments/running",  {"page[size]": 10})
     upcoming = await pandascore_get("/csgo/tournaments/upcoming", {"page[size]": 5, "sort": "begin_at"})
     def fmt(t, status):
-        return {"id":t.get("id"),"name":t.get("name"),"status":status,"begin_at":t.get("begin_at"),"end_at":t.get("end_at"),"prize_pool":t.get("prize_pool"),"tier":t.get("tier"),"league":(t.get("league") or {}).get("name"),"league_img":(t.get("league") or {}).get("image_url")}
+        return {"id":t.get("id"),"serie_id":(t.get("serie") or {}).get("id"),"name":t.get("name"),"status":status,"begin_at":t.get("begin_at"),"end_at":t.get("end_at"),"prize_pool":t.get("prize_pool"),"tier":t.get("tier"),"league":(t.get("league") or {}).get("name"),"league_img":(t.get("league") or {}).get("image_url")}
     return {"running":[fmt(t,"live") for t in (running if isinstance(running,list) else [])],"upcoming":[fmt(t,"upcoming") for t in (upcoming if isinstance(upcoming,list) else [])]}
 
 @app.get("/api/esports/tournament/{tournament_id}/matches")
 async def tournament_matches(tournament_id: int, game: str = "dota2"):
     g = "csgo" if game == "cs2" else "dota2"
-    matches = await pandascore_get(f"/{g}/tournaments/{tournament_id}/matches", {"page[size]": 50, "sort": "begin_at"})
+    # Пробуем сначала как serie, потом как tournament
+    matches = await pandascore_get(f"/{g}/series/{tournament_id}/matches", {"page[size]": 50, "sort": "begin_at"})
+    if not isinstance(matches, list) or not matches:
+        matches = await pandascore_get(f"/matches", {"page[size]": 50, "sort": "begin_at", "filter[tournament_id]": tournament_id})
+    if not isinstance(matches, list) or not matches:
+        matches = await pandascore_get(f"/{g}/tournaments/{tournament_id}/matches", {"page[size]": 50, "sort": "begin_at"})
     if not isinstance(matches, list): return []
     def fmt(m):
         ops = m.get("opponents",[])
