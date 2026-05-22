@@ -505,6 +505,45 @@ async def tournament_matches(tournament_id: int, game: str = "dota2"):
         return {"id":m.get("id"),"status":m.get("status"),"begin_at":m.get("begin_at"),"stage_name":m.get("tournament_stage_name") or m.get("match_type","Матч").replace("_"," ").title(),"team1":{"id":t1.get("id"),"name":t1.get("name"),"acronym":t1.get("acronym"),"img":t1.get("image_url")},"team2":{"id":t2.get("id"),"name":t2.get("name"),"acronym":t2.get("acronym"),"img":t2.get("image_url")},"score1":res[0].get("score") if res else None,"score2":res[1].get("score") if len(res)>1 else None,"winner_id":m.get("winner_id")}
     return [fmt(m) for m in matches]
 
+@app.get("/api/esports/tournament/{tournament_id}/rosters")
+async def tournament_rosters(tournament_id: int, game: str = "dota2"):
+    """Составы команд турнира"""
+    g = "csgo" if game == "cs2" else "dota2"
+    data = await pandascore_get(
+        f"/{g}/tournaments/{tournament_id}/rosters",
+        {"page[size]": 20}
+    )
+    if not isinstance(data, list):
+        # Пробуем через serie
+        data = await pandascore_get(
+            f"/tournaments/{tournament_id}/rosters",
+            {"page[size]": 20}
+        )
+    if not isinstance(data, list):
+        return []
+    result = []
+    for item in data:
+        team = item.get("team") or {}
+        players = item.get("players") or []
+        result.append({
+            "team": {
+                "id": team.get("id"),
+                "name": team.get("name"),
+                "acronym": team.get("acronym"),
+                "img": team.get("image_url"),
+            },
+            "players": [{
+                "id": p.get("id"),
+                "name": p.get("name"),
+                "first_name": p.get("first_name"),
+                "last_name": p.get("last_name"),
+                "img": p.get("image_url"),
+                "role": p.get("role"),
+                "nationality": p.get("nationality"),
+            } for p in players]
+        })
+    return result
+
 # ════════════════════════════════════════════════
 #  STEAM АВТОРИЗАЦИЯ
 # ════════════════════════════════════════════════
