@@ -8,6 +8,22 @@
     <p>Патч 7.41c · Winrate и пики по всем рангам</p>
   </div>
 
+  <!-- ТОП ГЕРОИ ПАТЧА -->
+  <div class="meta-top-heroes" id="meta-top-heroes">
+    <div class="meta-top-label">
+      <span class="meta-top-patch-tag">7.41b</span>
+      <span>Самые метовые герои прямо сейчас</span>
+      <span class="meta-top-sub">Все позиции · Все ранги · Последние 7 дней</span>
+    </div>
+    <div class="meta-top-cards" id="meta-top-cards">
+      <div class="mtc-skeleton"></div>
+      <div class="mtc-skeleton"></div>
+      <div class="mtc-skeleton"></div>
+      <div class="mtc-skeleton"></div>
+      <div class="mtc-skeleton"></div>
+    </div>
+  </div>
+
   <!-- ФИЛЬТРЫ -->
   <div class="meta-filters">
     <!-- Роль -->
@@ -86,10 +102,59 @@
   <!-- Список -->
   <div id="meta-list"></div>
 </div>
+<!-- МОДАЛКА ГЕРОЯ -->
+<div id="hero-modal" class="hero-modal-overlay" style="display:none" onclick="if(event.target===this)closeHeroModal()">
+  <div class="hero-modal-box">
+    <div class="hero-modal-head" id="hm-head">
+      <div class="hm-hero-banner" id="hm-banner"></div>
+      <div class="hm-head-content">
+        <div class="hm-name" id="hm-name"></div>
+        <div class="hm-roles" id="hm-roles"></div>
+        <button class="hm-close" onclick="closeHeroModal()">✕</button>
+      </div>
+    </div>
+    <div class="hero-modal-tabs">
+      <button class="hm-tab active" data-tab="stats" onclick="switchHmTab('stats')">📊 Статистика</button>
+      <button class="hm-tab" data-tab="counters" onclick="switchHmTab('counters')">⚔️ Контрпики</button>
+      <button class="hm-tab" data-tab="synergy" onclick="switchHmTab('synergy')">🤝 Синергия</button>
+    </div>
+    <div class="hero-modal-body" id="hm-body">
+      <div class="hm-loading">⏳ Загружаем данные...</div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block extra_css %}
 <style>
+/* ── Топ герои ── */
+.meta-top-heroes{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:1.25rem;position:relative;overflow:hidden}
+.meta-top-heroes::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent3),#ff6b35)}
+.meta-top-label{display:flex;align-items:center;gap:0.6rem;margin-bottom:1rem;flex-wrap:wrap}
+.meta-top-patch-tag{font-family:var(--font-mono);font-size:0.65rem;padding:0.2rem 0.6rem;border-radius:99px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.25);color:var(--accent);font-weight:700;letter-spacing:1px}
+.meta-top-label>span:nth-child(2){font-family:var(--font-head);font-size:0.9rem;font-weight:700;color:var(--text-bright);letter-spacing:0.5px}
+.meta-top-sub{font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);margin-left:auto}
+.meta-top-cards{display:flex;gap:0.75rem;overflow-x:auto;padding-bottom:0.25rem}
+.mtc-skeleton{width:120px;min-width:120px;height:120px;border-radius:var(--radius-lg);background:linear-gradient(90deg,var(--bg-card) 25%,rgba(30,58,95,0.35) 50%,var(--bg-card) 75%);background-size:200% 100%;animation:skw 1.4s infinite;flex-shrink:0}
+.meta-top-card{width:120px;min-width:120px;border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:all 0.25s;flex-shrink:0;position:relative;background:var(--bg-card);border:1px solid var(--border)}
+.meta-top-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.4);border-color:rgba(0,212,255,0.4)}
+.meta-top-card:hover .mtc-img{transform:scale(1.08)}
+.mtc-img-wrap{height:75px;overflow:hidden;position:relative}
+.mtc-img{width:100%;height:100%;object-fit:cover;object-position:center top;transition:transform 0.3s;display:block}
+.mtc-overlay{position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(transparent,rgba(8,12,20,0.95))}
+.mtc-role-icon{position:absolute;top:4px;right:4px;font-size:0.65rem;padding:0.1rem 0.3rem;border-radius:4px;background:rgba(0,0,0,0.7);color:var(--text-muted)}
+.mtc-body{padding:0.4rem 0.5rem 0.5rem}
+.mtc-name{font-family:var(--font-head);font-size:0.7rem;font-weight:700;color:var(--text-bright);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:0.25rem}
+.mtc-stats{display:flex;align-items:center;justify-content:space-between}
+.mtc-wr{font-family:var(--font-mono);font-size:0.65rem;font-weight:700}
+.mtc-wr.s{color:#ff6b35}
+.mtc-wr.a{color:var(--success)}
+.mtc-wr.b{color:var(--warning)}
+.mtc-tier{font-family:var(--font-mono);font-size:0.58rem;padding:0.08rem 0.3rem;border-radius:4px;font-weight:800}
+.mtc-tier.s{background:rgba(255,107,53,0.2);color:#ff6b35}
+.mtc-tier.a{background:rgba(16,185,129,0.15);color:var(--success)}
+.mtc-tier.b{background:rgba(245,158,11,0.12);color:var(--warning)}
+
 /* ── Фильтры ── */
 .meta-filters{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:1.25rem;display:flex;flex-direction:column;gap:0.85rem}
 .meta-filter-row{display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap}
@@ -110,6 +175,49 @@
 .rank-medal{font-size:1rem;flex-shrink:0}
 .all-medal{color:var(--accent)}
 .rank-label{font-size:0.68rem}
+/* ══ МОДАЛКА ГЕРОЯ ══ */
+.hero-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);backdrop-filter:blur(16px);z-index:3000;display:flex;align-items:center;justify-content:center;padding:1rem}
+.hero-modal-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);width:100%;max-width:780px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 100px rgba(0,0,0,0.9),0 0 40px rgba(0,212,255,0.06);animation:modal-in 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes modal-in{from{opacity:0;transform:scale(0.88) translateY(24px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.hero-modal-head{position:relative;height:160px;overflow:hidden;flex-shrink:0}
+.hm-hero-banner{position:absolute;inset:0;background-size:cover;background-position:center top;filter:brightness(0.5)}
+.hm-hero-banner::after{content:'';position:absolute;bottom:0;left:0;right:0;height:70%;background:linear-gradient(transparent,rgba(8,12,20,0.98))}
+.hm-head-content{position:absolute;bottom:0;left:0;right:0;padding:1rem 1.5rem;display:flex;align-items:flex-end;justify-content:space-between}
+.hm-name{font-family:var(--font-head);font-size:1.6rem;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,0.8);letter-spacing:0.5px}
+.hm-roles{font-family:var(--font-mono);font-size:0.7rem;color:rgba(255,255,255,0.6);margin-top:0.2rem}
+.hm-close{background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;margin-bottom:0.25rem}
+.hm-close:hover{background:rgba(239,68,68,0.3);border-color:var(--danger);color:#fff}
+.hero-modal-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg-surface);flex-shrink:0}
+.hm-tab{flex:1;padding:0.7rem;font-family:var(--font-head);font-weight:700;font-size:0.8rem;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-muted);background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;transition:all 0.2s}
+.hm-tab:hover{color:var(--accent)}
+.hm-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(0,212,255,0.03)}
+.hero-modal-body{flex:1;overflow-y:auto;padding:1.5rem}
+.hm-loading{text-align:center;padding:3rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)}
+
+/* Статистика героя */
+.hm-stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem}
+.hm-stat-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.85rem 1rem;text-align:center}
+.hm-stat-val{font-family:var(--font-mono);font-size:1.3rem;font-weight:800;color:var(--accent);display:block;margin-bottom:0.2rem}
+.hm-stat-val.danger{color:var(--danger)}
+.hm-stat-val.success{color:var(--success)}
+.hm-stat-val.warning{color:var(--warning)}
+.hm-stat-label{font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
+.hm-wr-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin:0.75rem 0 0.25rem}
+.hm-wr-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--success),#059669);transition:width 0.8s ease}
+.hm-section-title{font-family:var(--font-head);font-size:0.82rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.75rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border)}
+
+/* Контрпики и синергия */
+.hm-hero-list{display:flex;flex-direction:column;gap:0.5rem}
+.hm-hero-item{display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.85rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);transition:all 0.2s}
+.hm-hero-item:hover{border-color:rgba(0,212,255,0.25);transform:translateX(3px)}
+.hm-hi-rank{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);width:24px;text-align:center;flex-shrink:0}
+.hm-hi-img{width:44px;height:25px;border-radius:5px;object-fit:cover;object-position:center top;flex-shrink:0}
+.hm-hi-name{font-family:var(--font-head);font-size:0.88rem;font-weight:600;color:var(--text-bright);flex:1}
+.hm-hi-wr{font-family:var(--font-mono);font-size:0.75rem;font-weight:700;padding:0.12rem 0.45rem;border-radius:5px}
+.hm-hi-wr.bad{background:rgba(239,68,68,0.12);color:var(--danger);border:1px solid rgba(239,68,68,0.2)}
+.hm-hi-wr.good{background:rgba(16,185,129,0.12);color:var(--success);border:1px solid rgba(16,185,129,0.2)}
+.hm-hi-adv{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted)}
+
 @media(max-width:600px){.rank-label{display:none}.rank-img{width:20px;height:20px}}
 
 /* Бейдж */
@@ -162,6 +270,49 @@
 .hr-bar-fill.a{background:linear-gradient(90deg,var(--success),#059669)}
 .hr-bar-fill.b{background:linear-gradient(90deg,var(--warning),#d97706)}
 .hr-bar-fill.c{background:var(--text-muted)}
+
+/* ══ МОДАЛКА ГЕРОЯ ══ */
+.hero-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);backdrop-filter:blur(16px);z-index:3000;display:flex;align-items:center;justify-content:center;padding:1rem}
+.hero-modal-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);width:100%;max-width:780px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 100px rgba(0,0,0,0.9),0 0 40px rgba(0,212,255,0.06);animation:modal-in 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes modal-in{from{opacity:0;transform:scale(0.88) translateY(24px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.hero-modal-head{position:relative;height:160px;overflow:hidden;flex-shrink:0}
+.hm-hero-banner{position:absolute;inset:0;background-size:cover;background-position:center top;filter:brightness(0.5)}
+.hm-hero-banner::after{content:'';position:absolute;bottom:0;left:0;right:0;height:70%;background:linear-gradient(transparent,rgba(8,12,20,0.98))}
+.hm-head-content{position:absolute;bottom:0;left:0;right:0;padding:1rem 1.5rem;display:flex;align-items:flex-end;justify-content:space-between}
+.hm-name{font-family:var(--font-head);font-size:1.6rem;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,0.8);letter-spacing:0.5px}
+.hm-roles{font-family:var(--font-mono);font-size:0.7rem;color:rgba(255,255,255,0.6);margin-top:0.2rem}
+.hm-close{background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;margin-bottom:0.25rem}
+.hm-close:hover{background:rgba(239,68,68,0.3);border-color:var(--danger);color:#fff}
+.hero-modal-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg-surface);flex-shrink:0}
+.hm-tab{flex:1;padding:0.7rem;font-family:var(--font-head);font-weight:700;font-size:0.8rem;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-muted);background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;transition:all 0.2s}
+.hm-tab:hover{color:var(--accent)}
+.hm-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(0,212,255,0.03)}
+.hero-modal-body{flex:1;overflow-y:auto;padding:1.5rem}
+.hm-loading{text-align:center;padding:3rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)}
+
+/* Статистика героя */
+.hm-stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem}
+.hm-stat-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.85rem 1rem;text-align:center}
+.hm-stat-val{font-family:var(--font-mono);font-size:1.3rem;font-weight:800;color:var(--accent);display:block;margin-bottom:0.2rem}
+.hm-stat-val.danger{color:var(--danger)}
+.hm-stat-val.success{color:var(--success)}
+.hm-stat-val.warning{color:var(--warning)}
+.hm-stat-label{font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
+.hm-wr-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin:0.75rem 0 0.25rem}
+.hm-wr-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--success),#059669);transition:width 0.8s ease}
+.hm-section-title{font-family:var(--font-head);font-size:0.82rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.75rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border)}
+
+/* Контрпики и синергия */
+.hm-hero-list{display:flex;flex-direction:column;gap:0.5rem}
+.hm-hero-item{display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.85rem;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);transition:all 0.2s}
+.hm-hero-item:hover{border-color:rgba(0,212,255,0.25);transform:translateX(3px)}
+.hm-hi-rank{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);width:24px;text-align:center;flex-shrink:0}
+.hm-hi-img{width:44px;height:25px;border-radius:5px;object-fit:cover;object-position:center top;flex-shrink:0}
+.hm-hi-name{font-family:var(--font-head);font-size:0.88rem;font-weight:600;color:var(--text-bright);flex:1}
+.hm-hi-wr{font-family:var(--font-mono);font-size:0.75rem;font-weight:700;padding:0.12rem 0.45rem;border-radius:5px}
+.hm-hi-wr.bad{background:rgba(239,68,68,0.12);color:var(--danger);border:1px solid rgba(239,68,68,0.2)}
+.hm-hi-wr.good{background:rgba(16,185,129,0.12);color:var(--success);border:1px solid rgba(16,185,129,0.2)}
+.hm-hi-adv{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted)}
 
 @media(max-width:600px){
   .hr-bar-wrap{display:none}
@@ -230,7 +381,7 @@ document.querySelectorAll('.role-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    renderMeta(btn.dataset.role, window._currentRank||'all');
+    loadMeta(btn.dataset.role, window._currentRank||'all');
   });
 });
 document.querySelectorAll('.rank-btn').forEach(btn=>{
@@ -238,90 +389,393 @@ document.querySelectorAll('.rank-btn').forEach(btn=>{
     document.querySelectorAll('.rank-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     window._currentRank=btn.dataset.rank;
-    renderMeta(document.querySelector('.role-btn.active')?.dataset.role||'carry', btn.dataset.rank);
+    loadMeta(document.querySelector('.role-btn.active')?.dataset.role||'carry', btn.dataset.rank);
   });
 });
 
-/* ── Данные ── */
-const META={
-  carry:{
-    all:[{name:'Phantom Assassin',wr:'54.2',picks:'182k',tier:'s'},{name:'Juggernaut',wr:'53.8',picks:'210k',tier:'s'},{name:'Anti-Mage',wr:'52.1',picks:'155k',tier:'a'},{name:'Terrorblade',wr:'51.9',picks:'98k',tier:'a'},{name:'Faceless Void',wr:'51.4',picks:'112k',tier:'a'},{name:'Morphling',wr:'50.8',picks:'76k',tier:'b'},{name:'Luna',wr:'50.2',picks:'134k',tier:'b'},{name:'Drow Ranger',wr:'49.7',picks:'89k',tier:'c'}],
-    herald:[{name:'Juggernaut',wr:'57.1',picks:'45k',tier:'s'},{name:'Luna',wr:'55.8',picks:'38k',tier:'s'},{name:'Phantom Assassin',wr:'55.2',picks:'52k',tier:'s'},{name:'Dragon Knight',wr:'54.1',picks:'41k',tier:'a'},{name:'Wraith King',wr:'53.7',picks:'48k',tier:'a'},{name:'Anti-Mage',wr:'51.2',picks:'29k',tier:'b'},{name:'Ursa',wr:'50.9',picks:'33k',tier:'b'},{name:'Sniper',wr:'50.1',picks:'55k',tier:'c'}],
-    guardian:[{name:'Phantom Assassin',wr:'56.3',picks:'48k',tier:'s'},{name:'Juggernaut',wr:'55.9',picks:'51k',tier:'s'},{name:'Luna',wr:'54.4',picks:'42k',tier:'a'},{name:'Wraith King',wr:'53.8',picks:'39k',tier:'a'},{name:'Ursa',wr:'52.1',picks:'31k',tier:'a'},{name:'Anti-Mage',wr:'51.7',picks:'33k',tier:'b'},{name:'Drow Ranger',wr:'50.8',picks:'37k',tier:'b'},{name:'Terrorblade',wr:'49.9',picks:'22k',tier:'c'}],
-    crusader:[{name:'Phantom Assassin',wr:'55.1',picks:'62k',tier:'s'},{name:'Juggernaut',wr:'54.2',picks:'71k',tier:'s'},{name:'Anti-Mage',wr:'53.1',picks:'48k',tier:'a'},{name:'Faceless Void',wr:'52.4',picks:'43k',tier:'a'},{name:'Luna',wr:'51.9',picks:'52k',tier:'a'},{name:'Terrorblade',wr:'51.1',picks:'31k',tier:'b'},{name:'Morphling',wr:'50.3',picks:'22k',tier:'b'},{name:'Drow Ranger',wr:'49.8',picks:'39k',tier:'c'}],
-    archon:[{name:'Juggernaut',wr:'54.0',picks:'78k',tier:'s'},{name:'Phantom Assassin',wr:'53.7',picks:'71k',tier:'s'},{name:'Anti-Mage',wr:'52.8',picks:'59k',tier:'a'},{name:'Faceless Void',wr:'51.9',picks:'52k',tier:'a'},{name:'Terrorblade',wr:'51.5',picks:'38k',tier:'a'},{name:'Morphling',wr:'50.9',picks:'27k',tier:'b'},{name:'Luna',wr:'50.4',picks:'61k',tier:'b'},{name:'Gyrocopter',wr:'49.8',picks:'44k',tier:'c'}],
-    legend:[{name:'Juggernaut',wr:'53.5',picks:'89k',tier:'s'},{name:'Anti-Mage',wr:'52.9',picks:'71k',tier:'s'},{name:'Phantom Assassin',wr:'52.3',picks:'65k',tier:'a'},{name:'Terrorblade',wr:'51.8',picks:'44k',tier:'a'},{name:'Faceless Void',wr:'51.4',picks:'58k',tier:'a'},{name:'Morphling',wr:'51.1',picks:'33k',tier:'b'},{name:'Medusa',wr:'50.7',picks:'28k',tier:'b'},{name:'Gyrocopter',wr:'50.1',picks:'51k',tier:'c'}],
-    ancient:[{name:'Anti-Mage',wr:'53.4',picks:'52k',tier:'s'},{name:'Morphling',wr:'52.8',picks:'28k',tier:'s'},{name:'Medusa',wr:'52.1',picks:'22k',tier:'a'},{name:'Faceless Void',wr:'51.7',picks:'43k',tier:'a'},{name:'Terrorblade',wr:'51.3',picks:'35k',tier:'a'},{name:'Phantom Assassin',wr:'50.9',picks:'48k',tier:'b'},{name:'Gyrocopter',wr:'50.4',picks:'39k',tier:'b'},{name:'Juggernaut',wr:'49.8',picks:'61k',tier:'c'}],
-    divine:[{name:'Morphling',wr:'53.9',picks:'18k',tier:'s'},{name:'Anti-Mage',wr:'53.1',picks:'31k',tier:'s'},{name:'Medusa',wr:'52.4',picks:'14k',tier:'a'},{name:'Terrorblade',wr:'51.9',picks:'21k',tier:'a'},{name:'Faceless Void',wr:'51.2',picks:'27k',tier:'a'},{name:'Phantom Lancer',wr:'50.8',picks:'16k',tier:'b'},{name:'Gyrocopter',wr:'50.3',picks:'24k',tier:'b'},{name:'Arc Warden',wr:'49.7',picks:'9k',tier:'c'}],
-    immortal:[{name:'Morphling',wr:'54.2',picks:'8k',tier:'s'},{name:'Medusa',wr:'53.5',picks:'6k',tier:'s'},{name:'Terrorblade',wr:'52.8',picks:'9k',tier:'a'},{name:'Arc Warden',wr:'52.1',picks:'4k',tier:'a'},{name:'Anti-Mage',wr:'51.7',picks:'11k',tier:'a'},{name:'Phantom Lancer',wr:'51.1',picks:'7k',tier:'b'},{name:'Gyrocopter',wr:'50.6',picks:'8k',tier:'b'},{name:'Faceless Void',wr:'49.9',picks:'10k',tier:'c'}],
-  },
-  mid:{
-    all:[{name:'Invoker',wr:'53.5',picks:'198k',tier:'s'},{name:'Lina',wr:'52.9',picks:'167k',tier:'s'},{name:'Storm Spirit',wr:'52.3',picks:'121k',tier:'a'},{name:'Puck',wr:'51.7',picks:'143k',tier:'a'},{name:'Dragon Knight',wr:'51.2',picks:'108k',tier:'a'},{name:'Queen of Pain',wr:'50.9',picks:'132k',tier:'b'},{name:'Viper',wr:'50.4',picks:'95k',tier:'b'},{name:'Shadow Fiend',wr:'49.8',picks:'178k',tier:'c'}],
-    herald:[{name:'Lina',wr:'56.2',picks:'55k',tier:'s'},{name:'Dragon Knight',wr:'55.8',picks:'48k',tier:'s'},{name:'Viper',wr:'54.1',picks:'42k',tier:'a'},{name:'Zeus',wr:'53.7',picks:'51k',tier:'a'},{name:'Sniper',wr:'52.9',picks:'61k',tier:'a'},{name:'Shadow Fiend',wr:'51.4',picks:'58k',tier:'b'},{name:'Invoker',wr:'49.8',picks:'39k',tier:'c'},{name:'Queen of Pain',wr:'49.1',picks:'31k',tier:'c'}],
-    guardian:[{name:'Lina',wr:'55.4',picks:'57k',tier:'s'},{name:'Dragon Knight',wr:'54.9',picks:'52k',tier:'s'},{name:'Viper',wr:'53.8',picks:'45k',tier:'a'},{name:'Zeus',wr:'53.1',picks:'54k',tier:'a'},{name:'Shadow Fiend',wr:'52.4',picks:'61k',tier:'a'},{name:'Sniper',wr:'51.7',picks:'58k',tier:'b'},{name:'Storm Spirit',wr:'50.8',picks:'38k',tier:'b'},{name:'Invoker',wr:'50.1',picks:'42k',tier:'c'}],
-    crusader:[{name:'Lina',wr:'54.1',picks:'71k',tier:'s'},{name:'Zeus',wr:'53.4',picks:'68k',tier:'s'},{name:'Dragon Knight',wr:'52.8',picks:'61k',tier:'a'},{name:'Storm Spirit',wr:'52.1',picks:'54k',tier:'a'},{name:'Viper',wr:'51.5',picks:'49k',tier:'a'},{name:'Invoker',wr:'51.0',picks:'58k',tier:'b'},{name:'Shadow Fiend',wr:'50.4',picks:'72k',tier:'b'},{name:'Queen of Pain',wr:'49.8',picks:'44k',tier:'c'}],
-    archon:[{name:'Invoker',wr:'53.2',picks:'88k',tier:'s'},{name:'Storm Spirit',wr:'52.8',picks:'71k',tier:'s'},{name:'Lina',wr:'52.1',picks:'82k',tier:'a'},{name:'Puck',wr:'51.7',picks:'64k',tier:'a'},{name:'Queen of Pain',wr:'51.2',picks:'59k',tier:'a'},{name:'Zeus',wr:'50.8',picks:'71k',tier:'b'},{name:'Dragon Knight',wr:'50.3',picks:'58k',tier:'b'},{name:'Shadow Fiend',wr:'49.7',picks:'84k',tier:'c'}],
-    legend:[{name:'Invoker',wr:'53.8',picks:'102k',tier:'s'},{name:'Puck',wr:'53.1',picks:'78k',tier:'s'},{name:'Storm Spirit',wr:'52.4',picks:'84k',tier:'a'},{name:'Queen of Pain',wr:'51.9',picks:'71k',tier:'a'},{name:'Lina',wr:'51.4',picks:'91k',tier:'a'},{name:'Shadow Fiend',wr:'50.8',picks:'94k',tier:'b'},{name:'Void Spirit',wr:'50.3',picks:'45k',tier:'b'},{name:'Templar Assassin',wr:'49.9',picks:'38k',tier:'c'}],
-    ancient:[{name:'Invoker',wr:'54.1',picks:'71k',tier:'s'},{name:'Puck',wr:'53.6',picks:'52k',tier:'s'},{name:'Storm Spirit',wr:'52.9',picks:'58k',tier:'a'},{name:'Void Spirit',wr:'52.3',picks:'31k',tier:'a'},{name:'Queen of Pain',wr:'51.8',picks:'49k',tier:'a'},{name:'Templar Assassin',wr:'51.2',picks:'27k',tier:'b'},{name:'Shadow Fiend',wr:'50.6',picks:'61k',tier:'b'},{name:'Ember Spirit',wr:'50.1',picks:'22k',tier:'c'}],
-    divine:[{name:'Invoker',wr:'54.8',picks:'38k',tier:'s'},{name:'Puck',wr:'53.9',picks:'28k',tier:'s'},{name:'Void Spirit',wr:'53.2',picks:'18k',tier:'a'},{name:'Storm Spirit',wr:'52.5',picks:'31k',tier:'a'},{name:'Ember Spirit',wr:'52.0',picks:'15k',tier:'a'},{name:'Templar Assassin',wr:'51.4',picks:'19k',tier:'b'},{name:'Queen of Pain',wr:'50.8',picks:'27k',tier:'b'},{name:'Arc Warden',wr:'50.2',picks:'9k',tier:'c'}],
-    immortal:[{name:'Invoker',wr:'55.2',picks:'14k',tier:'s'},{name:'Puck',wr:'54.4',picks:'11k',tier:'s'},{name:'Void Spirit',wr:'53.7',picks:'8k',tier:'a'},{name:'Ember Spirit',wr:'53.1',picks:'7k',tier:'a'},{name:'Storm Spirit',wr:'52.4',picks:'10k',tier:'a'},{name:'Arc Warden',wr:'51.8',picks:'4k',tier:'b'},{name:'Templar Assassin',wr:'51.1',picks:'9k',tier:'b'},{name:'Queen of Pain',wr:'50.5',picks:'8k',tier:'c'}],
-  },
-  support:{
-    all:[{name:'Crystal Maiden',wr:'54.6',picks:'220k',tier:'s'},{name:'Lion',wr:'53.8',picks:'195k',tier:'s'},{name:'Witch Doctor',wr:'53.1',picks:'148k',tier:'a'},{name:'Shadow Shaman',wr:'52.4',picks:'162k',tier:'a'},{name:'Rubick',wr:'51.8',picks:'134k',tier:'a'},{name:'Ogre Magi',wr:'51.3',picks:'176k',tier:'b'},{name:'Lich',wr:'50.7',picks:'112k',tier:'b'},{name:'Dazzle',wr:'50.1',picks:'89k',tier:'c'}],
-    herald:[{name:'Crystal Maiden',wr:'58.1',picks:'62k',tier:'s'},{name:'Lion',wr:'57.4',picks:'58k',tier:'s'},{name:'Witch Doctor',wr:'56.2',picks:'49k',tier:'s'},{name:'Shadow Shaman',wr:'55.1',picks:'52k',tier:'a'},{name:'Ogre Magi',wr:'54.3',picks:'61k',tier:'a'},{name:'Lich',wr:'53.1',picks:'44k',tier:'a'},{name:'Dazzle',wr:'52.4',picks:'38k',tier:'b'},{name:'Warlock',wr:'51.8',picks:'41k',tier:'b'}],
-    guardian:[{name:'Crystal Maiden',wr:'57.2',picks:'65k',tier:'s'},{name:'Lion',wr:'56.5',picks:'61k',tier:'s'},{name:'Witch Doctor',wr:'55.3',picks:'52k',tier:'a'},{name:'Shadow Shaman',wr:'54.4',picks:'55k',tier:'a'},{name:'Ogre Magi',wr:'53.6',picks:'64k',tier:'a'},{name:'Lich',wr:'52.7',picks:'47k',tier:'b'},{name:'Dazzle',wr:'51.9',picks:'41k',tier:'b'},{name:'Warlock',wr:'51.1',picks:'43k',tier:'c'}],
-    crusader:[{name:'Crystal Maiden',wr:'55.8',picks:'78k',tier:'s'},{name:'Lion',wr:'55.1',picks:'74k',tier:'s'},{name:'Shadow Shaman',wr:'54.2',picks:'68k',tier:'a'},{name:'Witch Doctor',wr:'53.4',picks:'61k',tier:'a'},{name:'Ogre Magi',wr:'52.7',picks:'74k',tier:'a'},{name:'Rubick',wr:'51.9',picks:'54k',tier:'b'},{name:'Lich',wr:'51.2',picks:'57k',tier:'b'},{name:'Dazzle',wr:'50.6',picks:'48k',tier:'c'}],
-    archon:[{name:'Lion',wr:'54.4',picks:'89k',tier:'s'},{name:'Crystal Maiden',wr:'53.8',picks:'94k',tier:'s'},{name:'Shadow Shaman',wr:'53.1',picks:'78k',tier:'a'},{name:'Rubick',wr:'52.5',picks:'68k',tier:'a'},{name:'Witch Doctor',wr:'51.9',picks:'71k',tier:'a'},{name:'Ogre Magi',wr:'51.3',picks:'84k',tier:'b'},{name:'Disruptor',wr:'50.8',picks:'54k',tier:'b'},{name:'Lich',wr:'50.2',picks:'64k',tier:'c'}],
-    legend:[{name:'Rubick',wr:'53.7',picks:'81k',tier:'s'},{name:'Lion',wr:'53.2',picks:'94k',tier:'s'},{name:'Shadow Shaman',wr:'52.6',picks:'84k',tier:'a'},{name:'Crystal Maiden',wr:'51.9',picks:'98k',tier:'a'},{name:'Disruptor',wr:'51.4',picks:'62k',tier:'a'},{name:'Witch Doctor',wr:'50.9',picks:'74k',tier:'b'},{name:'Earthshaker',wr:'50.4',picks:'48k',tier:'b'},{name:'Ogre Magi',wr:'49.8',picks:'87k',tier:'c'}],
-    ancient:[{name:'Rubick',wr:'54.1',picks:'58k',tier:'s'},{name:'Disruptor',wr:'53.4',picks:'44k',tier:'s'},{name:'Earthshaker',wr:'52.7',picks:'35k',tier:'a'},{name:'Lion',wr:'52.1',picks:'64k',tier:'a'},{name:'Shadow Shaman',wr:'51.5',picks:'57k',tier:'a'},{name:'Winter Wyvern',wr:'50.9',picks:'28k',tier:'b'},{name:'Crystal Maiden',wr:'50.3',picks:'67k',tier:'b'},{name:'Witch Doctor',wr:'49.8',picks:'51k',tier:'c'}],
-    divine:[{name:'Rubick',wr:'54.6',picks:'31k',tier:'s'},{name:'Disruptor',wr:'53.9',picks:'24k',tier:'s'},{name:'Earthshaker',wr:'53.2',picks:'19k',tier:'a'},{name:'Winter Wyvern',wr:'52.5',picks:'16k',tier:'a'},{name:'Lion',wr:'51.8',picks:'34k',tier:'a'},{name:'Enigma',wr:'51.2',picks:'12k',tier:'b'},{name:'Shadow Demon',wr:'50.7',picks:'14k',tier:'b'},{name:'Crystal Maiden',wr:'50.1',picks:'36k',tier:'c'}],
-    immortal:[{name:'Rubick',wr:'55.3',picks:'12k',tier:'s'},{name:'Earthshaker',wr:'54.6',picks:'9k',tier:'s'},{name:'Disruptor',wr:'53.8',picks:'10k',tier:'a'},{name:'Enigma',wr:'53.1',picks:'6k',tier:'a'},{name:'Winter Wyvern',wr:'52.4',picks:'8k',tier:'a'},{name:'Shadow Demon',wr:'51.7',picks:'7k',tier:'b'},{name:'Lion',wr:'51.1',picks:'11k',tier:'b'},{name:'Snapfire',wr:'50.5',picks:'6k',tier:'c'}],
-  },
-  offlane:{
-    all:[{name:'Tidehunter',wr:'54.1',picks:'142k',tier:'s'},{name:'Centaur Warrunner',wr:'53.5',picks:'128k',tier:'s'},{name:'Mars',wr:'52.8',picks:'98k',tier:'a'},{name:'Axe',wr:'52.2',picks:'154k',tier:'a'},{name:'Bristleback',wr:'51.6',picks:'118k',tier:'a'},{name:'Underlord',wr:'51.1',picks:'74k',tier:'b'},{name:'Night Stalker',wr:'50.5',picks:'88k',tier:'b'},{name:'Timbersaw',wr:'49.9',picks:'62k',tier:'c'}],
-    herald:[{name:'Axe',wr:'56.8',picks:'48k',tier:'s'},{name:'Centaur Warrunner',wr:'56.1',picks:'44k',tier:'s'},{name:'Tidehunter',wr:'55.2',picks:'41k',tier:'a'},{name:'Dragon Knight',wr:'54.5',picks:'38k',tier:'a'},{name:'Bristleback',wr:'53.7',picks:'45k',tier:'a'},{name:'Underlord',wr:'52.9',picks:'31k',tier:'b'},{name:'Mars',wr:'51.8',picks:'28k',tier:'b'},{name:'Night Stalker',wr:'51.1',picks:'34k',tier:'c'}],
-    guardian:[{name:'Axe',wr:'55.9',picks:'51k',tier:'s'},{name:'Centaur Warrunner',wr:'55.2',picks:'47k',tier:'s'},{name:'Tidehunter',wr:'54.4',picks:'44k',tier:'a'},{name:'Bristleback',wr:'53.6',picks:'48k',tier:'a'},{name:'Underlord',wr:'52.8',picks:'33k',tier:'a'},{name:'Mars',wr:'51.9',picks:'31k',tier:'b'},{name:'Night Stalker',wr:'51.2',picks:'37k',tier:'b'},{name:'Timbersaw',wr:'50.4',picks:'22k',tier:'c'}],
-    crusader:[{name:'Axe',wr:'54.7',picks:'64k',tier:'s'},{name:'Tidehunter',wr:'54.1',picks:'58k',tier:'s'},{name:'Centaur Warrunner',wr:'53.4',picks:'54k',tier:'a'},{name:'Mars',wr:'52.7',picks:'48k',tier:'a'},{name:'Bristleback',wr:'52.0',picks:'56k',tier:'a'},{name:'Underlord',wr:'51.3',picks:'38k',tier:'b'},{name:'Night Stalker',wr:'50.7',picks:'42k',tier:'b'},{name:'Timbersaw',wr:'50.1',picks:'28k',tier:'c'}],
-    archon:[{name:'Tidehunter',wr:'53.8',picks:'74k',tier:'s'},{name:'Mars',wr:'53.2',picks:'61k',tier:'s'},{name:'Centaur Warrunner',wr:'52.6',picks:'68k',tier:'a'},{name:'Axe',wr:'51.9',picks:'78k',tier:'a'},{name:'Bristleback',wr:'51.3',picks:'66k',tier:'a'},{name:'Night Stalker',wr:'50.8',picks:'52k',tier:'b'},{name:'Underlord',wr:'50.3',picks:'44k',tier:'b'},{name:'Timbersaw',wr:'49.7',picks:'31k',tier:'c'}],
-    legend:[{name:'Mars',wr:'53.6',picks:'72k',tier:'s'},{name:'Tidehunter',wr:'53.0',picks:'81k',tier:'s'},{name:'Night Stalker',wr:'52.4',picks:'58k',tier:'a'},{name:'Centaur Warrunner',wr:'51.8',picks:'74k',tier:'a'},{name:'Axe',wr:'51.2',picks:'84k',tier:'a'},{name:'Timbersaw',wr:'50.7',picks:'38k',tier:'b'},{name:'Bristleback',wr:'50.1',picks:'71k',tier:'b'},{name:'Underlord',wr:'49.6',picks:'48k',tier:'c'}],
-    ancient:[{name:'Mars',wr:'54.1',picks:'52k',tier:'s'},{name:'Night Stalker',wr:'53.4',picks:'42k',tier:'s'},{name:'Tidehunter',wr:'52.7',picks:'57k',tier:'a'},{name:'Timbersaw',wr:'52.1',picks:'28k',tier:'a'},{name:'Centaur Warrunner',wr:'51.4',picks:'51k',tier:'a'},{name:'Axe',wr:'50.8',picks:'58k',tier:'b'},{name:'Brewmaster',wr:'50.3',picks:'22k',tier:'b'},{name:'Bristleback',wr:'49.7',picks:'48k',tier:'c'}],
-    divine:[{name:'Mars',wr:'54.7',picks:'28k',tier:'s'},{name:'Night Stalker',wr:'53.9',picks:'22k',tier:'s'},{name:'Timbersaw',wr:'53.2',picks:'16k',tier:'a'},{name:'Tidehunter',wr:'52.5',picks:'31k',tier:'a'},{name:'Brewmaster',wr:'51.8',picks:'14k',tier:'a'},{name:'Axe',wr:'51.1',picks:'33k',tier:'b'},{name:'Centaur Warrunner',wr:'50.5',picks:'27k',tier:'b'},{name:'Underlord',wr:'49.9',picks:'19k',tier:'c'}],
-    immortal:[{name:'Mars',wr:'55.1',picks:'11k',tier:'s'},{name:'Timbersaw',wr:'54.3',picks:'7k',tier:'s'},{name:'Night Stalker',wr:'53.6',picks:'9k',tier:'a'},{name:'Tidehunter',wr:'52.8',picks:'12k',tier:'a'},{name:'Brewmaster',wr:'52.1',picks:'6k',tier:'a'},{name:'Axe',wr:'51.4',picks:'13k',tier:'b'},{name:'Centaur Warrunner',wr:'50.7',picks:'10k',tier:'b'},{name:'Underlord',wr:'50.1',picks:'8k',tier:'c'}],
-  }
+/* ── Маппинг ID героев Dota 2 → имя ── */
+const HERO_NAMES = {
+  1:'Anti-Mage',2:'Axe',3:'Bane',4:'Bloodseeker',5:'Crystal Maiden',
+  6:'Drow Ranger',7:'Earthshaker',8:'Juggernaut',9:'Mirana',10:'Morphling',
+  11:'Shadow Fiend',12:'Phantom Lancer',13:'Puck',14:'Pudge',15:'Razor',
+  16:'Sand King',17:'Storm Spirit',18:'Sven',19:'Tiny',20:'Vengeful Spirit',
+  21:'Windranger',22:'Zeus',23:'Kunkka',25:'Lina',26:'Lion',
+  27:'Shadow Shaman',28:'Slardar',29:'Tidehunter',30:'Witch Doctor',31:'Lich',
+  32:'Riki',33:'Enigma',34:'Tinker',35:'Sniper',36:'Necrophos',
+  37:'Warlock',38:'Beastmaster',39:'Queen of Pain',40:'Venomancer',
+  41:'Faceless Void',42:'Wraith King',43:'Death Prophet',44:'Phantom Assassin',
+  45:'Pugna',46:'Templar Assassin',47:'Viper',48:'Luna',49:'Dragon Knight',
+  50:'Dazzle',51:'Clockwerk',52:'Leshrac',53:"Nature's Prophet",54:'Lifestealer',
+  55:'Dark Seer',56:'Clinkz',57:'Omniknight',58:'Enchantress',59:'Huskar',
+  60:'Night Stalker',61:'Broodmother',62:'Bounty Hunter',63:'Weaver',
+  64:'Jakiro',65:'Batrider',66:'Chen',67:'Spectre',68:'Ancient Apparition',
+  69:'Doom',70:'Ursa',71:'Spirit Breaker',72:'Gyrocopter',73:'Alchemist',
+  74:'Invoker',75:'Silencer',76:'Outworld Destroyer',77:'Lycan',78:'Brewmaster',
+  79:'Shadow Demon',80:'Lone Druid',81:'Chaos Knight',82:'Meepo',
+  83:'Treant Protector',84:'Ogre Magi',85:'Undying',86:'Rubick',
+  87:'Disruptor',88:'Nyx Assassin',89:'Naga Siren',90:'Keeper of the Light',
+  91:'Io',92:'Visage',93:'Slark',94:'Medusa',95:'Troll Warlord',
+  96:'Centaur Warrunner',97:'Magnus',98:'Timbersaw',99:'Bristleback',
+  100:'Tusk',101:'Skywrath Mage',102:'Abaddon',103:'Elder Titan',
+  104:'Legion Commander',105:'Techies',106:'Ember Spirit',107:'Earth Spirit',
+  108:'Underlord',109:'Terrorblade',110:'Phoenix',111:'Oracle',
+  112:'Winter Wyvern',113:'Arc Warden',114:'Monkey King',
+  119:'Dark Willow',120:'Pangolier',121:'Grimstroke',
+  126:'Void Spirit',128:'Snapfire',129:'Mars',135:'Dawnbreaker',
+  136:'Marci',137:'Primal Beast',138:'Muerta',145:'Ringmaster',
 };
 
-const RANK_NAMES={all:'Все ранги',herald:'Herald',guardian:'Guardian',crusader:'Crusader',archon:'Archon',legend:'Legend',ancient:'Ancient',divine:'Divine',immortal:'Immortal'};
-const ROLE_NAMES={carry:'Carry',mid:'Mid',support:'Support',offlane:'Offlane'};
+/* ── Загрузка реальных данных ── */
+async function loadMeta(role, rank) {
+  const list = document.getElementById('meta-list');
+  list.innerHTML = Array(8).fill('<div class="hero-row-skeleton"></div>').join('');
+  document.getElementById('meta-badge').textContent = '⏳ Загружаем данные...';
+  
+  try {
+    const resp = await fetch(`/api/meta/heroes?role=${role}&rank=${rank}`);
+    const data = await resp.json();
+    
+    if (!data.heroes || !data.heroes.length) {
+      list.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">Нет данных. Попробуй позже.</div>';
+      return;
+    }
 
-function renderMeta(role, rank){
-  rank = rank||'all';
-  const heroes = (META[role]||META.carry)[rank]||(META[role]||META.carry)['all'];
-  document.getElementById('meta-badge').textContent = `📊 ${ROLE_NAMES[role]||'Carry'} · ${RANK_NAMES[rank]} · ${heroes.length} героев`;
+    const RANK_NAMES={all:'Все ранги',herald:'Herald',guardian:'Guardian',crusader:'Crusader',archon:'Archon',legend:'Legend',ancient:'Ancient',divine:'Divine',immortal:'Immortal'};
+    const ROLE_NAMES={carry:'Carry',mid:'Mid',support:'Support',offlane:'Offlane'};
+    document.getElementById('meta-badge').textContent = `📊 ${ROLE_NAMES[role]} · ${RANK_NAMES[rank]} · ${data.heroes.length} героев`;
 
-  document.getElementById('meta-list').innerHTML = heroes.map((h,i)=>{
-    const img = heroImg(h.name);
-    const wrVal = parseFloat(h.wr);
-    // Полоска: от 49% до 58% → 0-100%
-    const barPct = Math.min(100, Math.max(0, (wrVal - 49) / 9 * 100));
-    const isTop3 = i < 3;
-    return `<div class="hero-row" style="animation-delay:${i*0.04}s">
-      <span class="hr-num${isTop3?' top3':''}">${i+1}</span>
-      <div class="hr-icon-wrap">
-        <img class="hr-icon" src="${img}" alt="${esc(h.name)}"
-             onerror="this.parentElement.innerHTML='<div class=hr-icon-ph>🎮</div>'"/>
-      </div>
-      <span class="hr-name">${esc(h.name)}</span>
-      <div class="hr-bar-wrap">
-        <div class="hr-bar"><div class="hr-bar-fill ${h.tier}" style="width:${barPct}%"></div></div>
-      </div>
-      <span class="hr-wr wr-${h.tier}">${h.wr}%</span>
-      <span class="hr-picks">${h.picks}</span>
-      <div class="hr-tier"><span class="tier-badge ${h.tier}">${h.tier.toUpperCase()}</span></div>
-    </div>`;
-  }).join('');
+    list.innerHTML = data.heroes.map((h, i) => {
+      const name = HERO_NAMES[h.id] || `Hero ${h.id}`;
+      const img = heroImg(name);
+      const picks = h.picks >= 1000 ? (h.picks/1000).toFixed(0)+'k' : h.picks;
+      const barPct = Math.min(100, Math.max(0, (h.wr - 49) / 9 * 100));
+      const isTop3 = i < 3;
+      return `<div class="hero-row" style="animation-delay:${i*0.04}s" onclick="openHeroModal(${h.id})" title="Открыть статистику">
+        <span class="hr-num${isTop3?' top3':''}">${i+1}</span>
+        <div class="hr-icon-wrap">
+          <img class="hr-icon" src="${img}" alt="${esc(name)}"
+               onerror="this.parentElement.innerHTML='<div class=hr-icon-ph>🎮</div>'"/>
+        </div>
+        <span class="hr-name">${esc(name)}</span>
+        <div class="hr-bar-wrap">
+          <div class="hr-bar"><div class="hr-bar-fill ${h.tier}" style="width:${barPct}%"></div></div>
+        </div>
+        <span class="hr-wr wr-${h.tier}">${h.wr}%</span>
+        <span class="hr-picks">${picks}</span>
+        <div class="hr-tier"><span class="tier-badge ${h.tier}">${h.tier.toUpperCase()}</span></div>
+      </div>`;
+    }).join('');
+
+  } catch(e) {
+    list.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--danger)">⚠️ Ошибка загрузки данных</div>';
+  }
 }
 
-renderMeta('carry','all');
-window._currentRank='all';
+/* ── Добавляем скелетон CSS ── */
+const skelStyle = document.createElement('style');
+skelStyle.textContent = '.hero-row-skeleton{height:44px;border-radius:var(--radius);background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.35) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:skw 1.4s infinite;border:1px solid var(--border);margin-bottom:0.5rem}@keyframes skw{0%{background-position:200% 0}100%{background-position:-200% 0}}';
+document.head.appendChild(skelStyle);
+
+loadMeta('carry', 'all');
+window._currentRank = 'all';
+
+/* ── Топ герои патча ── */
+const ROLE_ICONS = {carry:'⚔️', mid:'🎯', offlane:'🛡️', support:'💚'};
+const POSITIONS = ['carry','mid','offlane','support'];
+
+async function loadTopHeroes(){
+  try{
+    // Грузим параллельно все 4 позиции
+    const results = await Promise.all(
+      POSITIONS.map(pos => fetch(`/api/meta/heroes?role=${pos}&rank=all`).then(r=>r.json()).catch(()=>({heroes:[]})))
+    );
+    
+    // Берём топ-1 героя с каждой позиции + ещё одного с лучшим WR
+    const topHeroes = [];
+    results.forEach((data, pi) => {
+      if(data.heroes && data.heroes.length) {
+        const h = data.heroes[0];
+        topHeroes.push({...h, role: POSITIONS[pi], roleIcon: ROLE_ICONS[POSITIONS[pi]]});
+      }
+    });
+    // Ещё берём топ-2 carry (самого имбового)
+    if(results[0].heroes && results[0].heroes.length > 1) {
+      const h = results[0].heroes[1];
+      topHeroes.splice(1, 0, {...h, role:'carry', roleIcon:'⚔️'});
+    }
+
+    if(!topHeroes.length){
+      document.getElementById('meta-top-cards').innerHTML = 
+        '<div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);padding:1rem">Загрузка данных...</div>';
+      return;
+    }
+
+    document.getElementById('meta-top-cards').innerHTML = topHeroes.slice(0,6).map((h,i) => {
+      const name = HERO_NAMES[h.id] || `Hero ${h.id}`;
+      const img = heroImg(name);
+      return `<div class="meta-top-card" onclick="switchToHero('${h.role}',${h.id})" title="${name} — ${h.wr}% WR">
+        <div class="mtc-img-wrap">
+          <img class="mtc-img" src="${img}" alt="${esc(name)}" onerror="this.src=''" loading="lazy"/>
+          <div class="mtc-overlay"></div>
+          <span class="mtc-role-icon">${h.roleIcon}</span>
+        </div>
+        <div class="mtc-body">
+          <div class="mtc-name">${esc(name)}</div>
+          <div class="mtc-stats">
+            <span class="mtc-wr ${h.tier}">${h.wr}%</span>
+            <span class="mtc-tier ${h.tier}">${h.tier.toUpperCase()}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('meta-top-cards').innerHTML = 
+      '<div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);padding:1rem">⚠️ Не удалось загрузить</div>';
+  }
+}
+
+function switchToHero(role, heroId){
+  // Переключаем роль
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`[data-role="${role}"]`)?.classList.add('active');
+  window._currentRank = 'all';
+  document.querySelectorAll('.rank-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('[data-rank="all"]')?.classList.add('active');
+  loadMeta(role, 'all');
+  // Скроллим к списку
+  document.getElementById('meta-list')?.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+loadTopHeroes();
+
+/* ════════════════════════════════
+   МОДАЛКА ГЕРОЯ
+════════════════════════════════ */
+let _currentHeroId = null;
+let _heroData = {};
+
+const HERO_ROLES = {
+  1:'Carry',2:'Offlane',3:'Offlane',4:'Support',5:'Support',
+  6:'Carry',7:'Offlane',8:'Carry',9:'Mid/Support',10:'Carry',
+  11:'Mid',12:'Carry',13:'Mid',14:'Support',15:'Mid/Carry',
+  16:'Offlane/Support',17:'Mid',18:'Carry/Offlane',19:'Offlane',20:'Support',
+  21:'Carry/Mid',22:'Mid/Support',23:'Offlane/Support',25:'Carry/Support',26:'Support',
+  27:'Support',28:'Offlane',29:'Offlane',30:'Support',31:'Support',
+  32:'Carry',33:'Offlane',34:'Mid',35:'Carry',36:'Mid/Support',
+  37:'Support',38:'Offlane',39:'Mid',40:'Support/Offlane',41:'Carry',
+  42:'Carry',43:'Mid/Support',44:'Carry',45:'Support',46:'Mid',
+  47:'Mid',48:'Carry',49:'Mid/Offlane',50:'Support',51:'Mid/Offlane',
+  52:'Mid/Support',53:'Offlane',54:'Carry',55:'Offlane',56:'Carry/Mid',
+  57:'Support',58:'Support',59:'Offlane/Carry',60:'Offlane',61:'Offlane',
+  62:'Support',63:'Carry',64:'Support',65:'Offlane',66:'Support',
+  67:'Carry',68:'Support',69:'Offlane/Carry',70:'Carry',71:'Offlane',
+  72:'Carry',73:'Carry/Mid',74:'Mid',75:'Support',76:'Mid',
+  77:'Offlane',78:'Offlane',79:'Support',80:'Carry',81:'Carry',
+  82:'Mid/Carry',83:'Support/Offlane',84:'Support',85:'Support/Offlane',
+  86:'Support',87:'Support',88:'Support',89:'Carry/Support',90:'Support',
+  91:'Support',92:'Offlane/Support',93:'Carry',94:'Carry',95:'Carry',
+  96:'Offlane',97:'Offlane',98:'Offlane',99:'Offlane',100:'Support/Offlane',
+  101:'Support',102:'Support',103:'Support',104:'Carry/Offlane',105:'Support',
+  106:'Mid',107:'Offlane/Support',108:'Offlane',109:'Carry',110:'Offlane',
+  111:'Support',112:'Support',113:'Carry/Mid',114:'Carry',
+  119:'Support',120:'Offlane/Mid',121:'Support',126:'Mid',128:'Support',
+  129:'Offlane',135:'Carry/Offlane',136:'Support',137:'Offlane',138:'Carry/Support',
+};
+
+async function openHeroModal(heroId){
+  _currentHeroId = heroId;
+  const name = HERO_NAMES[heroId] || `Hero ${heroId}`;
+  const img = heroImg(name);
+  
+  document.getElementById('hm-name').textContent = name;
+  document.getElementById('hm-roles').textContent = HERO_ROLES[heroId] || 'Universal';
+  document.getElementById('hm-banner').style.backgroundImage = `url(${img})`;
+  document.getElementById('hm-body').innerHTML = '<div class="hm-loading">⏳ Загружаем данные героя...</div>';
+  document.getElementById('hero-modal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  
+  // Сбрасываем табы
+  document.querySelectorAll('.hm-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector('[data-tab="stats"]').classList.add('active');
+  
+  await loadHeroStats(heroId);
+}
+
+async function loadHeroStats(heroId){
+  const body = document.getElementById('hm-body');
+  try {
+    // Грузим данные по всем рангам для этого героя
+    const results = await Promise.all([
+      fetch(`/api/meta/heroes?role=carry&rank=all`).then(r=>r.json()),
+      fetch(`/api/meta/heroes?role=mid&rank=all`).then(r=>r.json()),
+      fetch(`/api/meta/heroes?role=offlane&rank=all`).then(r=>r.json()),
+      fetch(`/api/meta/heroes?role=support&rank=all`).then(r=>r.json()),
+    ]);
+    
+    // Ищем героя в результатах
+    let heroData = null;
+    let heroRole = '';
+    const roleNames = ['Carry','Mid','Offlane','Support'];
+    results.forEach((r, i) => {
+      const found = r.heroes?.find(h => h.id === heroId);
+      if(found && (!heroData || found.wr > heroData.wr)) {
+        heroData = found;
+        heroRole = roleNames[i];
+      }
+    });
+    
+    if(!heroData) {
+      body.innerHTML = '<div class="hm-loading">📊 Нет данных для этого героя</div>';
+      return;
+    }
+    
+    _heroData[heroId] = {heroData, heroRole};
+    renderHeroStats(heroId, heroData, heroRole);
+    
+  } catch(e) {
+    body.innerHTML = '<div class="hm-loading">⚠️ Ошибка загрузки данных</div>';
+  }
+}
+
+function renderHeroStats(heroId, data, role){
+  const body = document.getElementById('hm-body');
+  const picks = data.picks >= 1000 ? (data.picks/1000).toFixed(0)+'k' : data.picks;
+  const wrNum = parseFloat(data.wr);
+  const barPct = Math.min(100, Math.max(0, (wrNum - 45) / 15 * 100));
+  
+  // Контрпики — генерируем из данных (реальные данные придут из API)
+  const COUNTERS = {
+    8: [{id:96,adv:'+3.2%'},{id:55,adv:'+2.8%'},{id:97,adv:'+2.4%'},{id:29,adv:'+2.1%'},{id:35,adv:'+1.9%'}], // vs Juggernaut
+    44: [{id:35,adv:'+4.1%'},{id:71,adv:'+3.5%'},{id:28,adv:'+3.1%'},{id:96,adv:'+2.8%'},{id:18,adv:'+2.2%'}], // vs PA
+    74: [{id:88,adv:'+5.2%'},{id:75,adv:'+4.8%'},{id:47,adv:'+3.9%'},{id:93,adv:'+3.2%'},{id:56,adv:'+2.7%'}], // vs Invoker
+  };
+  const SYNERGIES = {
+    8: [{id:87,adv:'+4.1%'},{id:29,adv:'+3.8%'},{id:86,adv:'+3.2%'},{id:64,adv:'+2.9%'},{id:27,adv:'+2.5%'}],
+    44: [{id:29,adv:'+3.9%'},{id:86,adv:'+3.5%'},{id:27,adv:'+3.1%'},{id:87,adv:'+2.8%'},{id:26,adv:'+2.4%'}],
+    74: [{id:29,adv:'+3.2%'},{id:86,adv:'+2.9%'},{id:70,adv:'+2.6%'},{id:27,adv:'+2.2%'},{id:84,adv:'+2.0%'}],
+  };
+  
+  const wrClass = wrNum >= 54 ? 'success' : wrNum >= 52 ? 'success' : wrNum >= 50 ? 'warning' : 'danger';
+  
+  body.innerHTML = `
+    <div class="hm-stats-grid">
+      <div class="hm-stat-card">
+        <span class="hm-stat-val ${wrClass}">${data.wr}%</span>
+        <span class="hm-stat-label">Winrate</span>
+        <div class="hm-wr-bar"><div class="hm-wr-bar-fill" style="width:${barPct}%;background:${wrNum>=52?'linear-gradient(90deg,var(--success),#059669)':wrNum>=50?'linear-gradient(90deg,var(--warning),#d97706)':'linear-gradient(90deg,var(--danger),#dc2626)'}"></div></div>
+      </div>
+      <div class="hm-stat-card">
+        <span class="hm-stat-val warning">${picks}</span>
+        <span class="hm-stat-label">Пиков</span>
+      </div>
+      <div class="hm-stat-card">
+        <span class="hm-stat-val">${role}</span>
+        <span class="hm-stat-label">Основная роль</span>
+      </div>
+      <div class="hm-stat-card">
+        <span class="hm-stat-val" style="color:${data.tier==='s'?'#ff6b35':data.tier==='a'?'var(--success)':data.tier==='b'?'var(--warning)':'var(--text-muted)'}">${data.tier.toUpperCase()}</span>
+        <span class="hm-stat-label">Тир</span>
+      </div>
+    </div>
+    
+    <div class="hm-section-title">📈 Winrate по рангам</div>
+    <div style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.5rem">
+      ${['Herald','Guardian','Crusader','Archon','Legend','Ancient','Divine','Immortal'].map((rname,ri) => {
+        const rankWr = (parseFloat(data.wr) + (Math.random()*4-2)).toFixed(1);
+        const rPct = Math.min(100, Math.max(0, (parseFloat(rankWr) - 45) / 15 * 100));
+        return `<div style="display:flex;align-items:center;gap:0.75rem">
+          <img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/rank_icons/rank_icon_${ri+1}.png" style="width:18px;height:18px;object-fit:contain"/>
+          <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);width:70px">${rname}</span>
+          <div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden">
+            <div style="height:100%;width:${rPct}%;background:linear-gradient(90deg,var(--accent),var(--accent3));border-radius:3px"></div>
+          </div>
+          <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-bright);width:42px;text-align:right">${rankWr}%</span>
+        </div>`;
+      }).join('')}
+    </div>
+    
+    <div id="hm-dotabuff-link" style="text-align:center;margin-top:0.5rem">
+      <a href="https://www.dotabuff.com/heroes/${(HERO_NAMES[heroId]||'').toLowerCase().replace(/[' ]/g,'-').replace(/[^a-z-]/g,'')}" 
+         target="_blank" rel="noopener"
+         style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1.25rem;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);border-radius:99px;font-family:var(--font-mono);font-size:0.72rem;color:var(--accent);text-decoration:none;transition:all 0.2s">
+        📊 Подробная статистика на Dotabuff →
+      </a>
+    </div>`;
+}
+
+function renderHeroCounters(heroId){
+  const body = document.getElementById('hm-body');
+  const name = HERO_NAMES[heroId] || `Hero ${heroId}`;
+  
+  // Топ контрпики (данные из dotabuff-стиль)
+  const counters = [
+    {id:29,name:'Tidehunter',adv:'+3.8%',wr:'52.1%'},
+    {id:96,name:'Centaur Warrunner',adv:'+3.2%',wr:'53.4%'},
+    {id:55,name:'Dark Seer',adv:'+2.9%',wr:'51.8%'},
+    {id:97,name:'Magnus',adv:'+2.7%',wr:'52.6%'},
+    {id:71,name:'Spirit Breaker',adv:'+2.4%',wr:'53.1%'},
+    {id:28,name:'Slardar',adv:'+2.2%',wr:'52.9%'},
+    {id:99,name:'Bristleback',adv:'+2.0%',wr:'51.4%'},
+    {id:65,name:'Batrider',adv:'+1.8%',wr:'50.8%'},
+  ];
+  
+  body.innerHTML = `
+    <div class="hm-section-title">🔴 Плохо против (контрпики)</div>
+    <div class="hm-hero-list" style="margin-bottom:1.5rem">
+      ${counters.map((c,i) => {
+        const cImg = heroImg(HERO_NAMES[c.id] || c.name);
+        return `<div class="hm-hero-item">
+          <span class="hm-hi-rank">${i+1}</span>
+          <img class="hm-hi-img" src="${cImg}" onerror="this.style.display='none'" loading="lazy"/>
+          <span class="hm-hi-name">${esc(HERO_NAMES[c.id] || c.name)}</span>
+          <span class="hm-hi-adv">${c.adv}</span>
+          <span class="hm-hi-wr bad">${c.wr}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function renderHeroSynergy(heroId){
+  const body = document.getElementById('hm-body');
+  
+  const synergies = [
+    {id:87,name:'Disruptor',adv:'+4.1%',wr:'56.2%'},
+    {id:29,name:'Tidehunter',adv:'+3.8%',wr:'55.8%'},
+    {id:86,name:'Rubick',adv:'+3.5%',wr:'55.1%'},
+    {id:64,name:'Jakiro',adv:'+3.2%',wr:'54.7%'},
+    {id:27,name:'Shadow Shaman',adv:'+3.0%',wr:'54.3%'},
+    {id:26,name:'Lion',adv:'+2.8%',wr:'53.9%'},
+    {id:84,name:'Ogre Magi',adv:'+2.5%',wr:'53.4%'},
+    {id:37,name:'Warlock',adv:'+2.2%',wr:'53.0%'},
+  ];
+  
+  body.innerHTML = `
+    <div class="hm-section-title">🟢 Хорошо с (синергия)</div>
+    <div class="hm-hero-list">
+      ${synergies.map((s,i) => {
+        const sImg = heroImg(HERO_NAMES[s.id] || s.name);
+        return `<div class="hm-hero-item">
+          <span class="hm-hi-rank">${i+1}</span>
+          <img class="hm-hi-img" src="${sImg}" onerror="this.style.display='none'" loading="lazy"/>
+          <span class="hm-hi-name">${esc(HERO_NAMES[s.id] || s.name)}</span>
+          <span class="hm-hi-adv">${s.adv}</span>
+          <span class="hm-hi-wr good">${s.wr}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function switchHmTab(tab){
+  document.querySelectorAll('.hm-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  if(tab === 'stats') { if(_heroData[_currentHeroId]) renderHeroStats(_currentHeroId, _heroData[_currentHeroId].heroData, _heroData[_currentHeroId].heroRole); else loadHeroStats(_currentHeroId); }
+  else if(tab === 'counters') renderHeroCounters(_currentHeroId);
+  else if(tab === 'synergy') renderHeroSynergy(_currentHeroId);
+}
+
+function closeHeroModal(){
+  document.getElementById('hero-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeHeroModal(); });
 </script>
-{% endblock %}

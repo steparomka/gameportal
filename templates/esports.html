@@ -147,8 +147,7 @@
 .t-tier.c,.t-tier.d{background:rgba(100,116,139,0.12);color:var(--text-muted);border:1px solid rgba(100,116,139,0.2)}
 .t-prize{font-family:var(--font-mono);font-size:0.75rem;color:var(--warning);font-weight:700}
 .t-live-badge{font-family:var(--font-mono);font-size:0.6rem;padding:0.12rem 0.45rem;border-radius:99px;background:rgba(239,68,68,0.12);color:var(--danger);border:1px solid rgba(239,68,68,0.3);animation:pbadge 1.5s infinite}
-.t-open-hint{font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);opacity:0;transition:opacity 0.2s;white-space:nowrap}
-.t-card:hover .t-open-hint{opacity:1}
+
 
 /* Скелетоны */
 .match-skeleton{height:95px;border-radius:var(--radius-lg);background:linear-gradient(90deg,var(--bg-surface) 25%,rgba(30,58,95,0.35) 50%,var(--bg-surface) 75%);background-size:200% 100%;animation:skw 1.4s infinite;border:1px solid var(--border)}
@@ -335,7 +334,7 @@ function renderTournament(t,isCS2){
       ${t.prize_pool?`<span class="t-prize">$${Number(t.prize_pool).toLocaleString()}</span>`:''}
       <span class="t-tier ${tier}">${tierLabel}</span>
       ${t.status==='live'?`<span class="t-live-badge">🔴 LIVE</span>`:''}
-      <span class="t-open-hint">Открыть →</span>
+
     </div>
   </div>`;
 }
