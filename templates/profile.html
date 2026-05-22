@@ -18,7 +18,6 @@
         <div class="profile-actions">
           <a id="profile-steam-link" href="#" target="_blank" rel="noopener" class="profile-action-btn">Steam →</a>
           <a id="profile-dotabuff-link" href="#" target="_blank" rel="noopener" class="profile-action-btn cs2">Dotabuff →</a>
-          <a id="profile-stratz-link" href="#" target="_blank" rel="noopener" class="profile-action-btn stratz">Stratz →</a>
         </div>
       </div>
     </div>
@@ -166,7 +165,6 @@
 .profile-action-btn{padding:0.35rem 0.85rem;border-radius:99px;font-family:var(--font-mono);font-size:0.68rem;font-weight:700;text-decoration:none;transition:all 0.2s;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);color:var(--accent)}
 .profile-action-btn:hover{background:rgba(0,212,255,0.15);color:var(--accent)}
 .profile-action-btn.cs2{background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2);color:var(--warning)}
-.profile-action-btn.stratz{background:rgba(168,85,247,0.08);border-color:rgba(168,85,247,0.2);color:var(--accent3)}
 
 /* ── Статы ── */
 .profile-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0.85rem;margin-bottom:1.5rem}
@@ -307,22 +305,27 @@ async function loadProfile(){
       document.getElementById('profile-name').textContent = me.nickname || 'Игрок';
       document.getElementById('profile-sub').textContent = `Steam ID: ${steamId}`;
       document.getElementById('profile-steam-link').href = `https://steamcommunity.com/profiles/${steamId}`;
-      document.getElementById('profile-dotabuff-link').href = `https://www.dotabuff.com/players/${steamId}`;
-      document.getElementById('profile-stratz-link').href = `https://stratz.com/players/${steamId}`;
+      const accountIdForLinks = (BigInt(steamId) - BigInt('76561197960265728')).toString();
+      document.getElementById('profile-dotabuff-link').href = `https://www.dotabuff.com/players/${accountIdForLinks}`;
     }
   }catch(e){}
 
   // OpenDota данные
   try{
+    // Steam64 ID -> OpenDota account_id (вычитаем 76561197960265728)
+    const accountId = BigInt(steamId) - BigInt('76561197960265728');
+    const oid = accountId.toString();
+    
     const [playerData, wl, recentMatches, heroes, peers] = await Promise.all([
-      fetch(`/api/opendota/players/${steamId}`).then(r=>r.json()),
-      fetch(`/api/opendota/players/${steamId}/wl`).then(r=>r.json()),
-      fetch(`/api/opendota/players/${steamId}/recentMatches`).then(r=>r.json()),
-      fetch(`/api/opendota/players/${steamId}/heroes?limit=20`).then(r=>r.json()),
-      fetch(`/api/opendota/players/${steamId}/peers?limit=8`).then(r=>r.json()),
+      fetch(`/api/opendota/players/${oid}`).then(r=>r.json()),
+      fetch(`/api/opendota/players/${oid}/wl`).then(r=>r.json()),
+      fetch(`/api/opendota/players/${oid}/recentMatches`).then(r=>r.json()),
+      fetch(`/api/opendota/players/${oid}/heroes?limit=100`).then(r=>r.json()),
+      fetch(`/api/opendota/players/${oid}/peers?limit=8`).then(r=>r.json()),
     ]);
 
-    renderProfileHead(playerData);
+    window._profileOid = oid;
+    renderProfileHead(playerData, oid);
     renderStats(wl, recentMatches);
     renderRoleCharts(recentMatches);
     renderBestHeroes(heroes);
@@ -334,7 +337,7 @@ async function loadProfile(){
   }
 }
 
-function renderProfileHead(data){
+function renderProfileHead(data, oid){
   const p = data?.profile;
   if(!p) return;
   if(p.avatarfull) document.getElementById('profile-avatar').src = p.avatarfull;
@@ -449,7 +452,16 @@ function renderBestHeroes(heroes){
     return;
   }
   
-  const top = heroes.slice(0,8);
+  const top = heroes.filter(h=>h.games>=50).slice(0,8);
+  if(!top.length){
+    // Если нет с 50+ играми, берём топ по играм
+    const fallback = [...heroes].sort((a,b)=>b.games-a.games).slice(0,8);
+    return renderBestHeroesData(fallback, el);
+  }
+  return renderBestHeroesData(top, el);
+}
+
+function renderBestHeroesData(top, el){
   el.innerHTML = top.map((h,i)=>{
     const wr = h.games ? (h.win/h.games*100).toFixed(1) : '—';
     const wrClass = parseFloat(wr) >= 50 ? 'win' : 'loss';
@@ -491,7 +503,7 @@ function renderRecentMatches(matches){
     const kda = `${m.kills}/${m.deaths}/${m.assists}`;
     const dur = fmtDuration(m.duration);
     const ago = m.start_time ? Math.floor((Date.now()/1000 - m.start_time)/86400) + 'д назад' : '';
-    return `<div class="match-row" style="animation-delay:${i*0.04}s" onclick="window.open('https://www.dotabuff.com/matches/${m.match_id}','_blank')">
+    return `<div class="match-row" style="animation-delay:${i*0.04}s" onclick="window.open('https://www.dotabuff.com/matches/'+m.match_id,'_blank')">
       <div class="match-result ${won?'win':'loss'}"></div>
       ${img ? `<img class="match-hero-img" src="${img}" onerror="this.style.display='none'" loading="lazy"/>` : ''}
       <div class="match-info">
