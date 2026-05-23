@@ -14,7 +14,6 @@
       <div id="p-rank-label" class="profile-rank-label"></div>
       <div class="profile-links">
         <a id="p-steam-link" href="#" target="_blank" class="profile-link-btn">Steam ↗</a>
-        <a id="p-opendota-link" href="#" target="_blank" class="profile-link-btn orange">OpenDota ↗</a>
       </div>
     </div>
   </div>
@@ -40,7 +39,7 @@
   <hr class="neon-line"/>
 
   <div id="heroes-section" style="display:none">
-    <h2 class="section-title">🦸 Топ героев <span class="heroes-subtitle">≥ 20 игр</span></h2>
+    <h2 class="section-title">🦸 Топ героев <span class="heroes-subtitle">≥ 50 игр</span></h2>
     <div class="heroes-grid" id="heroes-grid"></div>
     <div id="heroes-empty" style="display:none;color:var(--text-muted);font-family:var(--font-mono);font-size:0.85rem;padding:1rem 0">
       Нет героев с 20+ играми
@@ -68,8 +67,8 @@
 .profile-hero{display:flex;align-items:center;gap:1.5rem;padding:2rem 0 1.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border)}
 .profile-avatar-wrap{position:relative;flex-shrink:0}
 .profile-avatar{width:96px;height:96px;border-radius:12px;border:3px solid var(--accent);box-shadow:0 0 24px rgba(0,212,255,0.2);object-fit:cover}
-.profile-rank{position:absolute;bottom:-8px;right:-8px}
-.profile-rank img{width:32px;height:32px;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))}
+.profile-rank{position:absolute;bottom:-10px;right:-10px}
+.profile-rank img{width:38px;height:38px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.7))}
 .profile-info{flex:1}
 .profile-name{font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--text-bright);letter-spacing:2px;margin-bottom:0.2rem}
 .profile-rank-label{font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);margin-bottom:0.65rem}
@@ -167,7 +166,14 @@ Promise.all([
   Object.keys(items).forEach(function(key){
     var item=items[key];
     if(!item) return;
-    var entry={name:item.dname||key, img:item.img?'https://cdn.cloudflare.steamstatic.com'+item.img:null};
+    var imgUrl=null;
+    if(item.img){
+      // Конвертируем старый путь в новый React CDN
+      var imgName=item.img.replace('/apps/dota2/images/items/','').replace('_lg.png','.png').replace('.png','.png');
+      var cleanName=imgName.split('/').pop().replace('_lg.png','.png');
+      imgUrl='https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/'+cleanName;
+    }
+    var entry={name:item.dname||key, img:imgUrl};
     if(item.id!==undefined) ITEMS[item.id]=entry;
     ITEMS[key]=entry;
   });
@@ -180,7 +186,6 @@ Promise.all([
   document.getElementById('p-avatar').src=user.avatar;
   document.getElementById('p-nickname').textContent=user.nickname;
   document.getElementById('p-steam-link').href='https://steamcommunity.com/profiles/'+user.steam_id;
-  document.getElementById('p-opendota-link').href='https://www.opendota.com/players/'+(BigInt(user.steam_id)-BigInt('76561197960265728')).toString();
 
   currentAccountId=(BigInt(user.steam_id)-BigInt('76561197960265728')).toString();
   loadRank(currentAccountId);
@@ -238,7 +243,7 @@ function loadTopHeroes(accountId){
   fetch('/api/opendota/players/'+accountId+'/heroes')
     .then(function(r){return r.json();})
     .then(function(heroes){
-      var filtered=heroes.filter(function(h){return h.games>=20;}).sort(function(a,b){return b.games-a.games;});
+      var filtered=heroes.filter(function(h){return h.games>=50;}).sort(function(a,b){return b.games-a.games;});
       document.getElementById('heroes-section').style.display='block';
       if(filtered.length===0){document.getElementById('heroes-empty').style.display='block';return;}
       var grid=document.getElementById('heroes-grid');
