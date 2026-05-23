@@ -168,10 +168,9 @@ Promise.all([
     if(!item) return;
     var imgUrl=null;
     if(item.img){
-      // Конвертируем старый путь в новый React CDN
-      var imgName=item.img.replace('/apps/dota2/images/items/','').replace('_lg.png','.png').replace('.png','.png');
-      var cleanName=imgName.split('/').pop().replace('_lg.png','.png');
-      imgUrl='https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/'+cleanName;
+      var parts=item.img.split('/');
+      var fname=parts[parts.length-1].replace('_lg.png','.png');
+      imgUrl='https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/'+fname;
     }
     var entry={name:item.dname||key, img:imgUrl};
     if(item.id!==undefined) ITEMS[item.id]=entry;
