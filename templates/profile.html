@@ -278,8 +278,36 @@ function loadRecentMatches(accountId){
       var list=document.getElementById('matches-list');
       document.getElementById('matches-section').style.display='block';
       document.getElementById('matches-divider').style.display='block';
-      matches.slice(0,15).forEach(function(m,i){
+      var slice=matches.slice(0,10);
+      // Сначала рендерим без предметов, потом догружаем детали
+      slice.forEach(function(m,i){
         setTimeout(function(){renderMatch(m,list);},i*30);
+      });
+      // Догружаем детали матчей для получения предметов
+      slice.forEach(function(m){
+        fetch('/api/opendota/matches/'+m.match_id)
+          .then(function(r){return r.json();})
+          .then(function(detail){
+            var player=(detail.players||[]).find(function(p){
+              return String(p.account_id)===String(accountId);
+            });
+            if(!player) return;
+            // Находим строку матча и обновляем предметы
+            var rows=list.querySelectorAll('.match-row');
+            rows.forEach(function(row){
+              if(row.dataset.matchId===String(m.match_id)){
+                var itemsDiv=row.querySelector('.match-items');
+                if(!itemsDiv) return;
+                var ids=[player.item_0,player.item_1,player.item_2,player.item_3,player.item_4,player.item_5];
+                itemsDiv.innerHTML=ids.map(function(id){
+                  if(id&&id>0&&ITEMS[id]&&ITEMS[id].img){
+                    return '<img class="item-icon" src="'+ITEMS[id].img+'" title="'+(ITEMS[id].name||'')+'" onerror="this.className='item-icon-empty';this.removeAttribute('src')" loading="lazy"/>';
+                  }
+                  return '<div class="item-icon-empty"></div>';
+                }).join('');
+              }
+            });
+          }).catch(function(){});
       });
     }).catch(function(){});
 }
@@ -300,6 +328,7 @@ function renderMatch(m, list){
 
   var row=document.createElement('div');
   row.className='match-row';
+  row.dataset.matchId=m.match_id;
   row.onclick=function(){window.open('https://www.opendota.com/matches/'+m.match_id,'_blank');};
   row.innerHTML=
     '<span class="match-result '+(won?'win':'loss')+'">'+(won?'Победа':'Поражение')+'</span>'+
