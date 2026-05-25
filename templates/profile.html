@@ -372,49 +372,22 @@ function loadPeers(accountId){
 }
 
 /* ── Матчи по герою (клик на карточку) ── */
-function loadHeroMatches(accountId, heroId, heroName){
-  var modal=document.createElement('div');
-  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(12px);z-index:3000;display:flex;align-items:center;justify-content:center;padding:1rem';
-  modal.innerHTML=
-    '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);width:100%;max-width:720px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,0.8)">'+
-      '<div style="padding:0.85rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-surface);flex-shrink:0">'+
-        '<span style="font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--accent)">'+heroName+'</span>'+
-        '<button onclick="this.closest(\'[style*=fixed]\').remove();document.body.style.overflow=\'\'" style="background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:0.9rem">✕</button>'+
-      '</div>'+
-      '<div id="hero-match-body" style="flex:1;overflow-y:auto;padding:1rem">'+
-        '<p style="text-align:center;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">⏳ Загрузка...</p>'+
-      '</div>'+
-    '</div>';
-  document.body.appendChild(modal);
-  document.body.style.overflow='hidden';
-  modal.addEventListener('click',function(e){if(e.target===modal){modal.remove();document.body.style.overflow='';}});
-  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){modal.remove();document.body.style.overflow='';document.removeEventListener('keydown',esc);}});
-
-  fetch('/api/opendota/players/'+accountId+'/matches?hero_id='+heroId)
-    .then(function(r){return r.json();})
-    .then(function(matches){
-      var body=document.getElementById('hero-match-body');
+var body=document.getElementById('hero-match-body');
       if(!matches||!matches.length){body.innerHTML='<p style="text-align:center;font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">Нет матчей</p>';return;}
       var wins=matches.filter(function(m){return(m.player_slot<128&&m.radiant_win)||(m.player_slot>=128&&!m.radiant_win);}).length;
       var wr=Math.round(wins/matches.length*100);
-      body.innerHTML='<div style="display:flex;gap:1rem;margin-bottom:1rem">'+
+
+      var html='<div style="display:flex;gap:1rem;margin-bottom:1rem">'+
         '<div style="flex:1;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.75rem;text-align:center"><div style="font-family:var(--font-mono);font-size:1.2rem;font-weight:800;color:var(--accent)">'+matches.length+'</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);text-transform:uppercase">Матчей</div></div>'+
         '<div style="flex:1;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.75rem;text-align:center"><div style="font-family:var(--font-mono);font-size:1.2rem;font-weight:800;color:'+(wr>=50?'var(--success)':'var(--danger)')+'">'+wr+'%</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);text-transform:uppercase">Winrate</div></div>'+
         '<div style="flex:1;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.75rem;text-align:center"><div style="font-family:var(--font-mono);font-size:1.2rem;font-weight:800;color:var(--success)">'+wins+'</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);text-transform:uppercase">Побед</div></div>'+
       '</div><div class="matches-list">';
+
       matches.forEach(function(m){
         var won=(m.player_slot<128&&m.radiant_win)||(m.player_slot>=128&&!m.radiant_win);
         var hero=HEROES[m.hero_id]||{name:'Герой #'+m.hero_id,img_wide:'',img:''};
         var mins=Math.floor(m.duration/60),secs=m.duration%60;
-        var itemsHtml='';
-        [m.item_0,m.item_1,m.item_2,m.item_3,m.item_4,m.item_5].forEach(function(id){
-          if(id&&id>0){
-            itemsHtml+='<img class="item-icon" src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/'+id+'.png" loading="lazy"/>';
-          } else {
-            itemsHtml+='<div class="item-icon-empty"></div>';
-          }
-        });
-        body.innerHTML+=
+        html+=
           '<div class="match-row" onclick="window.open(\'https://www.opendota.com/matches/'+m.match_id+'\',\'_blank\')">'+
             '<span class="match-result '+(won?'win':'loss')+'">'+(won?'Победа':'Поражение')+'</span>'+
             '<div class="match-hero-wrap">'+
@@ -424,11 +397,14 @@ function loadHeroMatches(accountId, heroId, heroName){
             '<span class="match-kda"><span>'+m.kills+'</span>/<span style="color:var(--danger)">'+m.deaths+'</span>/<span>'+m.assists+'</span></span>'+
             '<span class="match-gpm">💰 '+(m.gold_per_min||'—')+' GPM</span>'+
             '<span class="match-duration">⏱ '+mins+':'+(secs<10?'0':'')+secs+'</span>'+
-            '<div class="match-items" id="items-'+m.match_id+'">'+
-              '<div class="item-icon-empty"></div>'.repeat(6)+
-            '</div>'+
+            '<div class="match-items" id="items-'+m.match_id+'">'+'<div class="item-icon-empty"></div>'.repeat(6)+'</div>'+
           '</div>';
-        // Догружаем предметы
+      });
+
+      html+='</div>';
+      body.innerHTML=html;
+
+      matches.forEach(function(m){
         (function(matchId){
           fetch('/api/opendota/matches/'+matchId)
             .then(function(r){return r.json();})
@@ -442,15 +418,9 @@ function loadHeroMatches(accountId, heroId, heroName){
                 var url=itemImg(id);
                 return url?'<img class="item-icon" src="'+url+'" loading="lazy"/>':'<div class="item-icon-empty"></div>';
               }).join('');
-              var row=document.getElementById('mr-'+matchId);
-              if(row&&pl.gold_per_min){
-                var gpmEl=row.querySelector('.match-gpm');
-                if(gpmEl) gpmEl.textContent='💰 '+pl.gold_per_min+' GPM';
-              }
             }).catch(function(){});
         })(m.match_id);
       });
-      body.innerHTML+='</div>';
     }).catch(function(){
       document.getElementById('hero-match-body').innerHTML='<p style="text-align:center;color:var(--danger);font-family:var(--font-mono);font-size:0.8rem">⚠️ Ошибка загрузки</p>';
     });
