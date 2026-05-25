@@ -389,7 +389,7 @@ function loadHeroMatches(accountId, heroId, heroName){
   modal.addEventListener('click',function(e){if(e.target===modal){modal.remove();document.body.style.overflow='';}});
   document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){modal.remove();document.body.style.overflow='';document.removeEventListener('keydown',esc);}});
 
-  fetch('/api/opendota/players/'+accountId+'/matches?hero_id='+heroId+'&limit=15')
+  fetch('/api/opendota/players/'+accountId+'/matches?hero_id='+heroId+'&limit=500')
     .then(function(r){return r.json();})
     .then(function(matches){
       var body=document.getElementById('hero-match-body');
@@ -423,8 +423,30 @@ function loadHeroMatches(accountId, heroId, heroName){
             '<span class="match-kda"><span>'+m.kills+'</span>/<span style="color:var(--danger)">'+m.deaths+'</span>/<span>'+m.assists+'</span></span>'+
             '<span class="match-gpm">💰 '+(m.gold_per_min||'—')+' GPM</span>'+
             '<span class="match-duration">⏱ '+mins+':'+(secs<10?'0':'')+secs+'</span>'+
-            '<div class="match-items">'+itemsHtml+'</div>'+
+            '<div class="match-items" id="items-'+m.match_id+'">'+
+              '<div class="item-icon-empty"></div>'.repeat(6)+
+            '</div>'+
           '</div>';
+        // Догружаем предметы
+        fetch('/api/opendota/matches/'+m.match_id)
+          .then(function(r){return r.json();})
+          .then(function(detail){
+            var pl=(detail.players||[]).find(function(p){return String(p.account_id)===String(accountId);});
+            if(!pl) return;
+            var el=document.getElementById('items-'+m.match_id);
+            if(!el) return;
+            var ids=[pl.item_0,pl.item_1,pl.item_2,pl.item_3,pl.item_4,pl.item_5];
+            el.innerHTML=ids.map(function(id){
+              var url=itemImg(id);
+              return url?'<img class="item-icon" src="'+url+'" loading="lazy"/>':'<div class="item-icon-empty"></div>';
+            }).join('');
+            // Обновляем GPM
+            var row=document.getElementById('mr-'+m.match_id);
+            if(row&&pl.gold_per_min){
+              var gpmEl=row.querySelector('.match-gpm');
+              if(gpmEl) gpmEl.textContent='💰 '+pl.gold_per_min+' GPM';
+            }
+          }).catch(function(){});
       });
       body.innerHTML+='</div>';
     }).catch(function(){
