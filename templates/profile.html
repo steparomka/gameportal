@@ -119,8 +119,8 @@
 .match-gpm{font-family:var(--font-mono);font-size:0.75rem;color:var(--warning);white-space:nowrap}
 .match-duration{font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);white-space:nowrap}
 .match-items{display:flex;align-items:center;gap:3px;flex-wrap:wrap;margin-left:auto}
-.item-icon{width:28px;height:20px;border-radius:3px;object-fit:cover;border:1px solid rgba(255,255,255,0.06);background:var(--bg-surface)}
-.item-icon-empty{width:28px;height:20px;border-radius:3px;background:var(--bg-surface);border:1px solid var(--border);opacity:0.25}
+.item-icon{width:36px;height:26px;border-radius:4px;object-fit:cover;border:1px solid rgba(255,255,255,0.08);background:var(--bg-surface)}
+.item-icon-empty{width:36px;height:26px;border-radius:4px;background:var(--bg-surface);border:1px solid var(--border);opacity:0.2}
 
 /* ── Союзники ── */
 .peers-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem}
@@ -201,11 +201,12 @@ function loadRank(accountId){
   fetch('/api/opendota/players/'+accountId)
     .then(function(r){return r.json();})
     .then(function(data){
-      var rank=data.rank_tier;
+      var rank=data.rank_tier||data.leaderboard_rank;
       if(!rank) return;
       var medal=Math.floor(rank/10), stars=rank%10;
       var names=['','Herald','Guardian','Crusader','Archon','Legend','Ancient','Divine','Immortal'];
       document.getElementById('p-rank-label').textContent=(names[medal]||'')+(stars?' '+'★'.repeat(stars):'');
+      console.log('Rank medal:',medal,'stars:',stars);
       var rankImg='https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/rank_icons/rank_icon_'+medal+'.png';
       document.getElementById('p-rank').innerHTML='<img src="'+rankImg+'" style="width:38px;height:38px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.8))"/>';
     }).catch(function(){});
@@ -389,7 +390,7 @@ function loadHeroMatches(accountId, heroId, heroName){
   modal.addEventListener('click',function(e){if(e.target===modal){modal.remove();document.body.style.overflow='';}});
   document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){modal.remove();document.body.style.overflow='';document.removeEventListener('keydown',esc);}});
 
-  fetch('/api/opendota/players/'+accountId+'/matches?hero_id='+heroId+'&limit=500')
+  fetch('/api/opendota/players/'+accountId+'/matches?hero_id='+heroId)
     .then(function(r){return r.json();})
     .then(function(matches){
       var body=document.getElementById('hero-match-body');
