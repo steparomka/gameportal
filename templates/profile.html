@@ -65,7 +65,7 @@
 <style>
 /* ── Шапка ── */
 .profile-hero{display:flex;align-items:center;gap:1.5rem;padding:2rem 0 1.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border)}
-.profile-avatar-wrap{position:relative;flex-shrink:0}
+.profile-avatar-wrap{position:relative;flex-shrink:0;display:inline-block}
 .profile-avatar{width:96px;height:96px;border-radius:12px;border:3px solid var(--accent);box-shadow:0 0 24px rgba(0,212,255,0.2);object-fit:cover}
 .profile-rank{position:absolute;bottom:-8px;right:-8px;z-index:2;background:var(--bg-card);border-radius:50%;padding:2px}
 .profile-rank img{width:36px;height:36px;object-fit:contain;display:block}
@@ -429,25 +429,26 @@ function loadHeroMatches(accountId, heroId, heroName){
             '</div>'+
           '</div>';
         // Догружаем предметы
-        fetch('/api/opendota/matches/'+m.match_id)
-          .then(function(r){return r.json();})
-          .then(function(detail){
-            var pl=(detail.players||[]).find(function(p){return String(p.account_id)===String(accountId);});
-            if(!pl) return;
-            var el=document.getElementById('items-'+m.match_id);
-            if(!el) return;
-            var ids=[pl.item_0,pl.item_1,pl.item_2,pl.item_3,pl.item_4,pl.item_5];
-            el.innerHTML=ids.map(function(id){
-              var url=itemImg(id);
-              return url?'<img class="item-icon" src="'+url+'" loading="lazy"/>':'<div class="item-icon-empty"></div>';
-            }).join('');
-            // Обновляем GPM
-            var row=document.getElementById('mr-'+m.match_id);
-            if(row&&pl.gold_per_min){
-              var gpmEl=row.querySelector('.match-gpm');
-              if(gpmEl) gpmEl.textContent='💰 '+pl.gold_per_min+' GPM';
-            }
-          }).catch(function(){});
+        (function(matchId){
+          fetch('/api/opendota/matches/'+matchId)
+            .then(function(r){return r.json();})
+            .then(function(detail){
+              var pl=(detail.players||[]).find(function(p){return String(p.account_id)===String(accountId);});
+              if(!pl) return;
+              var el=document.getElementById('items-'+matchId);
+              if(!el) return;
+              var ids=[pl.item_0,pl.item_1,pl.item_2,pl.item_3,pl.item_4,pl.item_5];
+              el.innerHTML=ids.map(function(id){
+                var url=itemImg(id);
+                return url?'<img class="item-icon" src="'+url+'" loading="lazy"/>':'<div class="item-icon-empty"></div>';
+              }).join('');
+              var row=document.getElementById('mr-'+matchId);
+              if(row&&pl.gold_per_min){
+                var gpmEl=row.querySelector('.match-gpm');
+                if(gpmEl) gpmEl.textContent='💰 '+pl.gold_per_min+' GPM';
+              }
+            }).catch(function(){});
+        })(m.match_id);
       });
       body.innerHTML+='</div>';
     }).catch(function(){
