@@ -149,7 +149,7 @@ var HEROES={}, ITEMS={}, currentAccountId='';
 
 Promise.all([
   fetch('/api/opendota/heroes').then(function(r){return r.json();}).catch(function(){return[];}),
-  fetch('/api/opendota/constants/items').then(function(r){return r.json();}).catch(function(){return{};}),
+  Promise.resolve({}),
   fetch('/api/me').then(function(r){return r.json();}).catch(function(){return{logged_in:false};})
 ]).then(function(results){
   var heroes=results[0], items=results[1], user=results[2];
@@ -163,14 +163,7 @@ Promise.all([
     };
   });
 
-  Object.keys(items).forEach(function(key){
-    var d=items[key];
-    if(!d) return;
-    var url=d.img?('https://cdn.cloudflare.steamstatic.com'+d.img):null;
-    var e={name:d.dname||key,img:url};
-    if(d.id!==undefined) ITEMS[d.id]=e;
-    ITEMS[key]=e;
-  });
+  // items не используются - URL строится по ID
 
   if(!user.logged_in){
     document.getElementById('loading-stats').innerHTML='<p style="font-family:var(--font-mono);font-size:0.85rem;color:var(--text-muted)">👤 Войди через Steam чтобы увидеть профиль</p>';
@@ -294,8 +287,8 @@ function loadRecentMatches(accountId){
                 if(!itemsDiv) return;
                 var ids=[player.item_0,player.item_1,player.item_2,player.item_3,player.item_4,player.item_5];
                 itemsDiv.innerHTML=ids.map(function(id){
-                  if(id&&id>0&&ITEMS[id]&&ITEMS[id].img){
-                    return '<img class="item-icon" src="'+ITEMS[id].img+'" title="'+(ITEMS[id].name||'')+'" onerror="this.className='item-icon-empty';this.removeAttribute('src')" loading="lazy"/>';
+                  if(id&&id>0){
+                    return '<img class="item-icon" src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/'+id+'.png" onerror="this.style.display='none'" loading="lazy"/>';
                   }
                   return '<div class="item-icon-empty"></div>';
                 }).join('');
@@ -313,8 +306,8 @@ function renderMatch(m, list){
 
   var itemsHtml='';
   [m.item_0,m.item_1,m.item_2,m.item_3,m.item_4,m.item_5].forEach(function(id){
-    if(id&&id>0&&ITEMS[id]&&ITEMS[id].img){
-      itemsHtml+='<img class="item-icon" src="'+ITEMS[id].img+'" title="'+(ITEMS[id].name||'')+'" onerror="this.className=\'item-icon-empty\';this.removeAttribute(\'src\')" loading="lazy"/>';
+    if(id&&id>0){
+      itemsHtml+='<img class="item-icon" src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/'+id+'.png" onerror="this.style.display=\'none\'" loading="lazy"/>';
     } else {
       itemsHtml+='<div class="item-icon-empty"></div>';
     }
@@ -399,8 +392,8 @@ function loadHeroMatches(accountId, heroId, heroName){
         var mins=Math.floor(m.duration/60),secs=m.duration%60;
         var itemsHtml='';
         [m.item_0,m.item_1,m.item_2,m.item_3,m.item_4,m.item_5].forEach(function(id){
-          if(id&&id>0&&ITEMS[id]&&ITEMS[id].img){
-            itemsHtml+='<img class="item-icon" src="'+ITEMS[id].img+'" loading="lazy" onerror="this.className=\'item-icon-empty\';this.removeAttribute(\'src\')"/>';
+          if(id&&id>0){
+            itemsHtml+='<img class="item-icon" src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/'+id+'.png" onerror="this.style.display=\'none\'" loading="lazy"/>';
           } else {
             itemsHtml+='<div class="item-icon-empty"></div>';
           }
