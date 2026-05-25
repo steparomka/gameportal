@@ -164,17 +164,12 @@ Promise.all([
   });
 
   Object.keys(items).forEach(function(key){
-    var item=items[key];
-    if(!item) return;
-    var imgUrl=null;
-    if(item.img){
-      var parts=item.img.split('/');
-      var fname=parts[parts.length-1].replace('_lg.png','.png');
-      imgUrl='https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/'+fname;
-    }
-    var entry={name:item.dname||key, img:imgUrl};
-    if(item.id!==undefined) ITEMS[item.id]=entry;
-    ITEMS[key]=entry;
+    var d=items[key];
+    if(!d) return;
+    var url=d.img?('https://cdn.cloudflare.steamstatic.com'+d.img):null;
+    var e={name:d.dname||key,img:url};
+    if(d.id!==undefined) ITEMS[d.id]=e;
+    ITEMS[key]=e;
   });
 
   if(!user.logged_in){
