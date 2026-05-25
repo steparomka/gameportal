@@ -39,7 +39,7 @@
   <hr class="neon-line"/>
 
   <div id="heroes-section" style="display:none">
-    <h2 class="section-title">🦸 Топ героев <span class="heroes-subtitle">≥ 20 игр</span></h2>
+    <h2 class="section-title">🦸 Топ героев <span class="heroes-subtitle">≥ 50 игр</span></h2>
     <div class="heroes-grid" id="heroes-grid"></div>
     <div id="heroes-empty" style="display:none;color:var(--text-muted);font-family:var(--font-mono);font-size:0.85rem;padding:1rem 0">
       Нет героев с 20+ играми
@@ -67,8 +67,8 @@
 .profile-hero{display:flex;align-items:center;gap:1.5rem;padding:2rem 0 1.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border)}
 .profile-avatar-wrap{position:relative;flex-shrink:0}
 .profile-avatar{width:96px;height:96px;border-radius:12px;border:3px solid var(--accent);box-shadow:0 0 24px rgba(0,212,255,0.2);object-fit:cover}
-.profile-rank{position:absolute;bottom:-12px;right:-12px;z-index:2}
-.profile-rank img{width:40px;height:40px;object-fit:contain}
+.profile-rank{position:absolute;bottom:-8px;right:-8px;z-index:2;background:var(--bg-card);border-radius:50%;padding:2px}
+.profile-rank img{width:36px;height:36px;object-fit:contain;display:block}
 .profile-info{flex:1}
 .profile-name{font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--text-bright);letter-spacing:2px;margin-bottom:0.2rem}
 .profile-rank-label{font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);margin-bottom:0.65rem}
@@ -145,7 +145,22 @@
 
 {% block extra_js %}
 <script>
-var HEROES={}, ITEMS={}, currentAccountId='';
+var HEROES={}, ITEMS={}, ITEM_NAMES={}, currentAccountId='';
+
+// Загружаем имена предметов один раз
+fetch('/api/opendota/constants/items').then(function(r){return r.json();}).then(function(data){
+  Object.keys(data).forEach(function(k){
+    var d=data[k];
+    if(d&&d.id!=null) ITEM_NAMES[d.id]=k.replace('item_','');
+  });
+}).catch(function(){});
+
+function itemImg(id){
+  if(!id||id<=0) return null;
+  var name=ITEM_NAMES[id];
+  if(!name) return null;
+  return 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/'+name+'.png';
+}
 
 Promise.all([
   fetch('/api/opendota/heroes').then(function(r){return r.json();}).catch(function(){return[];}),
@@ -231,7 +246,7 @@ function loadTopHeroes(accountId){
   fetch('/api/opendota/players/'+accountId+'/heroes')
     .then(function(r){return r.json();})
     .then(function(heroes){
-      var filtered=heroes.filter(function(h){return h.games>=20;}).sort(function(a,b){return b.games-a.games;});
+      var filtered=heroes.filter(function(h){return h.games>=50;}).sort(function(a,b){return b.games-a.games;});
       document.getElementById('heroes-section').style.display='block';
       if(filtered.length===0){document.getElementById('heroes-empty').style.display='block';return;}
       var grid=document.getElementById('heroes-grid');
@@ -288,10 +303,8 @@ function loadRecentMatches(accountId){
                 if(!itemsDiv) return;
                 var ids=[player.item_0,player.item_1,player.item_2,player.item_3,player.item_4,player.item_5];
                 itemsDiv.innerHTML=ids.map(function(id){
-                  if(id&&id>0){
-                    return '<img class="item-icon" src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/'+id+'.png" loading="lazy"/>';
-                  }
-                  return '<div class="item-icon-empty"></div>';
+                  var url=itemImg(id);
+                  return url?'<img class="item-icon" src="'+url+'" loading="lazy"/>':'<div class="item-icon-empty"></div>';
                 }).join('');
               }
             });
@@ -307,8 +320,9 @@ function renderMatch(m, list){
 
   var itemsHtml='';
   [m.item_0,m.item_1,m.item_2,m.item_3,m.item_4,m.item_5].forEach(function(id){
-    if(id&&id>0){
-      itemsHtml+='<img class="item-icon" src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/'+id+'.png" loading="lazy"/>';
+    var url=itemImg(id);
+    if(url){
+      itemsHtml+='<img class="item-icon" src="'+url+'" loading="lazy"/>';
     } else {
       itemsHtml+='<div class="item-icon-empty"></div>';
     }
