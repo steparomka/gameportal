@@ -11,7 +11,6 @@
     </div>
     <div class="profile-info">
       <h1 id="p-nickname" class="profile-name">Загрузка...</h1>
-      <div id="p-rank-label" class="profile-rank-label"></div>
       <div class="profile-links">
         <a id="p-steam-link" href="#" target="_blank" class="profile-link-btn">Steam ↗</a>
       </div>
@@ -19,12 +18,12 @@
   </div>
 
   <div class="stats-grid" id="dota-stats" style="display:none">
-    <div class="stat-card"><div class="stat-value" id="s-matches">—</div><div class="stat-label">⚔️ Матчей</div></div>
-    <div class="stat-card"><div class="stat-value green" id="s-wins">—</div><div class="stat-label">🏆 Побед</div></div>
-    <div class="stat-card"><div class="stat-value red" id="s-losses">—</div><div class="stat-label">💀 Поражений</div></div>
-    <div class="stat-card"><div class="stat-value accent" id="s-winrate">—</div><div class="stat-label">📊 Винрейт</div></div>
-    <div class="stat-card"><div class="stat-value" id="s-kda">—</div><div class="stat-label">⚡ К/Д/А</div></div>
-    <div class="stat-card"><div class="stat-value" id="s-gpm">—</div><div class="stat-label">💰 Ср. GPM</div></div>
+    <div class="stat-card"><div class="stat-value" id="s-matches">—</div><div class="stat-label">Матчей</div></div>
+    <div class="stat-card"><div class="stat-value green" id="s-wins">—</div><div class="stat-label">Побед</div></div>
+    <div class="stat-card"><div class="stat-value red" id="s-losses">—</div><div class="stat-label">Поражений</div></div>
+    <div class="stat-card"><div class="stat-value accent" id="s-winrate">—</div><div class="stat-label">Винрейт</div></div>
+    <div class="stat-card"><div class="stat-value" id="s-kda">—</div><div class="stat-label">К/Д/А</div></div>
+    <div class="stat-card"><div class="stat-value" id="s-gpm">—</div><div class="stat-label">Ср. GPM</div></div>
   </div>
 
   <div id="loading-stats" style="text-align:center;padding:3rem;color:var(--text-muted)">
@@ -42,7 +41,7 @@
     <h2 class="section-title">🦸 Топ героев <span class="heroes-subtitle">≥ 50 игр</span></h2>
     <div class="heroes-grid" id="heroes-grid"></div>
     <div id="heroes-empty" style="display:none;color:var(--text-muted);font-family:var(--font-mono);font-size:0.85rem;padding:1rem 0">
-      Нет героев с 20+ играми
+      Нет героев с 50+ играми
     </div>
   </div>
 
@@ -67,11 +66,10 @@
 .profile-hero{display:flex;align-items:center;gap:1.5rem;padding:2rem 0 1.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border)}
 .profile-avatar-wrap{position:relative;flex-shrink:0;display:inline-block}
 .profile-avatar{width:96px;height:96px;border-radius:12px;border:3px solid var(--accent);box-shadow:0 0 24px rgba(0,212,255,0.2);object-fit:cover}
-.profile-rank{position:absolute;bottom:-8px;right:-8px;z-index:2;background:var(--bg-card);border-radius:50%;padding:2px}
-.profile-rank img{width:36px;height:36px;object-fit:contain;display:block}
+.profile-rank{position:absolute;bottom:-10px;right:-14px;z-index:2;background:var(--bg-card);border-radius:50%;padding:3px;border:2px solid var(--border)}
+.profile-rank img{width:40px;height:40px;object-fit:contain;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.8))}
 .profile-info{flex:1}
-.profile-name{font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--text-bright);letter-spacing:2px;margin-bottom:0.2rem}
-.profile-rank-label{font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);margin-bottom:0.65rem}
+.profile-name{font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--text-bright);letter-spacing:2px;margin-bottom:0.5rem}
 .profile-links{display:flex;gap:0.5rem;flex-wrap:wrap}
 .profile-link-btn{padding:0.3rem 0.85rem;border-radius:99px;font-family:var(--font-mono);font-size:0.7rem;font-weight:700;text-decoration:none;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);color:var(--accent);transition:all 0.2s}
 .profile-link-btn:hover{background:rgba(0,212,255,0.15)}
@@ -147,7 +145,6 @@
 <script>
 var HEROES={}, ITEMS={}, ITEM_NAMES={}, currentAccountId='';
 
-// Загружаем имена предметов один раз
 fetch('/api/opendota/constants/items').then(function(r){return r.json();}).then(function(data){
   Object.keys(data).forEach(function(k){
     var d=data[k];
@@ -178,8 +175,6 @@ Promise.all([
     };
   });
 
-  // items не используются - URL строится по ID
-
   if(!user.logged_in){
     document.getElementById('loading-stats').innerHTML='<p style="font-family:var(--font-mono);font-size:0.85rem;color:var(--text-muted)">👤 Войди через Steam чтобы увидеть профиль</p>';
     return;
@@ -203,12 +198,9 @@ function loadRank(accountId){
     .then(function(data){
       var rank=data.rank_tier||data.leaderboard_rank;
       if(!rank) return;
-      var medal=Math.floor(rank/10), stars=rank%10;
-      var names=['','Herald','Guardian','Crusader','Archon','Legend','Ancient','Divine','Immortal'];
-      document.getElementById('p-rank-label').textContent=(names[medal]||'')+(stars?' '+'★'.repeat(stars):'');
-      console.log('Rank medal:',medal,'stars:',stars);
+      var medal=Math.floor(rank/10);
       var rankImg='https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/rank_icons/rank_icon_'+medal+'.png';
-      document.getElementById('p-rank').innerHTML='<img src="'+rankImg+'" style="width:38px;height:38px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.8))"/>';
+      document.getElementById('p-rank').innerHTML='<img src="'+rankImg+'" onerror="this.style.display=\'none\'"/>';
     }).catch(function(){});
 }
 
@@ -283,11 +275,9 @@ function loadRecentMatches(accountId){
       document.getElementById('matches-section').style.display='block';
       document.getElementById('matches-divider').style.display='block';
       var slice=matches.slice(0,10);
-      // Сначала рендерим без предметов, потом догружаем детали
       slice.forEach(function(m,i){
         setTimeout(function(){renderMatch(m,list);},i*30);
       });
-      // Догружаем детали матчей для получения предметов
       slice.forEach(function(m){
         fetch('/api/opendota/matches/'+m.match_id)
           .then(function(r){return r.json();})
@@ -296,7 +286,6 @@ function loadRecentMatches(accountId){
               return String(p.account_id)===String(accountId);
             });
             if(!player) return;
-            // Находим строку матча и обновляем предметы
             var rows=list.querySelectorAll('.match-row');
             rows.forEach(function(row){
               if(row.dataset.matchId===String(m.match_id)){
@@ -340,8 +329,8 @@ function renderMatch(m, list){
       '<span class="match-hero">'+hero.name+'</span>'+
     '</div>'+
     '<span class="match-kda"><span>'+m.kills+'</span>/<span style="color:var(--danger)">'+m.deaths+'</span>/<span>'+m.assists+'</span></span>'+
-    '<span class="match-gpm">💰 '+(m.gold_per_min||'—')+' GPM</span>'+
-    '<span class="match-duration">⏱ '+mins+':'+(secs<10?'0':'')+secs+'</span>'+
+    '<span class="match-gpm">'+(m.gold_per_min||'—')+' GPM</span>'+
+    '<span class="match-duration">'+mins+':'+(secs<10?'0':'')+secs+'</span>'+
     '<div class="match-items">'+itemsHtml+'</div>';
   list.appendChild(row);
 }
@@ -371,7 +360,6 @@ function loadPeers(accountId){
     }).catch(function(){});
 }
 
-/* ── Матчи по герою (клик на карточку) ── */
 function loadHeroMatches(accountId, heroId, heroName){
   var modal=document.createElement('div');
   modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(12px);z-index:3000;display:flex;align-items:center;justify-content:center;padding:1rem';
@@ -416,8 +404,8 @@ function loadHeroMatches(accountId, heroId, heroName){
               '<span class="match-hero">'+hero.name+'</span>'+
             '</div>'+
             '<span class="match-kda"><span>'+m.kills+'</span>/<span style="color:var(--danger)">'+m.deaths+'</span>/<span>'+m.assists+'</span></span>'+
-            '<span class="match-gpm">💰 '+(m.gold_per_min||'—')+' GPM</span>'+
-            '<span class="match-duration">⏱ '+mins+':'+(secs<10?'0':'')+secs+'</span>'+
+            '<span class="match-gpm">'+(m.gold_per_min||'—')+' GPM</span>'+
+            '<span class="match-duration">'+mins+':'+(secs<10?'0':'')+secs+'</span>'+
             '<div class="match-items" id="items-'+m.match_id+'">'+'<div class="item-icon-empty"></div>'.repeat(6)+'</div>'+
           '</div>';
       });
