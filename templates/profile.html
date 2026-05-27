@@ -378,7 +378,7 @@ function loadHeroMatches(accountId, heroId, heroName){
   modal.addEventListener('click',function(e){if(e.target===modal){modal.remove();document.body.style.overflow='';}});
   document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){modal.remove();document.body.style.overflow='';document.removeEventListener('keydown',esc);}});
 
-  fetch('/api/opendota/players/'+accountId+'/matches?hero_id='+heroId)
+  fetch('/api/opendota/players/'+accountId+'/matches?hero_id='+heroId+'&limit=200')
     .then(function(r){return r.json();})
     .then(function(matches){
       var body=document.getElementById('hero-match-body');
